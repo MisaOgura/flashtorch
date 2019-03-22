@@ -6,7 +6,10 @@ from PIL import Image
 
 import torch
 
-from torchscope.utils import load_image, apply_transforms, denormalize
+from torchscope.utils import (load_image,
+                              apply_transforms,
+                              denormalize,
+                              format_for_plotting)
 
 
 @pytest.fixture
@@ -32,12 +35,20 @@ def test_crops_to_224(image):
     assert transformed.shape == (1, 3, 224, 224)
 
 
-def test_denormalize_tensor(image):
+def test_denormalizes_tensor(image):
     transformed = apply_transforms(image)
     denormalized = denormalize(transformed)
 
     assert denormalized.shape == (1, 3, 224, 224)
     assert denormalized.min() >= 0.0 and denormalized.max() <= 1.0
+
+
+def test_formats_tensor_for_image_plotting(image):
+    transformed = apply_transforms(image)
+    denormalized = denormalize(transformed)
+    formatted = format_for_plotting(denormalized)
+
+    assert formatted.shape == (224, 224, 3)
 
 
 if __name__ == '__main__':
