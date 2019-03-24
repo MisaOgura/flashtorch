@@ -16,6 +16,9 @@ class Backprop:
         self.target_layer_type = torch.nn.modules.conv.Conv2d
         self.target_layer_in_channels = 3
 
+        self.gradients = None
+        self.register_hooks()
+
     def find_target_layer(self):
         """
         """
@@ -32,4 +35,11 @@ class Backprop:
                         return node
 
         return search(self.nodes)
+
+    def register_hooks(self):
+        def record_gradient(module, grad_in, grad_out):
+            self.gradients = grad_in[0]
+
+        first_conv_layer = self.find_target_layer()
+        first_conv_layer.register_backward_hook(record_gradient)
 
