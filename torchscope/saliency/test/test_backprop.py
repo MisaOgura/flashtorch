@@ -37,7 +37,7 @@ def test_find_first_conv_layer_in_torchvision_models(mocker):
         mocker.spy(model, 'eval')
 
         backprop = Backprop(model)
-        target_layer = backprop.find_target_layer()
+        target_layer = backprop._find_target_layer()
 
         assert type(target_layer) == torch.nn.modules.conv.Conv2d
         assert target_layer.in_channels == 3
@@ -57,37 +57,32 @@ def test_zero_out_gradient(mocker, model):
     mocker.spy(model, 'zero_grad')
 
     target_class = 1
-    input_image = torch.zeros([1, 3, 224, 224],
-                              requires_grad=True,
-                              dtype=torch.float)
+    input_ = torch.zeros([1, 3, 224, 224])
 
-    backprop.calculate_gradient(input_image, target_class)
+    backprop.calculate_gradient(input_, target_class)
 
     model.zero_grad.assert_called_once()
 
 
 def test_calculate_gradient_of_target_class_only(mocker, model):
-    num_classes = 10
     backprop = Backprop(model)
 
-    mocked_output = mocker.Mock()
-    mocked_output.size.return_value = (1, num_classes)
+    # Mockout the output
 
-    mocked_forward = mocker.patch.object(model,
-                                         'forward',
-                                         return_value=mocked_output)
+    num_classes = 10
+    mock_tensor = torch.zeros((1, num_classes))
+    mock_output = mocker.Mock(spec=mock_tensor, shape=(1, num_classes))
+    mocker.patch.object(model, 'forward', return_value=mock_output)
 
     target_class = 5
-    input_image = torch.zeros([1, 3, 224, 224],
-                              requires_grad=True,
-                              dtype=torch.float)
+    input_ = torch.zeros([1, 3, 224, 224])
 
-    backprop.calculate_gradient(input_image, target_class)
+    backprop.calculate_gradient(input_, target_class)
 
-    expected_gradient_target = torch.FloatTensor(1, num_classes).zero_()
+    expected_gradient_target = torch.zeros((1, num_classes))
     expected_gradient_target[0][target_class] = 1
 
-    args, kwargs = mocked_output.backward.call_args
+    args, kwargs = mock_output.backward.call_args
 
     assert torch.all(kwargs['gradient'].eq(expected_gradient_target))
 
@@ -96,10 +91,8 @@ def test_calculate_gradient_wrt_inputs(mocker, model):
     backprop = Backprop(model)
 
     target_class = 1
-    input_image = torch.zeros([1, 3, 224, 224],
-                              requires_grad=True,
-                              dtype=torch.float)
+    input_ = torch.zeros([1, 3, 224, 224])
 
-    gradient = backprop.calculate_gradient(input_image, target_class)
+    gradient = backprop.calculate_gradient(input_, target_class)
 
-    assert gradient.shape == input_image.shape
+    assert gradient.shape == input_.shape
