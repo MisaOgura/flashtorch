@@ -73,10 +73,36 @@ def test_format_mono_channel_tensor_without_batch_dimension():
     assert formatted.shape == (224, 224)
 
 
-# def test_normalize(image):
-#     normalized = normalize(image)
+def test_normalize():
+    default_min = 0.0
+    default_max = 1.0
 
-#     assert normalized.min() >= 0.0 and normalized.max() <= 1.0
+    input_ = torch.arange(start=-5.0, end=5.0)
+    normalized = normalize(input_)
+
+    assert normalized.shape == input_.shape
+    assert normalized.min() >= default_min and normalized.max() <= default_max
+
+
+def test_normalize_with_custom_min_max():
+    custom_min = 2.0
+    custom_max = 3.0
+    input_ = torch.arange(start=-5.0, end=5.0)
+    normalized = normalize(input_, min_value=custom_min, max_value=custom_max)
+
+    assert normalized.shape == input_.shape
+    assert normalized.min() >= custom_min and normalized.max() <= custom_max
+
+
+def test_normalize_multi_channel_tensor():
+    default_min = 0.0
+    default_max = 1.0
+
+    input_ = torch.full((1, 224, 224), 100)
+    normalized = normalize(input_)
+
+    assert normalized.shape == input_.shape
+    assert normalized.min() >= default_min and normalized.max() <= default_max
 
 
 if __name__ == '__main__':

@@ -88,7 +88,7 @@ def denormalize(tensor):
         Output: :math:`(N, C, H, W)` (same shape as input)
 
     Return:
-        torch.Tensor (torch.float32): Demornalied image tensor with pixel
+        torch.Tensor (torch.float32): Demornalised image tensor with pixel
             values between [0, 1]
 
     Note:
@@ -111,8 +111,35 @@ def denormalize(tensor):
     return denormalized
 
 
-def normalize():
-    pass
+def normalize(tensor, min_value=0.0, max_value=1.0):
+    """Normalises input tensor values between min/max (default: 0.0/1.0).
+
+    Args:
+        tensor (torch.Tensor)
+        min_value (float, optional): Defaults to 0.0
+        max_value (float, optional): Defaults to 1.0
+
+    Return:
+        torch.Tensor (torch.float32): Demornalised tensor with values between
+            [min_value, max_value]
+
+    """
+
+    target_range = max_value - min_value
+
+    tensor_min = tensor.min()
+    tensor_max = tensor.max()
+    tensor_range = tensor_max - tensor_min
+
+    eps = 1e-7
+
+    # Normalise to [0, 1] (using epsilon to avoid diving by zero)
+
+    normalized = (tensor - tensor_min) / (tensor_max - tensor_min + eps)
+
+    # Scale it with min/max_value
+
+    return (max_value - min_value) * normalized + min_value
 
 
 def format_for_plotting(tensor):
@@ -143,12 +170,12 @@ def format_for_plotting(tensor):
     """
 
     has_batch_dimension = len(tensor.shape) == 4
-    normalized = tensor.clone()
+    formatted = tensor.clone()
 
     if has_batch_dimension:
-        normalized = tensor.squeeze(0)
+        formatted = tensor.squeeze(0)
 
-    if normalized.shape[0] == 1:
-        return normalized.squeeze(0)
+    if formatted.shape[0] == 1:
+        return formatted.squeeze(0)
     else:
-        return normalized.permute(1, 2, 0)
+        return formatted.permute(1, 2, 0)
