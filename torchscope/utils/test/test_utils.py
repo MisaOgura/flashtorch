@@ -9,6 +9,7 @@ import torch
 from torchscope.utils import (load_image,
                               apply_transforms,
                               denormalize,
+                              normalize,
                               format_for_plotting)
 
 
@@ -18,37 +19,64 @@ def image():
     return load_image(image_path)
 
 
-def test_converts_image_to_rgb(image):
+def test_convert_image_to_rgb(image):
     assert isinstance(image, Image.Image)
     assert image.mode == 'RGB'
 
 
-def test_transforms_image_to_tensor(image):
+def test_transform_image_to_tensor(image):
     transformed = apply_transforms(image)
 
     assert isinstance(transformed, torch.Tensor)
 
 
-def test_crops_to_224(image):
+def test_crop_to_224(image):
     transformed = apply_transforms(image)
 
     assert transformed.shape == (1, 3, 224, 224)
 
 
-def test_denormalizes_tensor(image):
+def test_denormalize_tensor(image):
     transformed = apply_transforms(image)
     denormalized = denormalize(transformed)
 
-    assert denormalized.shape == (1, 3, 224, 224)
+    assert denormalized.shape == transformed.shape
     assert denormalized.min() >= 0.0 and denormalized.max() <= 1.0
 
 
-def test_formats_tensor_for_image_plotting(image):
-    transformed = apply_transforms(image)
-    denormalized = denormalize(transformed)
-    formatted = format_for_plotting(denormalized)
+def test_format_multi_channel_tensor_with_batch_dimension():
+    input_ = torch.zeros((1, 3, 224, 224))
+
+    formatted = format_for_plotting(input_)
 
     assert formatted.shape == (224, 224, 3)
+
+
+def test_format_mono_channel_tensor_with_batch_dimension():
+    input_ = torch.zeros((1, 1, 224, 224))
+    formatted = format_for_plotting(input_)
+
+    assert formatted.shape == (224, 224)
+
+
+def test_format_multi_channel_tensor_without_batch_dimension():
+    input_ = torch.zeros((3, 224, 224))
+    formatted = format_for_plotting(input_)
+
+    assert formatted.shape == (224, 224, 3)
+
+
+def test_format_mono_channel_tensor_without_batch_dimension():
+    input_ = torch.zeros((1, 224, 224))
+    formatted = format_for_plotting(input_)
+
+    assert formatted.shape == (224, 224)
+
+
+# def test_normalize(image):
+#     normalized = normalize(image)
+
+#     assert normalized.min() >= 0.0 and normalized.max() <= 1.0
 
 
 if __name__ == '__main__':

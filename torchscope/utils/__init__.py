@@ -1,10 +1,11 @@
-
+#!/usr/bin/env python
 """torchscope.utils
 
 This module provides utility functions for image handling and tensor
 transformation.
 
 """
+import pdb
 
 from PIL import Image
 
@@ -15,7 +16,7 @@ def load_image(image_path):
     """Loads image as a PIL RGB image.
 
     Args:
-        image_path (str): A path to the image.
+        image_path (str): A path to the image
 
     Returns:
         An instance of PIL.Image.Image in RGB
@@ -46,7 +47,7 @@ def apply_transforms(image):
         Output: :math:`(N, C, H, W)`
 
     Returns:
-        torch.Tensor (torch.float32): Transformed image tensor.
+        torch.Tensor (torch.float32): Transformed image tensor
 
     Note:
         Symbols used to describe dimensions:
@@ -56,6 +57,7 @@ def apply_transforms(image):
             - W: width of the image
 
     """
+
     means = [0.485, 0.456, 0.406]
     stds = [0.229, 0.224, 0.225]
 
@@ -79,7 +81,7 @@ def denormalize(tensor):
     Denormalisation: image * std + mean
 
     Args:
-        tensor (torch.Tensor, dtype=torch.float32): Normalized image tensor.
+        tensor (torch.Tensor, dtype=torch.float32): Normalized image tensor
 
     Shape:
         Input: :math:`(N, C, H, W)`
@@ -87,7 +89,7 @@ def denormalize(tensor):
 
     Return:
         torch.Tensor (torch.float32): Demornalied image tensor with pixel
-            values between [0, 1].
+            values between [0, 1]
 
     Note:
         Symbols used to describe dimensions:
@@ -97,6 +99,7 @@ def denormalize(tensor):
             - W: width of the image
 
     """
+
     means = [0.485, 0.456, 0.406]
     stds = [0.229, 0.224, 0.225]
 
@@ -108,23 +111,27 @@ def denormalize(tensor):
     return denormalized
 
 
+def normalize():
+    pass
+
+
 def format_for_plotting(tensor):
     """Formats the shape of tensor for plotting.
 
-    Tensors typically have a shape of :math:`(N, C, H, W)`, which is not
-    suitable for plotting as images. This function formats their shape into
-    :math:`(H, W, C)` by removing the batch dimension and pushing the channel
-    dimention to the last.
+    Tensors typically have a shape of :math:`(N, C, H, W)` or :math:`(C, H, W)`
+    which is not suitable for plotting as images. This function formats an
+    input tensor :math:`(H, W, C)` for RGB and :math:`(H, W)` for mono-channel
+    data.
 
     Args:
-        tensor (torch.Tensor, torch.float32): Image tensor.
+        tensor (torch.Tensor, torch.float32): Image tensor
 
     Shape:
-        Input: :math:`(N, C, H, W)`
-        Output: :math:`(H, W, C)`
+        Input: :math:`(N, C, H, W)` or :math:`(C, H, W)`
+        Output: :math:`(H, W, C)` or :math:`(H, W)`, respectively
 
     Return:
-        torch.Tensor (torch.float32): Formatted image tensor.
+        torch.Tensor (torch.float32): Formatted image tensor
 
     Note:
         Symbols used to describe dimensions:
@@ -134,4 +141,14 @@ def format_for_plotting(tensor):
             - W: width of the image
 
     """
-    return tensor.squeeze(0).permute(1, 2, 0)
+
+    has_batch_dimension = len(tensor.shape) == 4
+    normalized = tensor.clone()
+
+    if has_batch_dimension:
+        normalized = tensor.squeeze(0)
+
+    if normalized.shape[0] == 1:
+        return normalized.squeeze(0)
+    else:
+        return normalized.permute(1, 2, 0)
