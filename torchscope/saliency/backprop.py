@@ -1,7 +1,10 @@
+#!/usr/bin/env python
 """
 """
+
 import pdb
 import torch
+
 
 class Backprop:
     """Provides an interface to perform backpropagation.
@@ -9,9 +12,9 @@ class Backprop:
     This class provids a way to calculate a gradient of a target class output
     w.r.t. an input image, by performing a single backprobagation.
 
-    The gradient obtained can be used to visualise a class-specific saliency
-    map, which can gives some intuition on regions within the input image that
-    contribute the most (and least) to the corresponding output.
+    The gradient obtained can be used to visualise an image-specific class
+    saliency map, which can gives some intuition on regions within the input
+    image that contribute the most (and least) to the corresponding output.
 
     More details on saliency maps: `Deep Inside Convolutional Networks:
     Visualising Image Classification Models and Saliency Maps
@@ -23,6 +26,7 @@ class Backprop:
         device (str, optional): 'cpu' or 'cuda'. Defaults to 'cpu'.
 
     """
+
     def __init__(self, model):
         self.model = model
         self.model.eval()
@@ -39,14 +43,18 @@ class Backprop:
     def calculate_gradient(self, input_, target_class):
         """Calculates gradient of the target_class output w.r.t. an input_.
 
+        The gradient is calculated for each colour channel. Then, the maximum
+        gradient across colour channels is returned.
+
         Args:
             input_ (torch.Tensor): With shape :math:`(N, C, H, W)`.
             target_class (int)
 
         Returns:
-            gradient (torch.Tensor): With shape :math:`(N, C, H, W)`.
+            gradient (torch.Tensor): With shape :math:`(C, H, W)`.
 
         """
+
         self.model = self.model.to(self._device)
         self.model.zero_grad()
 
@@ -72,7 +80,13 @@ class Backprop:
 
         output.backward(gradient=target)
 
-        return self.gradient.detach().cpu()
+        # Detach the gradient from the graph and move to cpu
+
+        gradient = self.gradient.detach().cpu()[0]
+
+        # Take the maximum across colour channels
+
+        return gradient.max(dim=0, keepdim=True)[0]
 
     def _find_target_layer(self):
         def search(nodes):

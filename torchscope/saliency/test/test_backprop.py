@@ -67,7 +67,7 @@ def test_zero_out_gradient(mocker, model):
 def test_calculate_gradient_of_target_class_only(mocker, model):
     backprop = Backprop(model)
 
-    # Mockout the output
+    # Mock the output from the neural network
 
     num_classes = 10
     mock_tensor = torch.zeros((1, num_classes))
@@ -95,4 +95,4 @@ def test_calculate_gradient_wrt_inputs(mocker, model):
 
     gradient = backprop.calculate_gradient(input_, target_class)
 
-    assert gradient.shape == input_.shape
+    assert gradient.shape == (1, 224, 224)
