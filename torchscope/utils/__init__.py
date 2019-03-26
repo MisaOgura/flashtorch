@@ -158,7 +158,7 @@ def format_for_plotting(tensor):
         Output: :math:`(H, W, C)` or :math:`(H, W)`, respectively
 
     Return:
-        torch.Tensor (torch.float32): Formatted image tensor
+        torch.Tensor (torch.float32): Formatted image tensor (detached)
 
     Note:
         Symbols used to describe dimensions:
@@ -176,6 +176,10 @@ def format_for_plotting(tensor):
         formatted = tensor.squeeze(0)
 
     if formatted.shape[0] == 1:
-        return formatted.squeeze(0)
+        return formatted.squeeze(0).detach()
     else:
-        return formatted.permute(1, 2, 0)
+        return formatted.permute(1, 2, 0).detach()
+
+
+def overlay(input_image, gradient):
+    pass

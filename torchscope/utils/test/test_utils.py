@@ -10,7 +10,8 @@ from torchscope.utils import (load_image,
                               apply_transforms,
                               denormalize,
                               normalize,
-                              format_for_plotting)
+                              format_for_plotting,
+                              overlay)
 
 
 @pytest.fixture
@@ -73,6 +74,15 @@ def test_format_mono_channel_tensor_without_batch_dimension():
     assert formatted.shape == (224, 224)
 
 
+def test_detach_tensor_from_computational_graph():
+    input_ = torch.zeros((1, 224, 224))
+    input_.requires_grad = True
+
+    formatted = format_for_plotting(input_)
+
+    assert not formatted.requires_grad
+
+
 def test_normalize():
     default_min = 0.0
     default_max = 1.0
@@ -103,6 +113,10 @@ def test_normalize_multi_channel_tensor():
 
     assert normalized.shape == input_.shape
     assert normalized.min() >= default_min and normalized.max() <= default_max
+
+
+# def test_overlay_gradient_with_input_image():
+#     pass
 
 
 if __name__ == '__main__':
