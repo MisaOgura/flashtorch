@@ -5,8 +5,6 @@ This module provides utility functions for image handling and tensor
 transformation.
 
 """
-import pdb
-
 from PIL import Image
 
 import torchvision.transforms as transforms

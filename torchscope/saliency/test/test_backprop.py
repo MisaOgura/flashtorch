@@ -1,5 +1,4 @@
 import inspect
-import pdb
 import pytest
 
 from sys import stdout
