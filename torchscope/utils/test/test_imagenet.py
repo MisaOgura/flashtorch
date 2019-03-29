@@ -26,10 +26,16 @@ def test_find_class_index(imagenet):
     assert class_index == 251
 
 
-# def test_handle_multi_word_target_class(imagenet):
-#     class_index = imagenet['dalmatian dog']
+def test_handle_multi_word_target_class(imagenet):
+    class_index = imagenet['dalmatian dog']
 
-#     assert class_index == 251
+    assert class_index == 251
+
+
+def test_handle_partial_match(imagenet):
+    class_index = imagenet['foxhound']
+
+    assert class_index == 167
 
 
 def test_raise_on_invalid_argument_type(imagenet):
