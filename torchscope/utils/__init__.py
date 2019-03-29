@@ -8,7 +8,7 @@ transformation.
 from PIL import Image
 
 import torchvision.transforms as transforms
-
+from .imagenet import *
 
 def load_image(image_path):
     """Loads image as a PIL RGB image.
