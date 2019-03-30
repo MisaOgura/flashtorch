@@ -6,8 +6,8 @@ Visualisation toolkit for neural networks with PyTorch.
 
 ## Algorithms
 
-## Demo
+## Example notebooks
 
-- [Image handling](./demo/image_handling.ipynb)
+- [Image handling](./examples/image_handling.ipynb)
 
-- [Image-specific class saliency map visualisation with backpropagation](./demo/visualise_saliency_with_backprop.ipynb)
+- [Image-specific class saliency map with backpropagation](./examples/visualise_saliency_with_backprop.ipynb)
