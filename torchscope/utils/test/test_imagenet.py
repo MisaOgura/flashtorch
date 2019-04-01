@@ -1,4 +1,5 @@
 import pytest
+from collections.abc import Iterable
 
 from torchscope.utils import ImageNetIndex
 
@@ -8,8 +9,13 @@ def imagenet():
     return ImageNetIndex()
 
 
-def test_list_all_classes(imagenet):
-    assert len(imagenet.keys()) == 1000
+def test_is_iterable(imagenet):
+    assert isinstance(imagenet, Iterable)
+    assert isinstance(iter(imagenet), Iterable)
+
+
+def test_return_length(imagenet):
+    assert len(imagenet) == 1000
 
 
 def test_return_true_when_target_class_exists(imagenet):
@@ -38,6 +44,12 @@ def test_handle_partial_match(imagenet):
     assert class_index == 167
 
 
+def test_return_none_for_invalid_class_name(imagenet):
+    class_index = imagenet['invalid class name']
+
+    assert class_index == None
+
+
 def test_raise_on_invalid_argument_type(imagenet):
     with pytest.raises(TypeError) as error:
         class_index = imagenet[1]
@@ -45,15 +57,12 @@ def test_raise_on_invalid_argument_type(imagenet):
     assert 'Target class needs to be a string' in str(error.value)
 
 
-def test_raise_on_invalid_class_name(imagenet):
-    with pytest.raises(ValueError) as error:
-        class_index = imagenet['invalid class name']
-
-    assert 'Cannot find the specified class' in str(error.value)
-
-
 def test_raise_on_multiple_matches(imagenet):
     with pytest.raises(ValueError) as error:
         class_index = imagenet['dog']
 
-    assert 'Multiple matches found' in str(error.value)
+    assert 'Multiple potential matches found' in str(error.value)
+
+
+def test_list_all_classes(imagenet):
+    assert len(imagenet.keys()) == 1000
