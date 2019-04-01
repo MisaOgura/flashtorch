@@ -46,30 +46,14 @@ class ImageNetIndex(Mapping):
         return iter(self._index)
 
     def __getitem__(self, phrase):
-
         if type(phrase) != str:
             raise TypeError('Target class needs to be a string.')
 
-        words = phrase.lower().split(' ')
-
-        # Find the intersection between search words and class names to
-        # prioritise whole word matches
-        # e.g. If words = {'dalmatian', 'dog'} then matches 'dalmatian'
-
-        matches = set(words).intersection(set(self.keys()))
+        matches = self._find_matches(phrase)
 
         if not any(matches):
-            # Find substring matches between search words and class names to
-            # accommodate for fuzzy matches to some extend
-            # e.g. If words = {'foxhound'} then matches 'english foxhound'
-
-            matches = [key for word in words for key in self.keys() \
-                if word in key]
-
-            if not any(matches):
-                return None
-
-        if len(matches) > 1:
+            return None
+        elif len(matches) > 1:
             raise ValueError('Multiple potential matches found.\n' \
                              'See the available class with .keys()')
 
@@ -85,3 +69,22 @@ class ImageNetIndex(Mapping):
 
     def items(self):
         return self._index.items()
+
+    def _find_matches(self, phrase):
+        words = phrase.lower().split(' ')
+
+        # Find the intersection between search words and class names to
+        # prioritise whole word matches
+            # e.g. If words = {'dalmatian', 'dog'} then matches 'dalmatian'
+
+        matches = set(words).intersection(set(self.keys()))
+
+        if not any(matches):
+            # Find substring matches between search words and class names to
+            # accommodate for fuzzy matches to some extend
+                # e.g. If words = {'foxhound'} then matches 'english foxhound'
+
+            matches = [key for word in words for key in self.keys() \
+                if word in key]
+
+        return matches
