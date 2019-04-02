@@ -10,7 +10,7 @@ from os import path
 
 
 class ImageNetIndex(Mapping):
-    """Interface to retrieve ImageNet class indecies from class names.
+    """Interface to retrieve ImageNet class indeces from class names.
 
     This class implements a dictionary like object, aiming to provide an
     easy-to-use look-up table for finding a target class index from an ImageNet
@@ -54,8 +54,8 @@ class ImageNetIndex(Mapping):
         if not any(matches):
             return None
         elif len(matches) > 1:
-            raise ValueError('Multiple potential matches found.\n' \
-                             'See the available class with .keys()')
+            raise ValueError('Multiple potential matches found: {}' \
+                .format(', '.join(map(str, matches))))
 
         target_class = matches.pop()
 
