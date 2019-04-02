@@ -31,10 +31,6 @@ class Backprop:
         self.model = model
         self.model.eval()
 
-        self.nodes = list(self.model.children())
-
-        self.target_layer_type = torch.nn.modules.conv.Conv2d
-        self.target_layer_in_channels = 3
         self.gradients = None
 
         self._register_hooks()
