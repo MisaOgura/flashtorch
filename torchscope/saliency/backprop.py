@@ -9,10 +9,10 @@ import torch.nn as nn
 class Backprop:
     """Provides an interface to perform backpropagation.
 
-    This class provids a way to calculate a gradient of a target class output
+    This class provids a way to calculate a gradients of a target class output
     w.r.t. an input image, by performing a single backprobagation.
 
-    The gradient obtained can be used to visualise an image-specific class
+    The gradients obtained can be used to visualise an image-specific class
     saliency map, which can gives some intuition on regions within the input
     image that contribute the most (and least) to the corresponding output.
 
@@ -35,23 +35,23 @@ class Backprop:
 
         self.target_layer_type = torch.nn.modules.conv.Conv2d
         self.target_layer_in_channels = 3
-        self.gradient = None
+        self.gradients = None
 
         self._register_hooks()
         self._device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    def calculate_gradient(self, input_, target_class, take_max=False):
-        """Calculates gradient of the target_class output w.r.t. an input_.
+    def calculate_gradients(self, input_, target_class, take_max=False):
+        """Calculates gradients of the target_class output w.r.t. an input_.
 
-        The gradient is calculated for each colour channel. Then, the maximum
-        gradient across colour channels is returned.
+        The gradients is calculated for each colour channel. Then, the maximum
+        gradients across colour channels is returned.
 
         Args:
             input_ (torch.Tensor): With shape :math:`(N, C, H, W)`.
             target_class (int)
 
         Returns:
-            gradient (torch.Tensor): With shape :math:`(C, H, W)`.
+            gradients (torch.Tensor): With shape :math:`(C, H, W)`.
 
         """
 
@@ -61,7 +61,7 @@ class Backprop:
         input_ = input_.to(self._device)
         input_.requires_grad = True
 
-        self.gradient = torch.zeros(input_.shape)
+        self.gradients = torch.zeros(input_.shape)
 
         # Get a raw prediction value (logit) from the last linear layer
 
@@ -76,27 +76,27 @@ class Backprop:
 
         target[0][target_class] = 1
 
-        # Calculate gradient of the target class output w.r.t. input_
+        # Calculate gradients of the target class output w.r.t. input_
 
         output.backward(gradient=target)
 
-        # Detach the gradient from the graph and move to cpu
+        # Detach the gradients from the graph and move to cpu
 
-        gradient = self.gradient.detach().cpu()[0]
+        gradients = self.gradients.detach().cpu()[0]
 
         if take_max:
             # Take the maximum across colour channels
 
-            gradient = gradient.max(dim=0, keepdim=True)[0]
+            gradients = gradients.max(dim=0, keepdim=True)[0]
 
-        return gradient
+        return gradients
 
     def _register_hooks(self):
-        def _record_gradient(module, grad_in, grad_out):
-            if self.gradient.shape == grad_in[0].shape:
-                self.gradient = grad_in[0]
+        def _record_gradients(module, grad_in, grad_out):
+            if self.gradients.shape == grad_in[0].shape:
+                self.gradients = grad_in[0]
 
         for _, module in self.model.named_modules():
             if isinstance(module, nn.modules.conv.Conv2d) and \
                     module.in_channels == 3:
-                module.register_backward_hook(_record_gradient)
+                module.register_backward_hook(_record_gradients)

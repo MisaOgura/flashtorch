@@ -57,19 +57,19 @@ def test_register_backward_hook_to_the_right_layer(mocker):
         target_layer.register_backward_hook.assert_called_once()
 
 
-def test_zero_out_gradient(mocker, model):
+def test_zero_out_gradients(mocker, model):
     backprop = Backprop(model)
     mocker.spy(model, 'zero_grad')
 
     target_class = 1
     input_ = torch.zeros([1, 3, 224, 224])
 
-    backprop.calculate_gradient(input_, target_class)
+    backprop.calculate_gradients(input_, target_class)
 
     model.zero_grad.assert_called_once()
 
 
-def test_calculate_gradient_of_target_class_only(mocker, model):
+def test_calculate_gradients_of_target_class_only(mocker, model):
     backprop = Backprop(model)
 
     # Mock the output from the neural network
@@ -82,25 +82,25 @@ def test_calculate_gradient_of_target_class_only(mocker, model):
     target_class = 5
     input_ = torch.zeros([1, 3, 224, 224])
 
-    backprop.calculate_gradient(input_, target_class)
+    backprop.calculate_gradients(input_, target_class)
 
-    expected_gradient_target = torch.zeros((1, num_classes))
-    expected_gradient_target[0][target_class] = 1
+    expected_gradients_target = torch.zeros((1, num_classes))
+    expected_gradients_target[0][target_class] = 1
 
     args, kwargs = mock_output.backward.call_args
 
-    assert torch.all(kwargs['gradient'].eq(expected_gradient_target))
+    assert torch.all(kwargs['gradient'].eq(expected_gradients_target))
 
 
-def test_calculate_gradient_wrt_inputs(mocker, model):
+def test_calculate_gradients_wrt_inputs(mocker, model):
     backprop = Backprop(model)
 
     target_class = 1
     input_ = torch.zeros([1, 3, 224, 224])
 
-    gradient = backprop.calculate_gradient(input_, target_class)
+    gradients = backprop.calculate_gradients(input_, target_class)
 
-    assert gradient.shape == (3, 224, 224)
+    assert gradients.shape == (3, 224, 224)
 
 
 def test_return_max_across_color_channel_if_specified(mocker, model):
@@ -109,6 +109,6 @@ def test_return_max_across_color_channel_if_specified(mocker, model):
     target_class = 1
     input_ = torch.zeros([1, 3, 224, 224])
 
-    gradient = backprop.calculate_gradient(input_, target_class, take_max=True)
+    gradients = backprop.calculate_gradients(input_, target_class, take_max=True)
 
-    assert gradient.shape == (1, 224, 224)
+    assert gradients.shape == (1, 224, 224)
