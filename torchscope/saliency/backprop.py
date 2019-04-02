@@ -3,6 +3,7 @@
 """
 
 import torch
+import torch.nn as nn
 
 
 class Backprop:
@@ -36,7 +37,7 @@ class Backprop:
         self.target_layer_in_channels = 3
         self.gradient = None
 
-        self._register_hook()
+        self._register_hooks()
         self._device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     def calculate_gradient(self, input_, target_class, take_max=False):
@@ -90,25 +91,12 @@ class Backprop:
 
         return gradient
 
-    def _find_target_layer(self):
-        def search(nodes):
-            for node in nodes:
-                children = list(node.children())
-                is_parent = len(children) > 0
-
-                if is_parent:
-                    return search(children)
-                else:
-                    if type(node) == self.target_layer_type and \
-                            node.in_channels == self.target_layer_in_channels:
-                        return node
-
-        return search(self.nodes)
-
-    def _register_hook(self):
+    def _register_hooks(self):
         def _record_gradient(module, grad_in, grad_out):
             if self.gradient.shape == grad_in[0].shape:
                 self.gradient = grad_in[0]
 
-        first_conv_layer = self._find_target_layer()
-        first_conv_layer.register_backward_hook(_record_gradient)
+        for _, module in self.model.named_modules():
+            if isinstance(module, nn.modules.conv.Conv2d) and \
+                    module.in_channels == 3:
+                module.register_backward_hook(_record_gradient)

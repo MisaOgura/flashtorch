@@ -4,11 +4,21 @@ import pytest
 from sys import stdout
 
 import scipy
+
 import torch
+import torch.nn as nn
+
 import torchvision
 import torchvision.models as models
 
 from torchscope.saliency import Backprop
+
+
+def find_target_layer(model, layer_type, in_channels):
+    for _, module in model.named_modules():
+        if isinstance(module, layer_type) and \
+                module.in_channels == in_channels:
+            return module
 
 
 @pytest.fixture
@@ -24,7 +34,7 @@ def test_set_model_to_eval_mode(mocker, model):
     model.eval.assert_called_once()
 
 
-def test_find_first_conv_layer_in_torchvision_models(mocker):
+def test_register_backward_hook_to_the_right_layer(mocker):
     available_models = inspect.getmembers(models, inspect.isfunction)
 
     print()
@@ -36,19 +46,15 @@ def test_find_first_conv_layer_in_torchvision_models(mocker):
         mocker.spy(model, 'eval')
 
         backprop = Backprop(model)
-        target_layer = backprop._find_target_layer()
+        target_layer = find_target_layer(model,
+                                         nn.modules.conv.Conv2d,
+                                         3)
 
-        assert type(target_layer) == torch.nn.modules.conv.Conv2d
-        assert target_layer.in_channels == 3
+        mocker.spy(target_layer, 'register_backward_hook')
 
+        Backprop(model)
 
-def test_register_hook(mocker, model):
-    target_layer = model.features[0]
-    mocker.spy(target_layer, 'register_backward_hook')
-
-    Backprop(model)
-
-    target_layer.register_backward_hook.assert_called_once()
+        target_layer.register_backward_hook.assert_called_once()
 
 
 def test_zero_out_gradient(mocker, model):
