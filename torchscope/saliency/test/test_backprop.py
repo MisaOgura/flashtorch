@@ -94,4 +94,15 @@ def test_calculate_gradient_wrt_inputs(mocker, model):
 
     gradient = backprop.calculate_gradient(input_, target_class)
 
+    assert gradient.shape == (3, 224, 224)
+
+
+def test_return_max_across_color_channel_if_specified(mocker, model):
+    backprop = Backprop(model)
+
+    target_class = 1
+    input_ = torch.zeros([1, 3, 224, 224])
+
+    gradient = backprop.calculate_gradient(input_, target_class, take_max=True)
+
     assert gradient.shape == (1, 224, 224)

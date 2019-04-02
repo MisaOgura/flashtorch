@@ -39,7 +39,7 @@ class Backprop:
         self._register_hook()
         self._device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    def calculate_gradient(self, input_, target_class):
+    def calculate_gradient(self, input_, target_class, take_max=False):
         """Calculates gradient of the target_class output w.r.t. an input_.
 
         The gradient is calculated for each colour channel. Then, the maximum
@@ -83,9 +83,12 @@ class Backprop:
 
         gradient = self.gradient.detach().cpu()[0]
 
-        # Take the maximum across colour channels
+        if take_max:
+            # Take the maximum across colour channels
 
-        return gradient.max(dim=0, keepdim=True)[0]
+            gradient = gradient.max(dim=0, keepdim=True)[0]
+
+        return gradient
 
     def _find_target_layer(self):
         def search(nodes):
