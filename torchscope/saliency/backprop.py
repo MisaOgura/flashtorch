@@ -9,8 +9,8 @@ import torch.nn as nn
 class Backprop:
     """Provides an interface to perform backpropagation.
 
-    This class provids a way to calculate a gradients of a target class output
-    w.r.t. an input image, by performing a single backprobagation.
+    This class provids a way to calculate the gradients of a target class
+    output w.r.t. an input image, by performing a single backprobagation.
 
     The gradients obtained can be used to visualise an image-specific class
     saliency map, which can gives some intuition on regions within the input
@@ -23,18 +23,24 @@ class Backprop:
     Args:
         model: A neural network model from `torchvision.models
             <https://pytorch.org/docs/stable/torchvision/models.html>`_.
-        device (str, optional): 'cpu' or 'cuda'. Defaults to 'cpu'.
+        guided (boolian, optional, default=False): If `guided=True`, use guided
+            backprop. See `Striving for Simplicity: The All Convolutional Net
+            <https://arxiv.org/pdf/1412.6806.pdf>`_.
 
     """
 
-    def __init__(self, model):
+    def __init__(self, model, guided=False):
         self.model = model
         self.model.eval()
 
         self.gradients = None
 
-        self._register_hooks()
+        self._register_conv_hook()
         self._device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+        if guided:
+            self.relu_outputs = []
+            self._register_relu_hooks()
 
     def calculate_gradients(self, input_, target_class, take_max=False):
         """Calculates gradients of the target_class output w.r.t. an input_.
@@ -63,6 +69,12 @@ class Backprop:
 
         output = self.model(input_)
 
+        _, top_class = output.topk(1, dim=1)
+
+        if top_class != target_class:
+            raise ValueError('The network prediction was wrong. \
+                Please choose another input image.')
+
         # Create a 2D tensor with shape (1, num_classes) and
         # set all element to zero
 
@@ -87,7 +99,7 @@ class Backprop:
 
         return gradients
 
-    def _register_hooks(self):
+    def _register_conv_hook(self):
         def _record_gradients(module, grad_in, grad_out):
             if self.gradients.shape == grad_in[0].shape:
                 self.gradients = grad_in[0]
@@ -96,3 +108,18 @@ class Backprop:
             if isinstance(module, nn.modules.conv.Conv2d) and \
                     module.in_channels == 3:
                 module.register_backward_hook(_record_gradients)
+
+    def _register_relu_hooks(self):
+        def _record_output(module, input_, output):
+            self.relu_outputs.append(output)
+
+        def _clip_gradients(module, grad_in, grad_out):
+            relu_output = self.relu_outputs.pop()
+            clippled_grad_out = grad_out[0].clamp(0.0)
+
+            return (clippled_grad_out.mul(relu_output),)
+
+        for _, module in self.model.named_modules():
+            if isinstance(module, nn.ReLU):
+                module.register_forward_hook(_record_output)
+                module.register_backward_hook(_clip_gradients)
