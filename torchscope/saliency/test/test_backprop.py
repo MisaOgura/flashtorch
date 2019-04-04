@@ -31,13 +31,31 @@ def find_relu_layers(model, layer_type):
     return modules
 
 
+def make_mock_output(mocker, model, top_class):
+    # Mock the output from the neural network
+
+    num_classes = 10
+
+    mock_tensor = torch.zeros((1, num_classes))
+    mock_tensor[0][top_class] = 1
+    mock_output = mocker.Mock(spec=mock_tensor, shape=(1, num_classes))
+
+    mocker.patch.object(model, 'forward', return_value=mock_output)
+
+    # Mock the return value of output.topk()
+
+    mock_topk = (None, top_class)
+    mocker.patch.object(mock_output, 'topk', return_value=mock_topk)
+
+    return mock_output
+
+
 @pytest.fixture
 def model():
     return models.alexnet()
 
 
 def test_set_model_to_eval_mode(mocker, model):
-
     mocker.spy(model, 'eval')
     Backprop(model)
 
@@ -93,22 +111,7 @@ def test_zero_out_gradients(mocker, model):
     target_class = 5
     input_ = torch.zeros([1, 3, 224, 224])
 
-    # Mock the output from the neural network
-
-    num_classes = 10
-
-    mock_tensor = torch.zeros((1, num_classes))
-    mock_tensor[0][target_class] = 1
-    mock_output = mocker.Mock(spec=mock_tensor, shape=(1, num_classes))
-
-    mocker.patch.object(model, 'forward', return_value=mock_output)
-
-    # Mock the return value of output.topk()
-
-    mock_topk = (None, target_class)
-    mocker.patch.object(mock_output, 'topk', return_value=mock_topk)
-
-    input_ = torch.zeros([1, 3, 224, 224])
+    make_mock_output(mocker, model, target_class)
 
     backprop.calculate_gradients(input_, target_class)
 
@@ -123,20 +126,13 @@ def test_calculate_gradients_of_target_class_only(mocker, model):
 
     # Mock the output from the neural network
 
-    num_classes = 10
-
-    mock_tensor = torch.zeros((1, num_classes))
-    mock_tensor[0][target_class] = 1
-    mock_output = mocker.Mock(spec=mock_tensor, shape=(1, num_classes))
-
-    mocker.patch.object(model, 'forward', return_value=mock_output)
-
-    # Mock the return value of output.topk()
-
-    mock_topk = (None, target_class)
-    mocker.patch.object(mock_output, 'topk', return_value=mock_topk)
+    mock_output = make_mock_output(mocker, model, target_class)
 
     backprop.calculate_gradients(input_, target_class)
+
+    # Make expected target of the gradient calculation
+
+    num_classes = 10
 
     expected_gradients_target = torch.zeros((1, num_classes))
     expected_gradients_target[0][target_class] = 1
@@ -152,48 +148,24 @@ def test_calculate_gradients_wrt_inputs(mocker, model):
     target_class = 5
     input_ = torch.zeros([1, 3, 224, 224])
 
-    # Mock the output from the neural network
-
-    num_classes = 10
-
-    mock_tensor = torch.zeros((1, num_classes))
-    mock_tensor[0][target_class] = 1
-    mock_output = mocker.Mock(spec=mock_tensor, shape=(1, num_classes))
-
-    mocker.patch.object(model, 'forward', return_value=mock_output)
-
-    # Mock the return value of output.topk()
-
-    mock_topk = (None, target_class)
-    mocker.patch.object(mock_output, 'topk', return_value=mock_topk)
+    make_mock_output(mocker, model, target_class)
 
     gradients = backprop.calculate_gradients(input_, target_class)
 
     assert gradients.shape == (3, 224, 224)
 
 
-def test_return_max_across_color_channel_if_specified(mocker, model):
+def test_return_max_across_color_channels_if_specified(mocker, model):
     backprop = Backprop(model)
 
     target_class = 5
     input_ = torch.zeros([1, 3, 224, 224])
 
-    # Mock the output from the neural network
+    make_mock_output(mocker, model, target_class)
 
-    num_classes = 10
-
-    mock_tensor = torch.zeros((1, num_classes))
-    mock_tensor[0][target_class] = 1
-    mock_output = mocker.Mock(spec=mock_tensor, shape=(1, num_classes))
-
-    mocker.patch.object(model, 'forward', return_value=mock_output)
-
-    # Mock the return value of output.topk()
-
-    mock_topk = (None, target_class)
-    mocker.patch.object(mock_output, 'topk', return_value=mock_topk)
-
-    gradients = backprop.calculate_gradients(input_, target_class, take_max=True)
+    gradients = backprop.calculate_gradients(input_,
+                                             target_class,
+                                             take_max=True)
 
     assert gradients.shape == (1, 224, 224)
 
@@ -203,22 +175,13 @@ def test_raise_when_prediction_is_wrong(mocker, model):
         backprop = Backprop(model)
 
         target_class = 5
+
         input_ = torch.zeros([1, 3, 224, 224])
 
-        # Mock the _wrong_ output from the neural network
+        # Mock a wrong prediction
 
-        num_classes = 10
         predict_class = 1
-
-        mock_tensor = torch.zeros((1, num_classes))
-        mock_tensor[0][predict_class] = 1
-        mock_output = mocker.Mock(spec=mock_tensor, shape=(1, num_classes))
-        mocker.patch.object(model, 'forward', return_value=mock_output)
-
-        # Mock the return value of output.topk()
-
-        mock_topk = (None, predict_class)
-        mocker.patch.object(mock_output, 'topk', return_value=mock_topk)
+        make_mock_output(mocker, model, predict_class)
 
         backprop.calculate_gradients(input_, target_class)
 
