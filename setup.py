@@ -16,6 +16,12 @@ setup(
     long_description_content_type='text/markdown',
     url='https://github.com/MisaOgura/torchscope',
     packages=find_packages(),
+    install_requires=[
+        'numpy',
+        'Pillow',
+        'torch',
+        'torchvision',
+    ],
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',
