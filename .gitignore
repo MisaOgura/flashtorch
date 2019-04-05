@@ -7,3 +7,5 @@ dist
 __pycache__
 .cache
 *.egg-info
+htmlcov
+.coverage

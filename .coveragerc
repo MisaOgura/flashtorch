@@ -1,0 +1,12 @@
+[run]
+branch = true
+disable_warnings =
+    module-not-imported
+    no-data-collected
+
+[report]
+include = */torchscope/*
+omit = */test/*
+
+[html]
+title = TorchScope - Test Coverage Report
