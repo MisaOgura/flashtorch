@@ -114,8 +114,8 @@ def normalize(tensor, min_value=0.0, max_value=1.0):
 
     Args:
         tensor (torch.Tensor)
-        min_value (float, optional): Defaults to 0.0
-        max_value (float, optional): Defaults to 1.0
+        min_value (float, optional, default=0.0)
+        max_value (float, optional, default=1.0)
 
     Return:
         torch.Tensor (torch.float32): Demornalised tensor with values between
@@ -177,7 +177,3 @@ def format_for_plotting(tensor):
         return formatted.squeeze(0).detach()
     else:
         return formatted.permute(1, 2, 0).detach()
-
-
-def overlay(input_image, gradient):
-    pass

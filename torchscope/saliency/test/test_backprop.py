@@ -14,6 +14,11 @@ import torchvision.models as models
 from torchscope.saliency import Backprop
 
 
+#####################
+# Utility functions #
+#####################
+
+
 def find_first_conv_layer(model, layer_type, in_channels):
     for _, module in model.named_modules():
         if isinstance(module, layer_type) and \
@@ -50,9 +55,19 @@ def make_mock_output(mocker, model, top_class):
     return mock_output
 
 
+#################
+# Test fixtures #
+#################
+
+
 @pytest.fixture
 def model():
     return models.alexnet()
+
+
+##############
+# Test cases #
+##############
 
 
 def test_set_model_to_eval_mode(mocker, model):
@@ -186,3 +201,7 @@ def test_raise_when_prediction_is_wrong(mocker, model):
         backprop.calculate_gradients(input_, target_class)
 
         assert 'The network prediction was wrong' in str(error.value)
+
+
+if __name__ == '__main__':
+    pytest.main([__file__])

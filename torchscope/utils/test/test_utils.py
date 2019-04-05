@@ -9,14 +9,23 @@ from torchscope.utils import (load_image,
                               apply_transforms,
                               denormalize,
                               normalize,
-                              format_for_plotting,
-                              overlay)
+                              format_for_plotting)
+
+
+#################
+# Test fixtures #
+#################
 
 
 @pytest.fixture
 def image():
     image_path = path.join(path.dirname(__file__), 'test_image.jpg')
     return load_image(image_path)
+
+
+##############
+# Test cases #
+##############
 
 
 def test_convert_image_to_rgb(image):
@@ -112,10 +121,6 @@ def test_normalize_multi_channel_tensor():
 
     assert normalized.shape == input_.shape
     assert normalized.min() >= default_min and normalized.max() <= default_max
-
-
-# def test_overlay_gradient_with_input_image():
-#     pass
 
 
 if __name__ == '__main__':

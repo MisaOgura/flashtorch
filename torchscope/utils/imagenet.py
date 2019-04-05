@@ -49,15 +49,18 @@ class ImageNetIndex(Mapping):
         if type(phrase) != str:
             raise TypeError('Target class needs to be a string.')
 
-        matches = self._find_matches(phrase)
+        if phrase in self._index:
+            return self._index[phrase]
 
-        if not any(matches):
+        partial_matches = self._find_partial_matches(phrase)
+
+        if not any(partial_matches):
             return None
-        elif len(matches) > 1:
+        elif len(partial_matches) > 1:
             raise ValueError('Multiple potential matches found: {}' \
-                .format(', '.join(map(str, matches))))
+                .format(', '.join(map(str, partial_matches))))
 
-        target_class = matches.pop()
+        target_class = partial_matches.pop()
 
         return self._index[target_class]
 
@@ -70,7 +73,7 @@ class ImageNetIndex(Mapping):
     def items(self):
         return self._index.items()
 
-    def _find_matches(self, phrase):
+    def _find_partial_matches(self, phrase):
         words = phrase.lower().split(' ')
 
         # Find the intersection between search words and class names to

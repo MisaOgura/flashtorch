@@ -4,6 +4,11 @@ from collections.abc import Iterable
 from torchscope.utils import ImageNetIndex
 
 
+#################
+# Test fixtures #
+#################
+
+
 @pytest.fixture
 def imagenet():
     return ImageNetIndex()
@@ -18,6 +23,14 @@ def test_return_length(imagenet):
     assert len(imagenet) == 1000
 
 
+def test_list_keys(imagenet):
+    assert len(imagenet.keys()) == 1000
+
+
+def test_list_items(imagenet):
+    assert len(imagenet.items()) == 1000
+
+
 def test_return_true_when_target_class_exists(imagenet):
     assert ('dalmatian' in imagenet) == True
 
@@ -27,16 +40,21 @@ def test_return_false_when_target_class_does_not_exist(imagenet):
 
 
 def test_find_class_index(imagenet):
-    class_index = imagenet['dalmatian']
+    class_index = imagenet['jay']
 
-    assert class_index == 251
+    assert class_index == 17
+
+
+def test_find_whole_match_first(imagenet):
+    class_index = imagenet['king penguin']
+
+    assert class_index == 145
 
 
 def test_handle_multi_word_target_class(imagenet):
     class_index = imagenet['dalmatian dog']
 
     assert class_index == 251
-
 
 def test_handle_partial_match(imagenet):
     class_index = imagenet['foxhound']
@@ -64,5 +82,5 @@ def test_raise_on_multiple_matches(imagenet):
     assert 'Multiple potential matches found' in str(error.value)
 
 
-def test_list_all_classes(imagenet):
-    assert len(imagenet.keys()) == 1000
+if __name__ == '__main__':
+    pytest.main([__file__])
