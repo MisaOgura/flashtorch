@@ -2,6 +2,10 @@
 
 Visualisation toolkit for inspecting neural networks with PyTorch.
 
+The project is work in progress, and I would appreciate your feedback.
+
+It currently supports visualisation of saliancy maps for all the models available under [torchvision.models](https://pytorch.org/docs/stable/torchvision/models.html).
+
 ## Installation
 
 ```bash
