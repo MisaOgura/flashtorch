@@ -7,7 +7,10 @@ transformation.
 """
 from PIL import Image
 
+import matplotlib.pyplot as plt
+
 import torchvision.transforms as transforms
+
 from .imagenet import *
 
 def load_image(image_path):
@@ -51,7 +54,7 @@ def apply_transforms(image, size=224):
 
     Note:
         Symbols used to describe dimensions:
-            - N: number of images in the batch
+            - N: number of images in a batch
             - C: number of channels
             - H: height of the image
             - W: width of the image
@@ -93,7 +96,7 @@ def denormalize(tensor):
 
     Note:
         Symbols used to describe dimensions:
-            - N: number of images in the batch
+            - N: number of images in a batch
             - C: number of channels
             - H: height of the image
             - W: width of the image
@@ -162,7 +165,7 @@ def format_for_plotting(tensor):
 
     Note:
         Symbols used to describe dimensions:
-            - N: number of images in the batch
+            - N: number of images in a batch
             - C: number of channels
             - H: height of the image
             - W: width of the image
@@ -179,3 +182,32 @@ def format_for_plotting(tensor):
         return formatted.squeeze(0).detach()
     else:
         return formatted.permute(1, 2, 0).detach()
+
+
+def visualize(input_, gradients, max_gradients, cmap='seismic', alpha=0.5):
+
+    input_ = format_for_plotting(denormalize(input_))
+    gradients = format_for_plotting(normalize(gradients))
+    max_gradients = format_for_plotting(normalize(max_gradients))
+
+    subplots = [
+        # (title, [(image1, cmap, alpha), (image2, cmap, alpha)])
+        ('Input image', [(input_, None, None)]),
+        ('Gradients across RGB channels', [(gradients, None, None)]),
+        ('Max gradients', [(max_gradients, cmap, None)]),
+        ('Overlay', [(input_, 'gray', None), (max_gradients, cmap, alpha)])
+    ]
+
+    num_subplots = len(subplots)
+
+    fig = plt.figure(figsize=(16, 4))
+
+
+    for i, (title, images) in enumerate(subplots):
+        ax = fig.add_subplot(1, num_subplots, i + 1)
+        ax.set_axis_off()
+
+        for image, cmap, alpha in images:
+            ax.imshow(image, cmap=cmap, alpha=alpha)
+
+        ax.set_title(title)
