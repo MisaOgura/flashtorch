@@ -24,7 +24,7 @@ def load_image(image_path):
     return Image.open(image_path).convert('RGB')
 
 
-def apply_transforms(image):
+def apply_transforms(image, size=224):
     """Transforms a PIL image to torch.Tensor.
 
     Applies a series of tranformations on PIL image including a conversion
@@ -39,6 +39,8 @@ def apply_transforms(image):
 
     Args:
         image (PIL.Image.Image): RGB PIL Image
+        size(int, optional, default=224): Desired size (width/height) of the
+            output tensor
 
     Shape:
         Input: N/A
@@ -59,11 +61,9 @@ def apply_transforms(image):
     means = [0.485, 0.456, 0.406]
     stds = [0.229, 0.224, 0.225]
 
-    # TODO - input size needs to be 299 for inception_v3
-
     transform = transforms.Compose([
-        transforms.Resize(256),
-        transforms.CenterCrop(224),
+        transforms.Resize(size),
+        transforms.CenterCrop(size),
         transforms.ToTensor(),
         transforms.Normalize(means, stds)
     ])

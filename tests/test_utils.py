@@ -42,10 +42,16 @@ def test_transform_image_to_tensor(image):
     assert isinstance(transformed, torch.Tensor)
 
 
-def test_crop_to_224(image):
+def test_crop_to_224_by_default(image):
     transformed = apply_transforms(image)
 
     assert transformed.shape == (1, 3, 224, 224)
+
+
+def test_crop_to_custom_size(image):
+    transformed = apply_transforms(image, 299)
+
+    assert transformed.shape == (1, 3, 299, 299)
 
 
 def test_denormalize_tensor(image):
