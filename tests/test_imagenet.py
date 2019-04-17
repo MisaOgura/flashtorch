@@ -1,7 +1,7 @@
 import pytest
 from collections.abc import Iterable
 
-from torchscope.utils import ImageNetIndex
+from flashtorch.utils import ImageNetIndex
 
 
 #################

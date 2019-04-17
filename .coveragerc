@@ -5,8 +5,8 @@ disable_warnings =
     no-data-collected
 
 [report]
-include = */torchscope/*
+include = */flashtorch/*
 omit = */test/*
 
 [html]
-title = TorchScope - Test Coverage Report
+title = FlashTorch - Test Coverage Report

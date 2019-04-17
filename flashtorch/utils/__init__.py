@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""torchscope.utils
+"""flashtorch.utils
 
 This module provides utility functions for image handling and tensor
 transformation.

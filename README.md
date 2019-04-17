@@ -1,15 +1,15 @@
-# TorchScope :microscope:
+# FlashTorch :flashlight:
 
-Visualisation toolkit for inspecting neural networks with PyTorch.
+Visualisation toolkit implemented in PyTorch for inspecting what neural networks learn in image recognition tasks (feature visualisation).
 
-The project is work in progress, and I would appreciate your feedback.
+The project is very much work in progress, and I would appreciate your feedback!
 
 It currently supports visualisation of saliancy maps for all the models available under [torchvision.models](https://pytorch.org/docs/stable/torchvision/models.html).
 
 ## Installation
 
 ```bash
-$ (sudo) pip install torchscope
+$ (sudo) pip install flashtorch
 ```
 
 ## Usage (example notebooks)

@@ -7,14 +7,14 @@ with open('README.md', 'r') as fh:
 version = '0.0.1'
 
 setup(
-    name='torchscope',
+    name='flashtorch',
     version=version,
     author='Misa Ogura',
     author_email='misa.ogura01@gmail.com',
     description='Visualisation toolkit for neural networks in PyTorch',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/MisaOgura/torchscope',
+    url='https://github.com/MisaOgura/flashtorch',
     packages=find_packages(exclude=['tests*']),
     install_requires=[
         'matplotlib',

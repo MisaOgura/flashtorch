@@ -11,7 +11,7 @@ import torch.nn as nn
 import torchvision
 import torchvision.models as models
 
-from torchscope.saliency import Backprop
+from flashtorch.saliency import Backprop
 
 
 #####################

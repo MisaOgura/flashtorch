@@ -5,7 +5,7 @@ from PIL import Image
 
 import torch
 
-from torchscope.utils import (load_image,
+from flashtorch.utils import (load_image,
                               apply_transforms,
                               denormalize,
                               normalize,
