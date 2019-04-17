@@ -57,6 +57,10 @@ class Backprop:
 
         """
 
+        if 'inception' in self.model.__class__.__name__.lower():
+            if input_.size()[1:] != (3, 299, 299):
+                raise ValueError('Image must be 299x299 for Inception models.')
+
         self.model = self.model.to(self._device)
         self.model.zero_grad()
 

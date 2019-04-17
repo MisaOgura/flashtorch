@@ -136,6 +136,19 @@ def test_return_max_across_color_channels_if_specified(mocker, model):
     assert gradients.shape == (1, 224, 224)
 
 
+def test_checks_input_size_for_inception_model(mocker):
+    with pytest.raises(ValueError) as error:
+        model = models.inception_v3()
+        backprop = Backprop(model)
+
+        target_class = 5
+        input_ = torch.zeros([1, 3, 224, 224])
+
+        backprop.calculate_gradients(input_, target_class)
+
+    assert 'Image must be 299x299 for Inception models.' in str(error.value)
+
+
 def test_raise_when_prediction_is_wrong(mocker, model):
     with pytest.raises(ValueError) as error:
         backprop = Backprop(model)
@@ -152,7 +165,7 @@ def test_raise_when_prediction_is_wrong(mocker, model):
 
         backprop.calculate_gradients(input_, target_class)
 
-        assert 'The network prediction was wrong' in str(error.value)
+    assert 'The network prediction was wrong' in str(error.value)
 
 
 # Test compatibilities with torchvision models
@@ -207,11 +220,14 @@ def test_calculate_gradients_for_all_models(mocker, available_models):
         target_class = 5
         input_ = torch.zeros([1, 3, 224, 224])
 
+        if 'inception' in name:
+            input_ = torch.zeros([1, 3, 299, 299])
+
         make_mock_output(mocker, model, num_classes, target_class)
 
         gradients = backprop.calculate_gradients(input_, target_class)
 
-        assert gradients.shape == (3, 224, 224)
+        assert gradients.shape == input_.size()[1:]
 
 
 if __name__ == '__main__':
