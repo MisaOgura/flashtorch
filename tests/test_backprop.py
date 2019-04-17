@@ -36,10 +36,8 @@ def find_relu_layers(model, layer_type):
     return modules
 
 
-def make_mock_output(mocker, model, top_class):
+def make_mock_output(mocker, model, num_classes, top_class):
     # Mock the output from the neural network
-
-    num_classes = 10
 
     mock_tensor = torch.zeros((1, num_classes))
     mock_tensor[0][top_class] = 1
@@ -65,6 +63,11 @@ def model():
     return models.alexnet()
 
 
+@pytest.fixture
+def available_models():
+    return inspect.getmembers(models, inspect.isfunction)
+
+
 ##############
 # Test cases #
 ##############
@@ -77,56 +80,15 @@ def test_set_model_to_eval_mode(mocker, model):
     model.eval.assert_called_once()
 
 
-def test_register_backward_hook_to_the_conv_layer(mocker):
-    available_models = inspect.getmembers(models, inspect.isfunction)
-
-    print()
-    for name, model in available_models:
-        print(f'Finding the first conv layer in model: {name}', end='\r')
-        stdout.write('\x1b[2K')
-
-        model = model()
-        mocker.spy(model, 'eval')
-
-        conv_layer = find_first_conv_layer(model, nn.modules.conv.Conv2d, 3)
-        mocker.spy(conv_layer, 'register_backward_hook')
-
-        Backprop(model)
-
-        conv_layer.register_backward_hook.assert_called_once()
-
-
-def test_register_hooks_to_the_relu_layers(mocker):
-    available_models = inspect.getmembers(models, inspect.isfunction)
-
-    print()
-    for name, model in available_models:
-        print(f'Finding the first conv layer in model: {name}', end='\r')
-        stdout.write('\x1b[2K')
-
-        model = model()
-        mocker.spy(model, 'eval')
-
-        relu_layers = find_relu_layers(model,nn.ReLU)
-
-        for layer in relu_layers:
-            mocker.spy(layer, 'register_forward_hook')
-            mocker.spy(layer, 'register_backward_hook')
-
-            Backprop(model, guided=True)
-
-            layer.register_forward_hook.assert_called_once()
-            layer.register_backward_hook.assert_called_once()
-
-
 def test_zero_out_gradients(mocker, model):
     backprop = Backprop(model)
     mocker.spy(model, 'zero_grad')
 
+    num_classes = 10
     target_class = 5
     input_ = torch.zeros([1, 3, 224, 224])
 
-    make_mock_output(mocker, model, target_class)
+    make_mock_output(mocker, model, num_classes, target_class)
 
     backprop.calculate_gradients(input_, target_class)
 
@@ -136,12 +98,13 @@ def test_zero_out_gradients(mocker, model):
 def test_calculate_gradients_of_target_class_only(mocker, model):
     backprop = Backprop(model)
 
+    num_classes = 10
     target_class = 5
     input_ = torch.zeros([1, 3, 224, 224])
 
     # Mock the output from the neural network
 
-    mock_output = make_mock_output(mocker, model, target_class)
+    mock_output = make_mock_output(mocker, model, num_classes, target_class)
 
     backprop.calculate_gradients(input_, target_class)
 
@@ -157,26 +120,14 @@ def test_calculate_gradients_of_target_class_only(mocker, model):
     assert torch.all(kwargs['gradient'].eq(expected_gradients_target))
 
 
-def test_calculate_gradients_wrt_inputs(mocker, model):
-    backprop = Backprop(model)
-
-    target_class = 5
-    input_ = torch.zeros([1, 3, 224, 224])
-
-    make_mock_output(mocker, model, target_class)
-
-    gradients = backprop.calculate_gradients(input_, target_class)
-
-    assert gradients.shape == (3, 224, 224)
-
-
 def test_return_max_across_color_channels_if_specified(mocker, model):
     backprop = Backprop(model)
 
+    num_classes = 10
     target_class = 5
     input_ = torch.zeros([1, 3, 224, 224])
 
-    make_mock_output(mocker, model, target_class)
+    make_mock_output(mocker, model, num_classes, target_class)
 
     gradients = backprop.calculate_gradients(input_,
                                              target_class,
@@ -189,6 +140,7 @@ def test_raise_when_prediction_is_wrong(mocker, model):
     with pytest.raises(ValueError) as error:
         backprop = Backprop(model)
 
+        num_classes = 10
         target_class = 5
 
         input_ = torch.zeros([1, 3, 224, 224])
@@ -196,11 +148,70 @@ def test_raise_when_prediction_is_wrong(mocker, model):
         # Mock a wrong prediction
 
         predict_class = 1
-        make_mock_output(mocker, model, predict_class)
+        make_mock_output(mocker, model, num_classes, predict_class)
 
         backprop.calculate_gradients(input_, target_class)
 
         assert 'The network prediction was wrong' in str(error.value)
+
+
+# Test compatibilities with torchvision models
+
+
+def test_register_backward_hook_to_first_conv_layer(mocker, available_models):
+    print()
+    for name, model in available_models:
+        print(f'Testing model: {name}', end='\r')
+        stdout.write('\x1b[2K')
+
+        model = model()
+
+        conv_layer = find_first_conv_layer(model, nn.modules.conv.Conv2d, 3)
+        mocker.spy(conv_layer, 'register_backward_hook')
+
+        Backprop(model)
+
+        conv_layer.register_backward_hook.assert_called_once()
+
+
+def test_register_hooks_to_relu_layers(mocker, available_models):
+    print()
+    for name, model in available_models:
+        print(f'Testing model: {name}', end='\r')
+        stdout.write('\x1b[2K')
+
+        model = model()
+
+        relu_layers = find_relu_layers(model,nn.ReLU)
+
+        for layer in relu_layers:
+            mocker.spy(layer, 'register_forward_hook')
+            mocker.spy(layer, 'register_backward_hook')
+
+            Backprop(model, guided=True)
+
+            layer.register_forward_hook.assert_called_once()
+            layer.register_backward_hook.assert_called_once()
+
+
+def test_calculate_gradients_for_all_models(mocker, available_models):
+    print()
+    for name, model in available_models:
+        print(f'Testing model: {name}', end='\r')
+        stdout.write('\x1b[2K')
+
+        model = model()
+        backprop = Backprop(model)
+
+        num_classes = 10
+        target_class = 5
+        input_ = torch.zeros([1, 3, 224, 224])
+
+        make_mock_output(mocker, model, num_classes, target_class)
+
+        gradients = backprop.calculate_gradients(input_, target_class)
+
+        assert gradients.shape == (3, 224, 224)
 
 
 if __name__ == '__main__':

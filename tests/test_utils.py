@@ -19,7 +19,10 @@ from torchscope.utils import (load_image,
 
 @pytest.fixture
 def image():
-    image_path = path.join(path.dirname(__file__), 'test_image.jpg')
+    image_path = path.join(path.dirname(__file__),
+                           'resources',
+                           'test_image.jpg')
+
     return load_image(image_path)
 
 
