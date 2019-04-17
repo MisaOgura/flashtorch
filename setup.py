@@ -17,6 +17,7 @@ setup(
     url='https://github.com/MisaOgura/torchscope',
     packages=find_packages(exclude=['tests*']),
     install_requires=[
+        'matplotlib',
         'numpy',
         'Pillow',
         'torch',
