@@ -24,7 +24,7 @@ $ (sudo) pip install flashtorch
 
 - Guided backprobagation: [Striving for Simplicity: The All Convolutional Net](https://arxiv.org/pdf/1412.6806.pdf)
 
-## Inspirations
+## Inspiration
 
 - [pytorch-cnn-visualizations](https://github.com/utkuozbulak/pytorch-cnn-visualizations) by utkuozbulak
 
