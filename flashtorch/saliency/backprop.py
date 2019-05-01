@@ -75,10 +75,6 @@ class Backprop:
 
         _, top_class = output.topk(1, dim=1)
 
-        if top_class != target_class:
-            raise ValueError('The network prediction was wrong. \
-                Please choose another input image.')
-
         # Create a 2D tensor with shape (1, num_classes) and
         # set all element to zero
 
@@ -86,7 +82,10 @@ class Backprop:
 
         # Set the element at target class index to be 1
 
-        target[0][target_class] = 1
+        if top_class == target_class:
+            target[0][target_class] = 1
+        else:
+            target[0][top_class] = 1
 
         # Calculate gradients of the target class output w.r.t. input_
 

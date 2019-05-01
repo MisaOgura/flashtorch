@@ -149,8 +149,8 @@ def test_checks_input_size_for_inception_model(mocker):
     assert 'Image must be 299x299 for Inception models.' in str(error.value)
 
 
-def test_raise_when_prediction_is_wrong(mocker, model):
-    with pytest.raises(ValueError) as error:
+def test_does_not_raise_when_prediction_is_wrong(mocker, model):
+    try:
         backprop = Backprop(model)
 
         num_classes = 10
@@ -165,7 +165,8 @@ def test_raise_when_prediction_is_wrong(mocker, model):
 
         backprop.calculate_gradients(input_, target_class)
 
-    assert 'The network prediction was wrong' in str(error.value)
+    except ValueError:
+        pytest.fail('Should not raise on wrong prediction')
 
 
 # Test compatibilities with torchvision models
