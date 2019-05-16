@@ -45,6 +45,15 @@ def test_handle_non_pil_as_input():
     assert isinstance(transformed, torch.Tensor)
 
 
+def test_handle_non_pil_input_with_channel_last():
+    non_pil_input = np.uint8(np.random.uniform(150, 180, (224, 224, 3)))
+
+    transformed = apply_transforms(non_pil_input)
+
+    assert isinstance(transformed, torch.Tensor)
+    assert transformed.shape == (1, 3, 224, 224)
+
+
 def test_transform_image_to_tensor(image):
     transformed = apply_transforms(image)
 
