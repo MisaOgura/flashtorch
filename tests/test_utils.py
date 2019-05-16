@@ -3,6 +3,7 @@ import pytest
 from os import path
 from PIL import Image
 
+import numpy as np
 import torch
 
 from flashtorch.utils import (load_image,
@@ -31,9 +32,17 @@ def image():
 ##############
 
 
-def test_convert_image_to_rgb(image):
+def test_convert_image_to_rgb_when_loading_image(image):
     assert isinstance(image, Image.Image)
     assert image.mode == 'RGB'
+
+
+def test_handle_non_pil_as_input():
+    non_pil_input = np.uint8(np.random.uniform(150, 180, (3, 224, 224)))
+
+    transformed = apply_transforms(non_pil_input)
+
+    assert isinstance(transformed, torch.Tensor)
 
 
 def test_transform_image_to_tensor(image):

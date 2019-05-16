@@ -10,6 +10,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 
 import torchvision.transforms as transforms
+import torchvision.transforms.functional as F
 
 from .imagenet import *
 
@@ -41,12 +42,12 @@ def apply_transforms(image, size=224):
     The plan is to to expand this to handle custom size/mean/std.
 
     Args:
-        image (PIL.Image.Image): RGB PIL Image
-        size(int, optional, default=224): Desired size (width/height) of the
+        image (PIL.Image.Image or numpy array)
+        size (int, optional, default=224): Desired size (width/height) of the
             output tensor
 
     Shape:
-        Input: N/A
+        Input: :math:`(C, H, W)` for numpy array
         Output: :math:`(N, C, H, W)`
 
     Returns:
@@ -60,6 +61,9 @@ def apply_transforms(image, size=224):
             - W: width of the image
 
     """
+
+    if not isinstance(image, Image.Image):
+        image = F.to_pil_image(image)
 
     means = [0.485, 0.456, 0.406]
     stds = [0.229, 0.224, 0.225]
