@@ -75,7 +75,11 @@ def apply_transforms(image, size=224):
         transforms.Normalize(means, stds)
     ])
 
-    return transform(image).unsqueeze(0)
+    tensor = transform(image).unsqueeze(0)
+
+    tensor.requires_grad = True
+
+    return tensor
 
 
 def denormalize(tensor):

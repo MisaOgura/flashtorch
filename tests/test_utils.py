@@ -43,6 +43,7 @@ def test_handle_non_pil_as_input():
     transformed = apply_transforms(non_pil_input)
 
     assert isinstance(transformed, torch.Tensor)
+    assert transformed.requires_grad
 
 
 def test_handle_non_pil_input_with_channel_last():
