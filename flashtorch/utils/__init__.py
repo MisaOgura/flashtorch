@@ -132,6 +132,8 @@ def normalize(tensor, min_value=0.0, max_value=1.0):
 
     """
 
+    tensor = tensor.detach().cpu()
+
     target_range = max_value - min_value
 
     tensor_min = tensor.min()

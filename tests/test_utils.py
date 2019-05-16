@@ -129,6 +129,17 @@ def test_normalize():
     assert normalized.min() >= default_min and normalized.max() <= default_max
 
 
+def test_normalize_detach_input_from_graph():
+    default_min = 0.0
+    default_max = 1.0
+
+    input_ = torch.arange(start=-5.0, end=5.0)
+    input_.requires_grad = True
+    normalized = normalize(input_)
+
+    assert normalized.requires_grad == False
+
+
 def test_normalize_with_custom_min_max():
     custom_min = 2.0
     custom_max = 3.0
