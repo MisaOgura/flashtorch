@@ -138,12 +138,8 @@ def normalize(tensor, min_value=0.0, max_value=1.0):
 
     tensor = tensor.detach().cpu()
 
-    target_range = max_value - min_value
-
     tensor_min = tensor.min()
     tensor_max = tensor.max()
-    tensor_range = tensor_max - tensor_min
-
     eps = 1e-7
 
     # Normalise to [0, 1] (using epsilon to avoid diving by zero)
@@ -195,7 +191,6 @@ def format_for_plotting(tensor):
 
 
 def visualize(input_, gradients, max_gradients, cmap='seismic', alpha=0.5):
-
     input_ = format_for_plotting(denormalize(input_))
     gradients = format_for_plotting(normalize(gradients))
     max_gradients = format_for_plotting(normalize(max_gradients))
