@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """
 """
+import warnings
 
 import torch
 import torch.nn as nn
@@ -80,12 +81,14 @@ class Backprop:
 
         target = torch.FloatTensor(1, output.shape[-1]).zero_()
 
-        # Set the element at target class index to be 1
+        if (target_class is not None) and (top_class != target_class):
+            warnings.warn(UserWarning('The predicted class does not equal  \
+                the target class. Calculating the gradient with respect to \
+                the predicted class.'))
 
-        if (target_class is not None) and (top_class == target_class):
-            target[0][target_class] = 1
-        else:
-            target[0][top_class] = 1
+        # Set the element at top class index to be 1
+
+        target[0][top_class] = 1
 
         # Calculate gradients of the target class output w.r.t. input_
 

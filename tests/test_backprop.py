@@ -1,4 +1,5 @@
 import inspect
+import warnings
 import pytest
 
 from sys import stdout
@@ -151,7 +152,8 @@ def test_calculate_gradients_of_top_class_if_prediction_is_wrong(mocker, model):
 
     mock_output = make_mock_output(mocker, model, top_class)
 
-    backprop.calculate_gradients(input_, target_class)
+    with pytest.warns(UserWarning):
+        backprop.calculate_gradients(input_, target_class)
 
     args, kwargs = mock_output.backward.call_args
 
@@ -186,21 +188,18 @@ def test_checks_input_size_for_inception_model(mocker):
     assert 'Image must be 299x299 for Inception models.' in str(error.value)
 
 
-def test_does_not_raise_when_prediction_is_wrong(mocker, model):
-    try:
-        backprop = Backprop(model)
+def test_warn_when_prediction_is_wrong(mocker, model):
+    backprop = Backprop(model)
 
-        top_class = 1
-        target_class = 5
+    top_class = 1
+    target_class = 5
 
-        input_ = torch.zeros([1, 3, 224, 224])
+    input_ = torch.zeros([1, 3, 224, 224])
 
-        make_mock_output(mocker, model, top_class)
+    make_mock_output(mocker, model, top_class)
 
+    with pytest.warns(UserWarning):
         backprop.calculate_gradients(input_, target_class)
-
-    except ValueError:
-        pytest.fail('Should not raise on wrong prediction')
 
 
 # Test compatibilities with torchvision models
