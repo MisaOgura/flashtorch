@@ -120,6 +120,57 @@ def test_calculate_gradients_of_target_class_only(mocker, model):
     assert torch.all(kwargs['gradient'].eq(expected_gradients_target))
 
 
+def test_calculate_gradients_of_top_class_if_target_not_provided(mocker, model):
+    backprop = Backprop(model)
+
+    num_classes = 10
+    top_class = 5
+    input_ = torch.zeros([1, 3, 224, 224])
+
+    # Mock the output from the neural network
+
+    mock_output = make_mock_output(mocker, model, num_classes, top_class)
+
+    backprop.calculate_gradients(input_)
+
+    # Make expected target of the gradient calculation
+
+    num_classes = 10
+
+    expected_gradients_target = torch.zeros((1, num_classes))
+    expected_gradients_target[0][top_class] = 1
+
+    args, kwargs = mock_output.backward.call_args
+
+    assert torch.all(kwargs['gradient'].eq(expected_gradients_target))
+
+
+def test_calculate_gradients_of_top_class_if_prediction_is_wrong(mocker, model):
+    backprop = Backprop(model)
+
+    num_classes = 10
+    top_class = 5
+    target_class = 7
+    input_ = torch.zeros([1, 3, 224, 224])
+
+    # Mock the output from the neural network
+
+    mock_output = make_mock_output(mocker, model, num_classes, top_class)
+
+    backprop.calculate_gradients(input_, target_class)
+
+    # Make expected target of the gradient calculation
+
+    num_classes = 10
+
+    expected_gradients_target = torch.zeros((1, num_classes))
+    expected_gradients_target[0][top_class] = 1
+
+    args, kwargs = mock_output.backward.call_args
+
+    assert torch.all(kwargs['gradient'].eq(expected_gradients_target))
+
+
 def test_return_max_across_color_channels_if_specified(mocker, model):
     backprop = Backprop(model)
 

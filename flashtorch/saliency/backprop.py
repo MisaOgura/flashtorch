@@ -42,7 +42,7 @@ class Backprop:
             self.relu_outputs = []
             self._register_relu_hooks()
 
-    def calculate_gradients(self, input_, target_class, take_max=False):
+    def calculate_gradients(self, input_, target_class=None, take_max=False):
         """Calculates gradients of the target_class output w.r.t. an input_.
 
         The gradients is calculated for each colour channel. Then, the maximum
@@ -50,7 +50,7 @@ class Backprop:
 
         Args:
             input_ (torch.Tensor): With shape :math:`(N, C, H, W)`.
-            target_class (int)
+            target_class (int, optional, default=None)
 
         Returns:
             gradients (torch.Tensor): With shape :math:`(C, H, W)`.
@@ -82,7 +82,7 @@ class Backprop:
 
         # Set the element at target class index to be 1
 
-        if top_class == target_class:
+        if (target_class is not None) and (top_class == target_class):
             target[0][target_class] = 1
         else:
             target[0][top_class] = 1
