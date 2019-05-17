@@ -36,8 +36,9 @@ def find_relu_layers(model, layer_type):
     return modules
 
 
-def make_mock_output(mocker, model, num_classes, top_class):
-    # Mock the output from the neural network
+# Mock the output from the neural network
+def make_mock_output(mocker, model, top_class):
+    num_classes = 10
 
     mock_tensor = torch.zeros((1, num_classes))
     mock_tensor[0][top_class] = 1
@@ -51,6 +52,16 @@ def make_mock_output(mocker, model, num_classes, top_class):
     mocker.patch.object(mock_output, 'topk', return_value=mock_topk)
 
     return mock_output
+
+
+# Make expected target of the gradient calculation
+def make_expected_gradient_target(top_class):
+    num_classes = 10
+
+    target = torch.zeros((1, num_classes))
+    target[0][top_class] = 1
+
+    return target
 
 
 #################
@@ -84,11 +95,10 @@ def test_zero_out_gradients(mocker, model):
     backprop = Backprop(model)
     mocker.spy(model, 'zero_grad')
 
-    num_classes = 10
     target_class = 5
     input_ = torch.zeros([1, 3, 224, 224])
 
-    make_mock_output(mocker, model, num_classes, target_class)
+    make_mock_output(mocker, model, target_class)
 
     backprop.calculate_gradients(input_, target_class)
 
@@ -98,87 +108,63 @@ def test_zero_out_gradients(mocker, model):
 def test_calculate_gradients_of_target_class_only(mocker, model):
     backprop = Backprop(model)
 
-    num_classes = 10
+    top_class = 5
     target_class = 5
     input_ = torch.zeros([1, 3, 224, 224])
 
-    # Mock the output from the neural network
+    target = make_expected_gradient_target(top_class)
 
-    mock_output = make_mock_output(mocker, model, num_classes, target_class)
+    mock_output = make_mock_output(mocker, model, target_class)
 
     backprop.calculate_gradients(input_, target_class)
 
-    # Make expected target of the gradient calculation
-
-    num_classes = 10
-
-    expected_gradients_target = torch.zeros((1, num_classes))
-    expected_gradients_target[0][target_class] = 1
-
     args, kwargs = mock_output.backward.call_args
 
-    assert torch.all(kwargs['gradient'].eq(expected_gradients_target))
+    assert torch.all(kwargs['gradient'].eq(target))
 
 
 def test_calculate_gradients_of_top_class_if_target_not_provided(mocker, model):
     backprop = Backprop(model)
 
-    num_classes = 10
     top_class = 5
     input_ = torch.zeros([1, 3, 224, 224])
 
-    # Mock the output from the neural network
+    target = make_expected_gradient_target(top_class)
 
-    mock_output = make_mock_output(mocker, model, num_classes, top_class)
+    mock_output = make_mock_output(mocker, model, top_class)
 
     backprop.calculate_gradients(input_)
 
-    # Make expected target of the gradient calculation
-
-    num_classes = 10
-
-    expected_gradients_target = torch.zeros((1, num_classes))
-    expected_gradients_target[0][top_class] = 1
-
     args, kwargs = mock_output.backward.call_args
 
-    assert torch.all(kwargs['gradient'].eq(expected_gradients_target))
+    assert torch.all(kwargs['gradient'].eq(target))
 
 
 def test_calculate_gradients_of_top_class_if_prediction_is_wrong(mocker, model):
     backprop = Backprop(model)
 
-    num_classes = 10
     top_class = 5
     target_class = 7
     input_ = torch.zeros([1, 3, 224, 224])
 
-    # Mock the output from the neural network
+    target = make_expected_gradient_target(top_class)
 
-    mock_output = make_mock_output(mocker, model, num_classes, top_class)
+    mock_output = make_mock_output(mocker, model, top_class)
 
     backprop.calculate_gradients(input_, target_class)
 
-    # Make expected target of the gradient calculation
-
-    num_classes = 10
-
-    expected_gradients_target = torch.zeros((1, num_classes))
-    expected_gradients_target[0][top_class] = 1
-
     args, kwargs = mock_output.backward.call_args
 
-    assert torch.all(kwargs['gradient'].eq(expected_gradients_target))
+    assert torch.all(kwargs['gradient'].eq(target))
 
 
 def test_return_max_across_color_channels_if_specified(mocker, model):
     backprop = Backprop(model)
 
-    num_classes = 10
     target_class = 5
     input_ = torch.zeros([1, 3, 224, 224])
 
-    make_mock_output(mocker, model, num_classes, target_class)
+    make_mock_output(mocker, model, target_class)
 
     gradients = backprop.calculate_gradients(input_,
                                              target_class,
@@ -204,15 +190,12 @@ def test_does_not_raise_when_prediction_is_wrong(mocker, model):
     try:
         backprop = Backprop(model)
 
-        num_classes = 10
+        top_class = 1
         target_class = 5
 
         input_ = torch.zeros([1, 3, 224, 224])
 
-        # Mock a wrong prediction
-
-        predict_class = 1
-        make_mock_output(mocker, model, num_classes, predict_class)
+        make_mock_output(mocker, model, top_class)
 
         backprop.calculate_gradients(input_, target_class)
 
@@ -268,14 +251,13 @@ def test_calculate_gradients_for_all_models(mocker, available_models):
         model = model()
         backprop = Backprop(model)
 
-        num_classes = 10
         target_class = 5
         input_ = torch.zeros([1, 3, 224, 224])
 
         if 'inception' in name:
             input_ = torch.zeros([1, 3, 299, 299])
 
-        make_mock_output(mocker, model, num_classes, target_class)
+        make_mock_output(mocker, model, target_class)
 
         gradients = backprop.calculate_gradients(input_, target_class)
 
