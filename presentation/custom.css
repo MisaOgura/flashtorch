@@ -1,0 +1,32 @@
+/* Global style */
+
+div > div.inner_cell > div > hr {
+    margin-top: 18px;
+    margin-bottom: 18px;
+    border: 0;
+    border-top: 1px solid #eeeeee;
+    background-color: transparent;
+}
+
+.prompt {
+    width: 0px;
+    min-width: 0px;
+    visibility: collapse
+}
+
+/* Profile */
+
+.profile-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+#profile-image {
+    width: 200px;
+    height: 200px;
+    margin: 1em 2em
+}
+
+#profile-list > li {
+    padding-bottom: 15px;
+}
