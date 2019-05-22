@@ -14,7 +14,13 @@ div > div.inner_cell > div > hr {
     visibility: collapse
 }
 
-/* Profile */
+/* Page 0 - title */
+
+#subtitle {
+    margin: 25px 0 20px;
+}
+
+/* Page 1 - Profile */
 
 .profile-container {
     display: flex;
