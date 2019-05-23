@@ -8,7 +8,7 @@ div > div.inner_cell > div > hr {
     background-color: transparent;
 }
 
-.prompt {
+div.prompt {
     width: 0px;
     min-width: 0px;
     visibility: collapse
@@ -16,23 +16,57 @@ div > div.inner_cell > div > hr {
 
 /* Page 0 - title */
 
-#subtitle {
+h3#subtitle {
     margin: 25px 0 20px;
 }
 
 /* Page 1 - Profile */
 
-.profile-container {
+div.social-container {
     display: flex;
     justify-content: space-between;
+    margin: 0.5em 0 0 2em;
+    width: 200px;
 }
 
-#profile-image {
+div.social-container > a,
+div.social-container > a:hover {
+    color: #333333;
+}
+
+div.social-container > a > i.fab {
+    font-family: "Font Awesome 5 Brands";
+    font-size: 1.2em;
+}
+
+div.social-container > a > i.fas {
+    font-family: "Font Awesome 5 Free";
+    font-size: 1.2em;
+}
+
+
+div.profile-container {
+    display: flex;
+    justify-content: flex-start;
+}
+
+img#profile-image {
     width: 200px;
     height: 200px;
-    margin: 1em 2em
+    margin: 1em 3em 0 2em;
 }
 
-#profile-list > li {
-    padding-bottom: 15px;
+img#wdd-logo {
+    width: 1.2em;
+    height: 1.2em;
+    margin: 0;
+    box-shadow: none;
+}
+
+ul#profile-list {
+   margin-top: 1.3em;
+}
+
+ul#profile-list > li {
+    padding-bottom: 14px;
 }
