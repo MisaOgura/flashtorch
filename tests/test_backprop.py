@@ -235,7 +235,19 @@ def test_register_hooks_to_relu_layers(mocker, available_models):
             mocker.spy(layer, 'register_forward_hook')
             mocker.spy(layer, 'register_backward_hook')
 
-            Backprop(model, guided=True)
+        backprop = Backprop(model)
+
+        target_class = 5
+        input_ = torch.zeros([1, 3, 224, 224])
+
+        if 'inception' in name:
+            input_ = torch.zeros([1, 3, 299, 299])
+
+        make_mock_output(mocker, model, target_class)
+
+        backprop.calculate_gradients(input_, target_class, guided=True)
+
+        for layer in relu_layers:
 
             layer.register_forward_hook.assert_called_once()
             layer.register_backward_hook.assert_called_once()
