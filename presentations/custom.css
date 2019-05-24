@@ -14,13 +14,17 @@ div.prompt {
     visibility: collapse
 }
 
-/* Page 0 - title */
+div.output_subarea {
+    max-width: 100%;
+}
+
+/* Title */
 
 h3#subtitle {
     margin: 25px 0 20px;
 }
 
-/* Page 1 - Profile */
+/* Profile */
 
 div.social-container {
     display: flex;
