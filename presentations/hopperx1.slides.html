@@ -11980,7 +11980,7 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Visualisation-Techniques">Visualisation Techniques<a class="anchor-link" href="#Visualisation-Techniques">&#182;</a></h2><hr>
+<h2 id="CNN-Visualisation-Techniques">CNN Visualisation Techniques<a class="anchor-link" href="#CNN-Visualisation-Techniques">&#182;</a></h2><hr>
 
 </div>
 </div>
@@ -12007,7 +12007,7 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Demo-1:-visualising-saliency-map">Demo 1: visualising saliency map<a class="anchor-link" href="#Demo-1:-visualising-saliency-map">&#182;</a></h2><hr>
+<h2 id="Demo-1">Demo 1<a class="anchor-link" href="#Demo-1">&#182;</a></h2><h3 id="Introducing-FlashTorch-&amp;-how-to-visualise-saliency-maps">Introducing FlashTorch &amp; how to visualise saliency maps<a class="anchor-link" href="#Introducing-FlashTorch-&amp;-how-to-visualise-saliency-maps">&#182;</a></h3><hr>
 
 </div>
 </div>
@@ -12017,6 +12017,8 @@ a.anchor-link {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="First-things-first---config-&amp;-imports">First things first - config &amp; imports<a class="anchor-link" href="#First-things-first---config-&amp;-imports">&#182;</a></h3><hr>
+
+<pre><code>$ pip install flashtorch</code></pre>
 
 </div>
 </div>
@@ -12155,14 +12157,22 @@ After: &lt;class &#39;torch.Tensor&#39;&gt;, torch.Size([1, 3, 224, 224])
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># plt.imshow(input_)</span>
 <span class="c1"># plt.title(&#39;Input tensor&#39;)</span>
 <span class="c1"># plt.axis(&#39;off&#39;);</span>
-
-<span class="c1"># RuntimeError: Can&#39;t call numpy() on Variable that requires grad. Use var.detach().numpy() instead.</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+
+<pre><code>RuntimeError: Can't call numpy() on Variable that requires grad. Use var.detach().numpy() instead.</code></pre>
+
+</div>
+</div>
 </div></section><section>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12373,16 +12383,22 @@ height=263
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># imagenet[&#39;dog&#39;]</span>
-
-<span class="c1"># ValueError: Multiple potential matches found: maltese dog, old english sheepdog,</span>
-<span class="c1"># shetland sheepdog, greater swiss mountain dog, bernese mountain dog, french bulldog,</span>
-<span class="c1"># eskimo dog, african hunting dog, dogsled, hotdog</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+
+<pre><code>ValueError: Multiple potential matches found: maltese dog, old english sheepdog, shetland sheepdog, greater swiss mountain dog, bernese mountain dog, french bulldog, eskimo dog, african hunting dog, dogsled, hotdog</code></pre>
+
+</div>
+</div>
 </div></section><section>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12648,7 +12664,7 @@ height=240
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Or-oystercatcher...">Or oystercatcher...<a class="anchor-link" href="#Or-oystercatcher...">&#182;</a></h3><hr>
+<h3 id="Or-an-oystercatcher...">Or an oystercatcher...<a class="anchor-link" href="#Or-an-oystercatcher...">&#182;</a></h3><hr>
 
 </div>
 </div>
@@ -12694,7 +12710,7 @@ height=240
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Demo-2:-Inslights-on-transfer-learning">Demo 2: Inslights on transfer learning<a class="anchor-link" href="#Demo-2:-Inslights-on-transfer-learning">&#182;</a></h2><hr>
+<h2 id="Demo-2">Demo 2<a class="anchor-link" href="#Demo-2">&#182;</a></h2><h3 id="Using-FlashTorch-to-gain-additional-insights-on-transfer-learning">Using FlashTorch to gain additional insights on transfer learning<a class="anchor-link" href="#Using-FlashTorch-to-gain-additional-insights-on-transfer-learning">&#182;</a></h3><hr>
 
 </div>
 </div>
