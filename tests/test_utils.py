@@ -180,5 +180,19 @@ def test_standardize_and_clip_multi_channel_tensor():
         assert channel.max().item() <= default_max
 
 
+def test_standardize_and_clip_add_eplison_when_std_is_zero():
+    default_min = 0.0
+    default_max = 1.0
+
+    input_ = torch.zeros(1, 244, 244)
+    normalized = standardize_and_clip(input_)
+
+    assert normalized.shape == input_.shape
+
+    for channel in normalized:
+        assert channel.min().item() >= default_min
+        assert channel.max().item() <= default_max
+
+
 if __name__ == '__main__':
     pytest.main([__file__])
