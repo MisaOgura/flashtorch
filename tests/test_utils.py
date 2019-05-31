@@ -123,7 +123,7 @@ def test_standardize_and_clip_tensor():
     default_min = 0.0
     default_max = 1.0
 
-    input_ = torch.rand(224, 224)
+    input_ = torch.randint(low=-1000, high=1000, size=(224, 224)).float()
     normalized = standardize_and_clip(input_)
 
     assert normalized.shape == input_.shape
@@ -135,7 +135,7 @@ def test_standardize_and_clip_detach_input_from_graph():
     default_min = 0.0
     default_max = 1.0
 
-    input_ = torch.rand(224, 224)
+    input_ = torch.randint(low=-1000, high=1000, size=(224, 224)).float()
     input_.requires_grad = True
     normalized = standardize_and_clip(input_)
 
@@ -146,7 +146,7 @@ def test_standardize_and_clip_with_custom_min_max():
     custom_min = 2.0
     custom_max = 3.0
 
-    input_ = torch.rand(224, 224)
+    input_ = torch.randint(low=-1000, high=1000, size=(224, 224)).float()
     normalized = standardize_and_clip(input_, min_value=custom_min, max_value=custom_max)
 
     assert normalized.shape == input_.shape
@@ -158,7 +158,7 @@ def test_standardize_and_clip_mono_channel_tensor():
     default_min = 0.0
     default_max = 1.0
 
-    input_ = torch.rand(1, 224, 224)
+    input_ = torch.randint(low=-1000, high=1000, size=(1, 224, 224)).float()
     normalized = standardize_and_clip(input_)
 
     assert normalized.shape == input_.shape
@@ -170,7 +170,7 @@ def test_standardize_and_clip_multi_channel_tensor():
     default_min = 0.0
     default_max = 1.0
 
-    input_ = torch.rand(3, 224, 224)
+    input_ = torch.randint(low=-1000, high=1000, size=(3, 224, 224)).float()
     normalized = standardize_and_clip(input_)
 
     assert normalized.shape == input_.shape
