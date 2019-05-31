@@ -122,33 +122,37 @@ def denormalize(tensor):
     return denormalized
 
 
-def normalize(tensor, min_value=0.0, max_value=1.0):
-    """Normalises input tensor values between min/max (default: 0.0/1.0).
+def standardize_and_clip(tensor, min_value=0.0, max_value=1.0):
+    """Standardizes and clips input tensor.
+
+    Standardize the input tensor (mean = 0.0, std = 1.0), ensures std is 0.1
+    and clips it to values between min/max (default: 0.0/1.0).
 
     Args:
-        tensor (torch.Tensor)
+        tensor (torch.Tensor):
         min_value (float, optional, default=0.0)
         max_value (float, optional, default=1.0)
 
+    Shape:
+        Input: :math:`(C, H, W)`
+        Output: Same as the input
+
     Return:
-        torch.Tensor (torch.float32): Demornalised tensor with values between
+        torch.Tensor (torch.float32): Normalised tensor with values between
             [min_value, max_value]
 
     """
 
     tensor = tensor.detach().cpu()
 
-    tensor_min = tensor.min()
-    tensor_max = tensor.max()
-    eps = 1e-7
+    mean = tensor.mean()
+    std = tensor.std()
 
-    # Normalise to [0, 1] (using epsilon to avoid diving by zero)
+    standardized = tensor.sub(mean).div(std + 1e-5).mul(0.1)
 
-    normalized = (tensor - tensor_min) / (tensor_max - tensor_min + eps)
+    clipped = standardized.add(0.5).clamp(min_value, max_value)
 
-    # Scale it with min/max_value
-
-    return (max_value - min_value) * normalized + min_value
+    return clipped
 
 
 def format_for_plotting(tensor):
@@ -190,17 +194,17 @@ def format_for_plotting(tensor):
         return formatted.permute(1, 2, 0).detach()
 
 
-def visualize(input_, gradients, max_gradients, cmap='seismic', alpha=0.5):
+def visualize(input_, gradients, max_gradients, cmap='viridis', alpha=0.5):
     input_ = format_for_plotting(denormalize(input_))
-    gradients = format_for_plotting(normalize(gradients))
-    max_gradients = format_for_plotting(normalize(max_gradients))
+    gradients = format_for_plotting(standardize_and_clip(gradients))
+    max_gradients = format_for_plotting(standardize_and_clip(max_gradients))
 
     subplots = [
         # (title, [(image1, cmap, alpha), (image2, cmap, alpha)])
         ('Input image', [(input_, None, None)]),
         ('Gradients across RGB channels', [(gradients, None, None)]),
         ('Max gradients', [(max_gradients, cmap, None)]),
-        ('Overlay', [(input_, 'gray', None), (max_gradients, cmap, alpha)])
+        ('Overlay', [(input_, None, None), (max_gradients, cmap, alpha)])
     ]
 
     num_subplots = len(subplots)

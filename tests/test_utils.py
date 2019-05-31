@@ -9,7 +9,7 @@ import torch
 from flashtorch.utils import (load_image,
                               apply_transforms,
                               denormalize,
-                              normalize,
+                              standardize_and_clip,
                               format_for_plotting)
 
 
@@ -119,47 +119,65 @@ def test_detach_tensor_from_computational_graph():
     assert not formatted.requires_grad
 
 
-def test_normalize():
+def test_standardize_and_clip_tensor():
     default_min = 0.0
     default_max = 1.0
 
-    input_ = torch.arange(start=-5.0, end=5.0)
-    normalized = normalize(input_)
+    input_ = torch.rand(224, 224)
+    normalized = standardize_and_clip(input_)
 
     assert normalized.shape == input_.shape
-    assert normalized.min() >= default_min and normalized.max() <= default_max
+    assert normalized.min().item() >= default_min
+    assert normalized.max().item() <= default_max
 
 
-def test_normalize_detach_input_from_graph():
+def test_standardize_and_clip_detach_input_from_graph():
     default_min = 0.0
     default_max = 1.0
 
-    input_ = torch.arange(start=-5.0, end=5.0)
+    input_ = torch.rand(224, 224)
     input_.requires_grad = True
-    normalized = normalize(input_)
+    normalized = standardize_and_clip(input_)
 
     assert normalized.requires_grad == False
 
 
-def test_normalize_with_custom_min_max():
+def test_standardize_and_clip_with_custom_min_max():
     custom_min = 2.0
     custom_max = 3.0
-    input_ = torch.arange(start=-5.0, end=5.0)
-    normalized = normalize(input_, min_value=custom_min, max_value=custom_max)
+
+    input_ = torch.rand(224, 224)
+    normalized = standardize_and_clip(input_, min_value=custom_min, max_value=custom_max)
 
     assert normalized.shape == input_.shape
-    assert normalized.min() >= custom_min and normalized.max() <= custom_max
+    assert normalized.min() >= custom_min
+    assert normalized.max() <= custom_max
 
 
-def test_normalize_multi_channel_tensor():
+def test_standardize_and_clip_mono_channel_tensor():
     default_min = 0.0
     default_max = 1.0
 
-    input_ = torch.full((1, 224, 224), 100)
-    normalized = normalize(input_)
+    input_ = torch.rand(1, 224, 224)
+    normalized = standardize_and_clip(input_)
 
     assert normalized.shape == input_.shape
-    assert normalized.min() >= default_min and normalized.max() <= default_max
+    assert normalized.min().item() >= default_min
+    assert normalized.max().item() <= default_max
+
+
+def test_standardize_and_clip_multi_channel_tensor():
+    default_min = 0.0
+    default_max = 1.0
+
+    input_ = torch.rand(3, 224, 224)
+    normalized = standardize_and_clip(input_)
+
+    assert normalized.shape == input_.shape
+
+    for channel in normalized:
+        assert channel.min().item() >= default_min
+        assert channel.max().item() <= default_max
 
 
 if __name__ == '__main__':
