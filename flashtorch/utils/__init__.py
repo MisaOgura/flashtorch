@@ -148,7 +148,10 @@ def standardize_and_clip(tensor, min_value=0.0, max_value=1.0):
     mean = tensor.mean()
     std = tensor.std()
 
-    standardized = tensor.sub(mean).div(std + 1e-5).mul(0.1)
+    if std == 0:
+        std += 1e-7
+
+    standardized = tensor.sub(mean).div(std).mul(0.1)
 
     clipped = standardized.add(0.5).clamp(min_value, max_value)
 
