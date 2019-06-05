@@ -18,7 +18,8 @@ div.output_subarea {
     max-width: 100%;
 }
 
-.reveal pre {
+.reveal pre,
+div.output_area pre {
     font-size: 70%;
 }
 
