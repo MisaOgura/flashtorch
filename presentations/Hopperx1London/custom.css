@@ -41,6 +41,18 @@ h3#subtitle {
     margin: 25px 0 20px;
 }
 
+div.title > a,
+div.title > a:hover {
+    position: absolute;
+    right: 3%;
+    top: 43%;
+    color: #333333;
+}
+
+div.title > i#repo {
+    font-size: 1.8em;
+}
+
 /* Profile */
 
 div.social-container {
