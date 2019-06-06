@@ -1,0 +1,26 @@
+language: python
+cache: pip
+
+python:
+    - "3.6"
+
+# install jupyter and get reveal.js as we will need it to build the website
+# from Travis
+install:
+    - pip install jupyter
+    - wget https://github.com/hakimel/reveal.js/archive/master.zip
+    - unzip master.zip
+    - mv reveal.js-master reveal.js
+
+script:
+    - jupyter nbconvert nb.ipynb --to slides --reveal-prefix=reveal.js
+
+after_success: |
+    if [ -n "$GITHUB_API_KEY" ]; then
+    git checkout --orphan gh-pages
+    git rm -rf --cached .
+    mv nb.slides.html index.html
+    git add -f --ignore-errors index.html img reveal.js
+    git -c user.name='travis' -c user.email='travis' commit -m init
+    git push -f -q https://$GITHUB_USER:$GITHUB_API_KEY@github.com/$TRAVIS_REPO_SLUG gh-pages
+    fi
