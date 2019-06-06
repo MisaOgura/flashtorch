@@ -2,7 +2,6 @@
 
 div > div.inner_cell > div > hr {
     margin-top: 18px;
-    margin-bottom: 18px;
     border: 0;
     border-top: 1px solid #eeeeee;
     background-color: transparent;
@@ -18,14 +17,22 @@ div.output_subarea {
     max-width: 100%;
 }
 
+div.output_subarea {
+    text-align: center;
+}
+
 .reveal pre,
 div.output_area pre {
-    font-size: 70%;
+    font-size: 65%;
 }
 
 div.source {
     text-align: right;
     font-size: 0.7em;
+}
+
+hr {
+    margin-bottom: 0;
 }
 
 /* Title */
@@ -112,7 +119,6 @@ img#vis-non-edge {
 }
 
 img#vis-edge {
-    margin-top: 20px;
     margin-bottom: 30px;
 }
 
