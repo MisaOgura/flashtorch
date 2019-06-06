@@ -11,3 +11,4 @@ htmlcov
 .coverage
 models
 .DS_Store
+development
