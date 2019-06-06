@@ -13,7 +13,7 @@ install:
     - mv reveal.js-master reveal.js
 
 script:
-    - jupyter nbconvert presentations/hopperx1.ipynb --to slides --reveal-prefix=reveal.js
+    - jupyter nbconvert presentations/hopperx1.ipynb --to slides --reveal-prefix=../reveal.js
 
 after_success: |
     if [ -n "$GITHUB_API_KEY" ]; then
