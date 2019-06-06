@@ -4,8 +4,6 @@ cache: pip
 python:
     - "3.6"
 
-# install jupyter and get reveal.js as we will need it to build the website
-# from Travis
 install:
     - pip install jupyter
     - wget https://github.com/hakimel/reveal.js/archive/master.zip
