@@ -6,9 +6,9 @@ python:
 
 install:
     - pip install jupyter
-    - wget https://github.com/hakimel/reveal.js/archive/master.zip
-    - unzip master.zip
-    - mv reveal.js-master reveal.js
+    - wget https://github.com/hakimel/reveal.js/archive/3.7.0.zip
+    - unzip 3.7.0.zip
+    - mv reveal.js-3.7.0 reveal.js
 
 script:
     - jupyter nbconvert presentations/hopperx1.ipynb --to slides --reveal-prefix=reveal.js
