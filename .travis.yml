@@ -11,13 +11,13 @@ install:
     - mv reveal.js-3.7.0 reveal.js
 
 script:
-    - jupyter nbconvert presentations/hopperx1.ipynb --to slides --reveal-prefix=reveal.js
+    - jupyter nbconvert presentations/Hopperx1London/notebook.ipynb --to slides --reveal-prefix=https://misaogura.github.io/flashtorch/presentations/reveal.js
 
 after_success: |
     if [ -n "$GITHUB_API_KEY" ]; then
     git checkout --orphan gh-pages
     git rm -rf --cached .
-    mv presentations/hopperx1.slides.html presentations/index.html
+    mv presentations/Hopperx1London/notebook.slides.html presentations/Hopperx1London/index.html
     mv reveal.js presentations
     git add -f --ignore-errors README.md presentations examples/images
     git -c user.name='travis' -c user.email='travis' commit -m init
