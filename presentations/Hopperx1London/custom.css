@@ -125,13 +125,13 @@ div.kernels-container > img#kernels_2 {
     padding-top: 25px;
 }
 
-img#vis-edge,
-img#vis-non-edge {
+img#sobel_1,
+img#sobel_2 {
     margin: auto;
 }
 
-img#vis-edge {
-    margin-bottom: 30px;
+img#sobel_1 {
+    margin-bottom: 10px;
 }
 
 img#cnn {
