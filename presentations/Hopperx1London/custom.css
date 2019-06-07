@@ -35,6 +35,20 @@ hr {
     margin-bottom: 0;
 }
 
+div.output_subarea.output_stream.output_stderr.output_text {
+    font-size: 0.8em;
+}
+
+div.bottom {
+    margin-top: -10px;
+}
+
+div.bottom > i {
+    font-style: italic;
+    font-family: Lato, sans-serif;
+    font-size: 1em;
+}
+
 /* Title */
 
 h3#subtitle {
@@ -144,3 +158,20 @@ img#cnn {
     color: #BA2121;
     font-weight: 400;
 }
+
+div.saliency,
+div.guided_backprop {
+    display: flex;
+}
+
+div.saliency > img {
+    width: 400px;
+    height: 150px;
+    margin: 30px auto;
+}
+
+div.guided_backprop > img {
+    width: 400px;
+    height: 200px;
+    margin: 30px auto;
+
