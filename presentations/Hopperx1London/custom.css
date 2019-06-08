@@ -120,9 +120,13 @@ ul#profile-list > li {
 
 /* CNN */
 
+div.convolution {
+    display: flex;
+}
+
 div.convolution > img {
-    margin: auto;
-    margin-top: 50px;
+    margin: auto 0;
+    margin-top: 40px;
 }
 
 div.kernels-container {
