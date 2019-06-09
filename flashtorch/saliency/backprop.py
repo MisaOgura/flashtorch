@@ -88,9 +88,11 @@ class Backprop:
         target = torch.FloatTensor(1, output.shape[-1]).zero_()
 
         if (target_class is not None) and (top_class != target_class):
-            warnings.warn(UserWarning('''The predicted class does not equal the
-                target class. Calculating the gradient with respect to the
-                predicted class.'''))
+            warnings.warn(UserWarning(
+                f'The predicted class index {top_class.item()} does not' +
+                f'equal the target class index {target_class}. Calculating' +
+                'the gradient w.r.t. the predicted class.'
+            ))
 
         # Set the element at top class index to be 1
 

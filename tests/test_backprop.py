@@ -144,7 +144,7 @@ def test_calculate_gradients_of_top_class_if_target_not_provided(mocker, model):
 def test_calculate_gradients_of_top_class_if_prediction_is_wrong(mocker, model):
     backprop = Backprop(model)
 
-    top_class = 5
+    top_class = torch.tensor(5)
     target_class = 7
     input_ = torch.zeros([1, 3, 224, 224])
 
@@ -191,7 +191,7 @@ def test_checks_input_size_for_inception_model(mocker):
 def test_warn_when_prediction_is_wrong(mocker, model):
     backprop = Backprop(model)
 
-    top_class = 1
+    top_class = torch.tensor(1)
     target_class = 5
 
     input_ = torch.zeros([1, 3, 224, 224])
