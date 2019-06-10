@@ -122,6 +122,7 @@ ul#profile-list > li {
 
 div.convolution {
     display: flex;
+    justify-content: center;
 }
 
 div.convolution > img {
