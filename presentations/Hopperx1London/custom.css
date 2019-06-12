@@ -31,8 +31,12 @@ div.source {
     font-size: 0.7em;
 }
 
-hr {
+.rendered_html hr {
     margin-bottom: 0;
+    margin-top: 18px;
+    border: 0;
+    border-top: 1px solid #eeeeee;
+    background-color: transparent;
 }
 
 div.output_subarea.output_stream.output_stderr.output_text {
@@ -51,15 +55,24 @@ div.bottom > i {
 
 /* Title */
 
+.rendered_html h1:first-child {
+    margin-top: 3em;
+}
+
 h3#subtitle {
     margin: 25px 0 20px;
+}
+
+div.title > p#short-url {
+    margin-top: 50px;
+    text-align: center;
 }
 
 div.title > a,
 div.title > a:hover {
     position: absolute;
     right: 3%;
-    top: 41%;
+    top: 47%;
     color: #333333;
 }
 
@@ -179,4 +192,3 @@ div.guided_backprop > img {
     width: 400px;
     height: 200px;
     margin: 30px auto;
-
