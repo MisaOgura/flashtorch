@@ -39,6 +39,10 @@ div.source {
     background-color: transparent;
 }
 
+.rendered_html ul {
+    margin-top: 0;
+}
+
 div.output_subarea.output_stream.output_stderr.output_text {
     font-size: 0.8em;
 }
@@ -189,6 +193,7 @@ div.saliency > img {
 }
 
 div.guided_backprop > img {
-    width: 400px;
-    height: 200px;
+    width: 200px;
+    height: 100px;
     margin: 30px auto;
+}
