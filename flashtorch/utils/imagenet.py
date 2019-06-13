@@ -6,7 +6,9 @@
 import json
 
 from collections.abc import Mapping
-from os import path
+from importlib_resources import path
+
+from . import resources
 
 
 class ImageNetIndex(Mapping):
@@ -26,14 +28,12 @@ class ImageNetIndex(Mapping):
         make the use of this tool simpler.
     """
 
-    source = path.join(path.dirname(__file__),
-                       './resources/imagenet_class_index.json')
-
     def __init__(self):
         self._index = {}
 
-        with open(ImageNetIndex.source, 'r') as source:
-            data = json.load(source)
+        with path(resources, 'imagenet_class_index.json') as source_path:
+            with open(str(source_path), 'r') as source:
+                data = json.load(source)
 
         for index, (_, class_name) in data.items():
             class_name = class_name.lower().replace('_', ' ')
