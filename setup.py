@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 with open('README.md', 'r') as fh:
     long_description = fh.read()
 
-version = '0.0.5'
+version = '0.0.6'
 
 setup(
     name='flashtorch',
@@ -16,12 +16,17 @@ setup(
     long_description_content_type='text/markdown',
     url='https://github.com/MisaOgura/flashtorch',
     packages=find_packages(exclude=['tests*']),
+    include_package_data=True,
+    package_data={'flashtorch.utils.resources':
+        ['imagenet_class_index.json']
+    },
     install_requires=[
         'matplotlib',
         'numpy',
         'Pillow',
         'torch',
         'torchvision',
+        'importlib_resources'
     ],
     classifiers=[
         'Programming Language :: Python :: 3',
