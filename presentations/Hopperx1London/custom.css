@@ -13,6 +13,11 @@ div.prompt {
     visibility: collapse
 }
 
+div.output_subarea.output_stream.output_stderr.output_text {
+    visibility: hidden;
+    height: 0;
+}
+
 div.output_subarea {
     max-width: 100%;
 }
@@ -140,6 +145,7 @@ ul#profile-list > li {
 div.convolution {
     display: flex;
     justify-content: center;
+    height: 360px;
 }
 
 div.convolution > img {
@@ -174,7 +180,7 @@ img#cnn {
     margin: 50px auto;
 }
 
-/* Demo 1 */
+/* Demos */
 
 .highlight span.si {
     color: #BA2121;
