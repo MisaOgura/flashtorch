@@ -184,6 +184,7 @@ img#cnn {
 div.saliency,
 div.guided_backprop {
     display: flex;
+    justify-content: center;
 }
 
 div.saliency > img {
@@ -193,7 +194,7 @@ div.saliency > img {
 }
 
 div.guided_backprop > img {
-    width: 200px;
-    height: 100px;
-    margin: 30px auto;
+    width: 300px;
+    height: 150px;
+    margin: 1em;
 }
