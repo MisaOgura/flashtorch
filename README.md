@@ -12,35 +12,53 @@ It currently supports visualisation of saliancy maps for all the models availabl
 $ pip install flashtorch
 ```
 
-## Usage (example notebooks)
+## Examples
 
-- [Image handling](./examples/image_handling.ipynb)
+### Image handling
 
-- [Image-specific class saliency map with backpropagation](./examples/visualise_saliency_with_backprop.ipynb)
+Notebook: [Image handling](./examples/image_handling.ipynb)
 
-  - Notebook also available on [Google Colab](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/visualise_saliency_with_backprop_colab.ipynb)
+### Saliency maps
 
-## Examples of saliency maps in Alexnet, pre-trained on ImageNet dataset
+Notebook: [Image-specific class saliency map with backpropagation](./examples/visualise_saliency_with_backprop.ipynb)
 
-Great gray owl (class index 24):
+  - Notebook also available on [Google Colab](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/visualise_saliency_with_backprop_colab.ipynb) - probably the best way to play around quickly, as there is no need for setting up the environment!
+
+**[Saliency](https://en.wikipedia.org/wiki/Salience_(neuroscience))** in human visual perception is a _subjective quality_ that makes certain things within the field of view _stand out_ from the rest and _grabs our attention_.
+
+**Saliency maps** in computer vision provide indications of the most salient regions within images. By creating a saliency map for neural networks, we can gain some intuition on _"where the network is paying the most attention to"_ in an imput image.
+
+#### AlexNet visualisation
+
+Using `flashtorch.saliency` module, let's visualise image-specific class saliency maps of [AlexNet](https://arxiv.org/abs/1404.5997) pre-trained on [ImageNet](http://www.image-net.org/) classification tasks.
+
+**Great gray owl** (class index 24):
 
 ![Saliency map of great grey owl in Alexnet](examples/images/alexnet_great_grey_owl.png)
 
-Peacock (class index 84):
+**Peacock** (class index 84):
 
 ![Saliency map of peacock in Alexnet](examples/images/alexnet_peacock.png)
 
-Toucan (class index 96):
+**Toucan** (class index 96):
 
 ![Saliency map of tucan in Alexnet](examples/images/alexnet_tucan.png)
 
-## Insignts on transfer learning
+#### Insignts on transfer learning
 
-Densenet, pre-trained on ImageNet dataset, no additional training:
+We can take a step further and investigate _how the network's perception changes through training_, by visualising saliency maps of a model **before and after** the training.
+
+As a demo, I'm going to use [DenseNet](https://arxiv.org/abs/1608.06993), which is pre-trained on ImageNet (1000 classes), and train it further into a flower classifier to recognise 102 species of flowers ([dataset](http://www.robots.ox.ac.uk/~vgg/data/flowers/102/index.html)).
+
+With _no additional training_, and just by swapping out the last fully-connected layer, the model performs very poorly (0.1% test accurasy). By plotting the gradients, we can see that the network is mainly focusing on the shape of the flower.
+
+**Foxgloves** as an example:
 
 ![Transfer learning pre](examples/images/transfer_learning_pre.png)
 
-With training:
+With training, the model now achieves 98.7% test accuracy. But _why_? What is it that it's seeing now, that it wasn't before?
+
+The network has _learnt to shift its focus_ on the mottle patten within flower cups! In it's world's view, that is the most distinguishing things about this object, which I think closely align with what _we_ deem the most unique trait of this flower.
 
 ![Transfer learning post](examples/images/transfer_learning_post.png)
 
