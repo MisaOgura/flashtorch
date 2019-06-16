@@ -12,7 +12,7 @@ It currently supports visualisation of saliancy maps for all the models availabl
 $ pip install flashtorch
 ```
 
-## Examples
+## Example notebooks
 
 ### Image handling
 
@@ -28,29 +28,36 @@ Notebook: [Image-specific class saliency map with backpropagation](./examples/vi
 
 **Saliency maps** in computer vision provide indications of the most salient regions within images. By creating a saliency map for neural networks, we can gain some intuition on _"where the network is paying the most attention to"_ in an imput image.
 
-#### AlexNet visualisation
+### AlexNet visualisation
 
 Using `flashtorch.saliency` module, let's visualise image-specific class saliency maps of [AlexNet](https://arxiv.org/abs/1404.5997) pre-trained on [ImageNet](http://www.image-net.org/) classification tasks.
 
 **Great gray owl** (class index 24):
+The network is focusing on the sunken eyes and the round head for this owl.
 
 ![Saliency map of great grey owl in Alexnet](examples/images/alexnet_great_grey_owl.png)
 
 **Peacock** (class index 84):
+But it doesn't always focus on the eyes and head of an animal. In its world's view, what makes peacok a peacok is the eyespots on its tail!
 
 ![Saliency map of peacock in Alexnet](examples/images/alexnet_peacock.png)
 
 **Toucan** (class index 96):
+And in case of a toucan, the network is paying an intense attention on its beak.
 
 ![Saliency map of tucan in Alexnet](examples/images/alexnet_tucan.png)
 
-#### Insignts on transfer learning
+Do you agree? :robot:
 
-We can take a step further and investigate _how the network's perception changes through training_, by visualising saliency maps of a model **before and after** the training.
+### Insignts on transfer learning
 
-As a demo, I'm going to use [DenseNet](https://arxiv.org/abs/1608.06993), which is pre-trained on ImageNet (1000 classes), and train it further into a flower classifier to recognise 102 species of flowers ([dataset](http://www.robots.ox.ac.uk/~vgg/data/flowers/102/index.html)).
+In the example above, we've visualised saliency maps for a network that has been trained on ImageNet and used images of objects which it _already knows_.
 
-With _no additional training_, and just by swapping out the last fully-connected layer, the model performs very poorly (0.1% test accurasy). By plotting the gradients, we can see that the network is mainly focusing on the shape of the flower.
+We can take a step further and investigate _how the network's perception changes_ before and after the training, when presented by a new object.
+
+This time, I'm going to use [DenseNet](https://arxiv.org/abs/1608.06993), which is again pre-trained on ImageNet (1000 classes), and train it into a flower classifier to recognise 102 species of flowers ([dataset](http://www.robots.ox.ac.uk/~vgg/data/flowers/102/index.html)).
+
+With _no additional training_, and just by swapping out the last fully-connected layer, the model performs very poorly (0.1% test accuracy). By plotting the gradients, we can see that the network is mainly focusing on the shape of the flower.
 
 **Foxgloves** as an example:
 
