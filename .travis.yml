@@ -1,0 +1,25 @@
+language: python
+cache: pip
+
+python:
+    - "3.6"
+
+install:
+    - pip install jupyter
+    - wget https://github.com/hakimel/reveal.js/archive/3.7.0.zip
+    - unzip 3.7.0.zip
+    - mv reveal.js-3.7.0 reveal.js
+
+script:
+    - jupyter nbconvert presentations/Hopperx1London/notebook.ipynb --to slides --reveal-prefix=https://misaogura.github.io/flashtorch/presentations/reveal.js
+
+after_success: |
+    if [ -n "$GITHUB_API_KEY" ]; then
+    git checkout --orphan gh-pages
+    git rm -rf --cached .
+    mv presentations/Hopperx1London/notebook.slides.html presentations/Hopperx1London/index.html
+    mv reveal.js presentations
+    git add -f --ignore-errors README.md presentations examples/images
+    git -c user.name='travis' -c user.email='travis' commit -m init
+    git push -f -q https://$GITHUB_USER:$GITHUB_API_KEY@github.com/$TRAVIS_REPO_SLUG gh-pages
+    fi
