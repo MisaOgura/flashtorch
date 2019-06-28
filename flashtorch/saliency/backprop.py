@@ -80,23 +80,26 @@ class Backprop:
 
         output = self.model(input_)
 
-        _, top_class = output.topk(1, dim=1)
+        if len(output.shape) == 1:
+            target = None
+        else:
+            _, top_class = output.topk(1, dim=1)
 
-        # Create a 2D tensor with shape (1, num_classes) and
-        # set all element to zero
+            # Create a 2D tensor with shape (1, num_classes) and
+            # set all element to zero
 
-        target = torch.FloatTensor(1, output.shape[-1]).zero_()
+            target = torch.FloatTensor(1, output.shape[-1]).zero_()
 
-        if (target_class is not None) and (top_class != target_class):
-            warnings.warn(UserWarning(
-                f'The predicted class index {top_class.item()} does not' +
-                f'equal the target class index {target_class}. Calculating' +
-                'the gradient w.r.t. the predicted class.'
-            ))
+            if (target_class is not None) and (top_class != target_class):
+                warnings.warn(UserWarning(
+                    f'The predicted class index {top_class.item()} does not' +
+                    f'equal the target class index {target_class}. Calculating' +
+                    'the gradient w.r.t. the predicted class.'
+                ))
 
-        # Set the element at top class index to be 1
+            # Set the element at top class index to be 1
 
-        target[0][top_class] = 1
+            target[0][top_class] = 1
 
         # Calculate gradients of the target class output w.r.t. input_
 

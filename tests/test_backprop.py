@@ -106,6 +106,19 @@ def test_zero_out_gradients(mocker, model):
     model.zero_grad.assert_called_once()
 
 
+def test_handle_binary_classifier(mocker, model):
+    backprop = Backprop(model)
+
+    target_class = 0
+    input_ = torch.zeros([1, 3, 224, 224])
+
+    mock_output = torch.tensor([0.8])
+    mock_output.requires_grad = True
+    mocker.patch.object(model, 'forward', return_value=mock_output)
+
+    backprop.calculate_gradients(input_, target_class)
+
+
 def test_calculate_gradients_of_target_class_only(mocker, model):
     backprop = Backprop(model)
 
