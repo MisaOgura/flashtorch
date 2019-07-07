@@ -220,11 +220,11 @@ def test_warn_when_prediction_is_wrong(mocker, model):
 
 def test_register_backward_hook_to_first_conv_layer(mocker, available_models):
     print()
-    for name, model in available_models:
+    for name, model_module in available_models:
         print(f'Testing model: {name}', end='\r')
         stdout.write('\x1b[2K')
 
-        model = model()
+        model = model_module()
 
         conv_layer = find_first_conv_layer(model, nn.modules.conv.Conv2d, 3)
         mocker.spy(conv_layer, 'register_backward_hook')
@@ -236,11 +236,11 @@ def test_register_backward_hook_to_first_conv_layer(mocker, available_models):
 
 def test_register_hooks_to_relu_layers(mocker, available_models):
     print()
-    for name, model in available_models:
+    for name, model_module in available_models:
         print(f'Testing model: {name}', end='\r')
         stdout.write('\x1b[2K')
 
-        model = model()
+        model = model_module()
 
         relu_layers = find_relu_layers(model,nn.ReLU)
 
@@ -268,11 +268,11 @@ def test_register_hooks_to_relu_layers(mocker, available_models):
 
 def test_calculate_gradients_for_all_models(mocker, available_models):
     print()
-    for name, model in available_models:
+    for name, model_module in available_models:
         print(f'Testing model: {name}', end='\r')
         stdout.write('\x1b[2K')
 
-        model = model()
+        model = model_module()
         backprop = Backprop(model)
 
         target_class = 5
@@ -283,7 +283,9 @@ def test_calculate_gradients_for_all_models(mocker, available_models):
 
         make_mock_output(mocker, model, target_class)
 
-        gradients = backprop.calculate_gradients(input_, target_class)
+        gradients = backprop.calculate_gradients(input_,
+                                                 target_class,
+                                                 use_gpu=True)
 
         assert gradients.shape == input_.size()[1:]
 
