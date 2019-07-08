@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-"""
-"""
 import warnings
 
 import torch
@@ -30,17 +27,16 @@ class Backprop:
     def __init__(self, model):
         self.model = model
         self.model.eval()
-
         self.gradients = None
-
         self._register_conv_hook()
-        self._device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     def calculate_gradients(self,
                             input_,
                             target_class=None,
                             take_max=False,
-                            guided=False):
+                            guided=False,
+                            use_gpu=False):
+
         """Calculates gradients of the target_class output w.r.t. an input_.
 
         The gradients is calculated for each colour channel. Then, the maximum
@@ -54,6 +50,8 @@ class Backprop:
             guided (bool, optional, default=Fakse): If True, perform guided
                 backpropagation. See `Striving for Simplicity: The All
                 Convolutional Net <https://arxiv.org/pdf/1412.6806.pdf>`_.
+            use_gpu (bool, optional, default=False): Use GPU if set to True and
+                `torch.cuda.is_available()`.
 
         Returns:
             gradients (torch.Tensor): With shape :math:`(C, H, W)`.
@@ -68,17 +66,20 @@ class Backprop:
             self.relu_outputs = []
             self._register_relu_hooks()
 
-        self.model = self.model.to(self._device)
-        self.model.zero_grad()
+        if torch.cuda.is_available() and use_gpu:
+            self.model = self.model.to('cuda')
+            input_ = input_.to('cuda')
 
-        input_ = input_.to(self._device)
-        input_.requires_grad = True
+        self.model.zero_grad()
 
         self.gradients = torch.zeros(input_.shape)
 
         # Get a raw prediction value (logit) from the last linear layer
 
         output = self.model(input_)
+
+        # Don't set the gradient target if the model is a binary classifier
+        # i.e. has one class prediction
 
         if len(output.shape) == 1:
             target = None
@@ -89,6 +90,9 @@ class Backprop:
             # set all element to zero
 
             target = torch.FloatTensor(1, output.shape[-1]).zero_()
+
+            if torch.cuda.is_available() and use_gpu:
+                target = target.to('cuda')
 
             if (target_class is not None) and (top_class != target_class):
                 warnings.warn(UserWarning(

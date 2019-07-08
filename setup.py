@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 with open('README.md', 'r') as fh:
     long_description = fh.read()
 
-version = '0.0.7'
+version = '0.0.8'
 
 setup(
     name='flashtorch',
@@ -29,7 +29,9 @@ setup(
         'importlib_resources'
     ],
     classifiers=[
-        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3 :: Only',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ],
