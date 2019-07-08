@@ -1,10 +1,18 @@
 # FlashTorch :flashlight:
 
+[![DOI](https://zenodo.org/badge/177140934.svg)](https://zenodo.org/badge/latestdoi/177140934)
+
 Visualisation toolkit implemented in PyTorch for inspecting what neural networks learn in image recognition tasks (feature visualisation).
 
 The project is very much work in progress, and I would appreciate your feedback!
 
 It currently supports visualisation of saliancy maps for all the models available under [torchvision.models](https://pytorch.org/docs/stable/torchvision/models.html).
+
+## Citation
+
+```txt
+Misa Ogura. (2019, July 8). MisaOgura/flashtorch: 0.0.8 (Version v0.0.8). Zenodo. http://doi.org/10.5281/zenodo.3271410
+```
 
 ## Installation
 
