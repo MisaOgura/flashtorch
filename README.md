@@ -8,19 +8,48 @@ The project is very much work in progress, and I would appreciate your feedback!
 
 It currently supports visualisation of saliancy maps for all the models available under [torchvision.models](https://pytorch.org/docs/stable/torchvision/models.html).
 
-## Citation
+## Overview
 
-```txt
-Misa Ogura. (2019, July 8). MisaOgura/flashtorch: 0.0.8 (Version v0.0.8). Zenodo. http://doi.org/10.5281/zenodo.3271410
-```
+- [Installation](#installation)
+- [API guide](#api-guide)
+- [Example notebooks](#example-notebooks)
+  - [Image handling](#image-handling)
+  - [Saliency maps](#saliency-maps)
+- [Talks & blog posts](#talks-&-blog-posts)
+- [Papers](#papers)
+- [Inspiration](#inspiration)
+- [Citation](#citation)
+- [Author](#author)
 
 ## Installation
+
+If you are installing `flashtorch` for the first time:
 
 ```bash
 $ pip install flashtorch
 ```
 
+Or if you are upgrading it:
+
+```bash
+$ pip install flashtorch -U
+```
+
+## API guide
+
+An API guide is under construction, so this is a temporary workaround.
+
+These are currently available modules.
+
+- `flashtorch.utils`: some useful utilility functions for data handling & transformation
+- `flashtorch.utils.imagenet`: `ImageNetIndex` class for easy-ish retrieval of class index
+- `flashtorch.saliency.backprop`: `Backprop` class for calculating gradients
+
+You can inspect each module with Python built-in function `help`. The output of that is available on [Quick API Guide page](https://github.com/MisaOgura/flashtorch/wiki/Quick-API-Guide) for your convenience.
+
 ## Example notebooks
+
+Here are some handy notebooks showing you examples of using `flashtorch`.
 
 ### Image handling
 
@@ -36,7 +65,7 @@ Notebook: [Image-specific class saliency map with backpropagation](./examples/vi
 
 **Saliency maps** in computer vision provide indications of the most salient regions within images. By creating a saliency map for neural networks, we can gain some intuition on _"where the network is paying the most attention to"_ in an imput image.
 
-### AlexNet visualisation
+#### AlexNet visualisation
 
 Using `flashtorch.saliency` module, let's visualise image-specific class saliency maps of [AlexNet](https://arxiv.org/abs/1404.5997) pre-trained on [ImageNet](http://www.image-net.org/) classification tasks.
 
@@ -57,7 +86,7 @@ And in case of a toucan, the network is paying an intense attention on its beak.
 
 Do you agree? :robot:
 
-### Insignts on transfer learning
+#### Insignts on transfer learning
 
 In the example above, we've visualised saliency maps for a network that has been trained on ImageNet and used images of objects which it _already knows_.
 
@@ -77,11 +106,15 @@ The network has _learnt to shift its focus_ on the mottle patten within flower c
 
 ![Transfer learning post](examples/images/transfer_learning_post.png)
 
-## Talks on FlashTorch
+## Talks & blog posts
 
 - [Hopperx1 London](http://www.cvent.com/events/hopperx1-london/agenda-e7d0f2fa5e9d46cf88fd8c322ae1290b.aspx), June 2019 - [slide deck](https://misaogura.github.io/flashtorch/presentations/Hopperx1London)
 
-## Papers on feature visualisation
+- [Uncovering what neural nets “see” with FlashTorch](https://towardsdatascience.com/feature-visualisation-in-pytorch-saliency-maps-a3f99d08f78a)
+
+- [Gaining insights on transfer learning with FlashTorch](https://towardsdatascience.com/gaining-insights-on-transfer-learning-with-flashtorch-de344df0f410)
+
+## Papers
 
 - Introduction and overview of feature visualisation: [Feature Visualization](https://distill.pub/2017/feature-visualization/)
 
@@ -96,3 +129,19 @@ The network has _learnt to shift its focus_ on the mottle patten within flower c
 - [pytorch-cnn-visualizations](https://github.com/utkuozbulak/pytorch-cnn-visualizations) by utkuozbulak
 
 - [keras-vis](https://github.com/raghakot/keras-vis) by raghakot
+
+## Citation
+
+```txt
+Misa Ogura. (2019, July 8). MisaOgura/flashtorch: 0.0.8 (Version v0.0.8). Zenodo. http://doi.org/10.5281/zenodo.3271410
+```
+
+## Author
+
+### Misa Ogura
+
+#### 👩🏻‍💻 R&D Software Engineer @ [BBC](https://www.bbc.co.uk/rd/blog)
+
+#### 🏳️‍🌈 Co-founder of [Women Driven Development](https://womendrivendev.org/)
+
+[Github](https://github.com/MisaOgura) | [Medium](https://medium.com/@misaogura) | [twitter](https://twitter.com/misa_ogura) | [LinkedIn](https://www.linkedin.com/in/misaogura/)
