@@ -1,5 +1,10 @@
 # FlashTorch :flashlight:
 
+
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/flashtorch.svg?color=green)
+![PyPI](https://img.shields.io/pypi/v/flashtorch.svg?color=yellow)
+![PyPI - License](https://img.shields.io/pypi/l/flashtorch.svg?color=black)
+
 [![DOI](https://zenodo.org/badge/177140934.svg)](https://zenodo.org/badge/latestdoi/177140934)
 
 Visualisation toolkit implemented in PyTorch for inspecting what neural networks learn in image recognition tasks (feature visualisation).
@@ -137,6 +142,8 @@ Misa Ogura. (2019, July 8). MisaOgura/flashtorch: 0.0.8 (Version v0.0.8). Zenodo
 ```
 
 ## Author
+
+[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/MisaOgura)
 
 ### Misa Ogura
 
