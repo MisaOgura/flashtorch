@@ -1,9 +1,8 @@
 # FlashTorch :flashlight:
 
-
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/flashtorch.svg?color=green)
-![PyPI](https://img.shields.io/pypi/v/flashtorch.svg?color=yellow)
-![PyPI - License](https://img.shields.io/pypi/l/flashtorch.svg?color=black)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/flashtorch.svg?color=green)](https://pypi.org/project/flashtorch/)
+[![PyPI](https://img.shields.io/pypi/v/flashtorch.svg?color=yellow)](https://pypi.org/project/flashtorch/)
+[![PyPI - License](https://img.shields.io/pypi/l/flashtorch.svg?color=black)](https://github.com/MisaOgura/flashtorch/blob/master/LICENSE)
 
 [![DOI](https://zenodo.org/badge/177140934.svg)](https://zenodo.org/badge/latestdoi/177140934)
 
@@ -141,9 +140,9 @@ The network has _learnt to shift its focus_ on the mottle patten within flower c
 Misa Ogura. (2019, July 8). MisaOgura/flashtorch: 0.0.8 (Version v0.0.8). Zenodo. http://doi.org/10.5281/zenodo.3271410
 ```
 
-## Author
-
 [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/MisaOgura)
+
+## Author
 
 ### Misa Ogura
 
