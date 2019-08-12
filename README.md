@@ -1,9 +1,8 @@
-# FlashTorch :flashlight:
+# FlashTorch
 
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/flashtorch.svg?color=green)](https://pypi.org/project/flashtorch/)
 [![PyPI](https://img.shields.io/pypi/v/flashtorch.svg?color=yellow)](https://pypi.org/project/flashtorch/)
 [![PyPI - License](https://img.shields.io/pypi/l/flashtorch.svg?color=black)](https://github.com/MisaOgura/flashtorch/blob/master/LICENSE)
-
 [![DOI](https://zenodo.org/badge/177140934.svg)](https://zenodo.org/badge/latestdoi/177140934)
 
 Visualisation toolkit implemented in PyTorch for inspecting what neural networks learn in image recognition tasks (feature visualisation).
@@ -19,7 +18,7 @@ It currently supports visualisation of saliancy maps for all the models availabl
 - [Example notebooks](#example-notebooks)
   - [Image handling](#image-handling)
   - [Saliency maps](#saliency-maps)
-- [Talks & blog posts](#talks-&-blog-posts)
+- [Talks & blog posts](#talks--blog-posts)
 - [Papers](#papers)
 - [Inspiration](#inspiration)
 - [Citation](#citation)
@@ -88,7 +87,7 @@ And in case of a toucan, the network is paying an intense attention on its beak.
 
 ![Saliency map of tucan in Alexnet](examples/images/alexnet_tucan.png)
 
-Do you agree? :robot:
+Do you agree?
 
 #### Insignts on transfer learning
 
@@ -146,8 +145,8 @@ Misa Ogura. (2019, July 8). MisaOgura/flashtorch: 0.0.8 (Version v0.0.8). Zenodo
 
 ### Misa Ogura
 
-#### 👩🏻‍💻 R&D Software Engineer @ [BBC](https://www.bbc.co.uk/rd/blog)
+#### R&D Software Engineer @ [BBC](https://www.bbc.co.uk/rd/blog)
 
-#### 🏳️‍🌈 Co-founder of [Women Driven Development](https://womendrivendev.org/)
+#### Co-founder of [Women Driven Development](https://womendrivendev.org/)
 
 [Github](https://github.com/MisaOgura) | [Medium](https://medium.com/@misaogura) | [twitter](https://twitter.com/misa_ogura) | [LinkedIn](https://www.linkedin.com/in/misaogura/)
