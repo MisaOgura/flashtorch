@@ -9,7 +9,7 @@ Visualisation toolkit implemented in PyTorch for inspecting what neural networks
 
 The project is very much work in progress, and I would appreciate your feedback!
 
-It currently supports visualisation of saliancy maps for all the models available under [torchvision.models](https://pytorch.org/docs/stable/torchvision/models.html).
+It currently supports visualisation of saliency maps for all the models available under [torchvision.models](https://pytorch.org/docs/stable/torchvision/models.html).
 
 ## Overview
 
@@ -44,7 +44,7 @@ An API guide is under construction, so this is a temporary workaround.
 
 These are currently available modules.
 
-- `flashtorch.utils`: some useful utilility functions for data handling & transformation
+- `flashtorch.utils`: some useful utility functions for data handling & transformation
 - `flashtorch.utils.imagenet`: `ImageNetIndex` class for easy-ish retrieval of class index
 - `flashtorch.saliency.backprop`: `Backprop` class for calculating gradients
 
@@ -52,7 +52,7 @@ You can inspect each module with Python built-in function `help`. The output of 
 
 ## Example notebooks
 
-Here are some handy notebooks showing you examples of using `flashtorch`.
+Here are some handy notebooks showing examples of using `flashtorch`.
 
 ### Image handling
 
@@ -78,18 +78,18 @@ The network is focusing on the sunken eyes and the round head for this owl.
 ![Saliency map of great grey owl in Alexnet](examples/images/alexnet_great_grey_owl.png)
 
 **Peacock** (class index 84):
-But it doesn't always focus on the eyes and head of an animal. In its world's view, what makes peacok a peacok is the eyespots on its tail!
+But it doesn't always focus on the eyes and head of an animal. In its world's view, what makes peacock a peacock is the eyespots on its tail!
 
 ![Saliency map of peacock in Alexnet](examples/images/alexnet_peacock.png)
 
 **Toucan** (class index 96):
 And in case of a toucan, the network is paying an intense attention on its beak.
 
-![Saliency map of tucan in Alexnet](examples/images/alexnet_tucan.png)
+![Saliency map of toucan in Alexnet](examples/images/alexnet_tucan.png)
 
 Do you agree?
 
-#### Insignts on transfer learning
+#### Insights on transfer learning
 
 In the example above, we've visualised saliency maps for a network that has been trained on ImageNet and used images of objects which it _already knows_.
 
@@ -105,7 +105,7 @@ With _no additional training_, and just by swapping out the last fully-connected
 
 With training, the model now achieves 98.7% test accuracy. But _why_? What is it that it's seeing now, that it wasn't before?
 
-The network has _learnt to shift its focus_ on the mottle patten within flower cups! In it's world's view, that is the most distinguishing things about this object, which I think closely align with what _we_ deem the most unique trait of this flower.
+The network has _learnt to shift its focus_ on the mottled patten within flower cups! In its world's view, that is the most distinguishing things about this object, which I think closely align with what _we_ deem the most unique trait of this flower.
 
 ![Transfer learning post](examples/images/transfer_learning_post.png)
 
@@ -121,7 +121,7 @@ The network has _learnt to shift its focus_ on the mottle patten within flower c
 
 - Introduction and overview of feature visualisation: [Feature Visualization](https://distill.pub/2017/feature-visualization/)
 
-- Latest development in feature visualisation: [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
+- The latest development in feature visualisation: [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
 
 - Using backpropagation for gradient visualisation: [Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps](https://arxiv.org/pdf/1312.6034.pdf)
 
