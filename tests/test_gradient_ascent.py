@@ -35,6 +35,7 @@ def available_models():
 def g_ascent(model):
     return GradientAscent(model)
 
+
 ##############
 # Test cases #
 ##############
@@ -129,6 +130,13 @@ def test_register_backward_hook_to_first_conv_layer(mocker, model):
     g_ascent.optimize(0, 0, 2)
 
     conv_layer.register_backward_hook.assert_called_once()
+
+
+def test_visualize_one_filter(model):
+    g_ascent = GradientAscent(model)
+    output = g_ascent.visualize(0, 0, 2, return_output=True)
+
+    assert output.shape == (1, 3, 224, 224)
 
 
 if __name__ == '__main__':
