@@ -16,10 +16,11 @@ class GradientAscent(nn.Module):
     """
     """
 
-    def __init__(self, model, lr=0.01, weight_decay=1e-5):
+    def __init__(self, model, img_size=128, lr=0.01, weight_decay=1e-5):
         super().__init__()
 
         self.model = model
+        self._img_size = img_size
         self._lr = lr
         self._weight_decay = weight_decay
 
@@ -42,6 +43,14 @@ class GradientAscent(nn.Module):
     @weight_decay.setter
     def weight_decay(self, weight_decay):
         self._weight_decay = weight_decay
+
+    @property
+    def img_size(self):
+        return self._img_size
+
+    @img_size.setter
+    def img_size(self, img_size):
+        self._img_size = img_size
 
     def _register_forward_hooks(self, layer_idx, filter_idx):
         def _record_activation(module, input_, output):
@@ -107,8 +116,7 @@ class GradientAscent(nn.Module):
         if filter_idx > num_filters:
             raise ValueError(f'Filter index must be <= {num_filters}.')
 
-    def optimize(self, layer_idx, filter_idx, num_iter, size=224,
-                 with_adam=True):
+    def optimize(self, layer_idx, filter_idx, num_iter, with_adam=True):
         """
         """
 
@@ -123,8 +131,9 @@ class GradientAscent(nn.Module):
 
         # Inisialize input noise
 
-        input_noise = np.uint8(np.random.uniform(150, 180, (size, size, 3)))
-        input_noise = apply_transforms(input_noise, size=size)
+        input_noise = np.uint8(
+            np.random.uniform(150, 180, (self._img_size, self._img_size, 3)))
+        input_noise = apply_transforms(input_noise, size=self._img_size)
 
         # Inisialize gradients
 
@@ -139,7 +148,7 @@ class GradientAscent(nn.Module):
 
         return output
 
-    def visualize_filter(self, layer_idx, filter_idx, num_iter=20, size=224,
+    def visualize_filter(self, layer_idx, filter_idx, num_iter=20,
                          with_adam=True, figsize=(4, 4), return_output=False):
         """
         """
@@ -147,7 +156,6 @@ class GradientAscent(nn.Module):
         output = self.optimize(layer_idx,
                                filter_idx,
                                num_iter,
-                               size,
                                with_adam)
 
         plt.figure(figsize=figsize)
@@ -161,7 +169,7 @@ class GradientAscent(nn.Module):
         if return_output:
             return output
 
-    def visualize_layer(self, layer_idx, num_iter=20, size=224, with_adam=True,
+    def visualize_layer(self, layer_idx, num_iter=20, with_adam=True,
                         num_subplots=5, return_output=False):
         """
         """
@@ -187,7 +195,6 @@ class GradientAscent(nn.Module):
             output = self.optimize(layer_idx,
                                    filter_idx,
                                    num_iter,
-                                   size,
                                    with_adam)
 
             outputs.append(output)

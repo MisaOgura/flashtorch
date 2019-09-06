@@ -4,6 +4,7 @@ import pytest
 
 from sys import stdout
 
+import numpy as np
 import torch.nn as nn
 import torchvision.models as models
 
@@ -59,23 +60,29 @@ def test_set_custom_weight_decay(g_ascent):
     assert g_ascent.weight_decay == 1e-3
 
 
-def test_optimize_with_default_input_size(g_ascent):
+def test_default_img_size(g_ascent):
+    default_img_size = 128
+    assert g_ascent.img_size == default_img_size
+
     output = g_ascent.optimize(0, 0, 2)
 
-    assert output.shape == (1, 3, 224, 224)
+    assert output.shape == (1, 3, default_img_size, default_img_size)
 
 
-def test_optimize_with_custom_input_size(g_ascent):
-    custom_input_size = 64
-    output = g_ascent.optimize(0, 0, 2, size=custom_input_size)
+def test_set_custom_img_size(g_ascent):
+    custom_img_size = 64
+    g_ascent.img_size = custom_img_size
+    assert g_ascent.img_size == custom_img_size
 
-    assert output.shape == (1, 3, custom_input_size, custom_input_size)
+    output = g_ascent.optimize(0, 0, 2)
+
+    assert output.shape == (1, 3, custom_img_size, custom_img_size)
 
 
 def test_optimize_without_adam(g_ascent):
     output = g_ascent.optimize(0, 0, 2, with_adam=False)
 
-    assert output.shape == (1, 3, 224, 224)
+    assert output.shape == (1, 3, g_ascent.img_size, g_ascent.img_size)
 
 
 def test_invalid_layer_idx_not_int(g_ascent):
@@ -153,11 +160,16 @@ def test_register_backward_hook_to_first_conv_layer(mocker, model):
 def test_visualize_one_filter(model, g_ascent):
     output = g_ascent.visualize_filter(0, 0, 2, return_output=True)
 
-    assert output.shape == (1, 3, 224, 224)
+    assert output.shape == (1, 3, g_ascent.img_size, g_ascent.img_size)
 
 
-def test_visualize_one_layer(model, g_ascent):
+def test_visualize_many_filters(model, g_ascent):
+    filter_idxs = np.random.choice(range(64), size=5)
+
+
+def test_visualize_random_filters_from_one_layer(model, g_ascent):
     num_subplots = 3
+
     output = g_ascent.visualize_layer(
         0, num_iter=2, num_subplots=num_subplots, return_output=True)
 
