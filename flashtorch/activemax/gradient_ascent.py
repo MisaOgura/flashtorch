@@ -1,12 +1,15 @@
 import sys
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from flashtorch.utils import standardize_and_clip, apply_transforms
+from flashtorch.utils import (apply_transforms,
+                              format_for_plotting,
+                              standardize_and_clip)
 
 
 class GradientAscent(nn.Module):
@@ -81,8 +84,8 @@ class GradientAscent(nn.Module):
         if filter_idx > num_filters:
             raise ValueError(f'Filter index must be <= {num_filters}.')
 
-    def optimize(self, layer_idx, filter_idx, num_iter,
-                 size=224, with_adam=True):
+    def optimize(self, layer_idx, filter_idx, num_iter, size=224,
+                 with_adam=True):
         """
         """
 
@@ -112,3 +115,23 @@ class GradientAscent(nn.Module):
             output = self._ascent(input_noise, num_iter)
 
         return output
+
+    def visualize(self, layer_idx, filter_idx, num_iter=20, size=224,
+                  with_adam=True, return_output=False):
+        """
+        """
+
+        output = self.optimize(
+            layer_idx, filter_idx, num_iter, size, with_adam)
+
+        plt.figure(figsize=(4, 4))
+
+        plt.title(f'Conv2d ({layer_idx}, {filter_idx})')
+        plt.axis('off')
+
+        plt.imshow(format_for_plotting(standardize_and_clip(output)));
+
+        # Return output for further processing if desired
+
+        if return_output:
+            return output
