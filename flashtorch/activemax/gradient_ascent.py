@@ -68,7 +68,8 @@ class GradientAscent(nn.Module):
         return x
 
     def _check_indecies(self, layer_idx, filter_idx):
-        if (type(layer_idx) != int) or (type(filter_idx) != int):
+        if not np.issubdtype(type(layer_idx), np.integer) \
+                or not np.issubdtype(type(filter_idx), np.integer):
             raise TypeError('Indecies must be integers.')
         elif (layer_idx < 0) or (filter_idx < 0):
             raise ValueError('Indecies must be zero or positive integers.')
