@@ -42,7 +42,7 @@ class GradientAscent(nn.Module):
                 break
 
     def _ascent_with_adam(self, x, num_iter):
-        optimizer = optim.Adam([x], lr=0.1, weight_decay=1e-5)
+        optimizer = optim.Adam([x], lr=0.01, weight_decay=1e-5)
         optimizer.zero_grad()
 
         for i in range(num_iter):
