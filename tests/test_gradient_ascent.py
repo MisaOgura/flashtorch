@@ -108,5 +108,28 @@ def test_invalid_filter_idx_too_large(g_ascent):
     assert 'Filter index must be <=' in str(err.value)
 
 
+def test_register_forward_hook_to_target_layer(mocker, model):
+    layer_idx = 6
+    target_layer = model[layer_idx]
+    mocker.spy(target_layer, 'register_forward_hook')
+
+    g_ascent = GradientAscent(model)
+
+    g_ascent.optimize(layer_idx, 0, 2)
+
+    target_layer.register_forward_hook.assert_called_once()
+
+
+def test_register_backward_hook_to_first_conv_layer(mocker, model):
+    conv_layer = find_first_conv_layer(model, nn.modules.conv.Conv2d, 3)
+    mocker.spy(conv_layer, 'register_backward_hook')
+
+    g_ascent = GradientAscent(model)
+
+    g_ascent.optimize(0, 0, 2)
+
+    conv_layer.register_backward_hook.assert_called_once()
+
+
 if __name__ == '__main__':
     pytest.main([__file__])

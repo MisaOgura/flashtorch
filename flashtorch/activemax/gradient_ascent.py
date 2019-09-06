@@ -74,7 +74,7 @@ class GradientAscent(nn.Module):
             raise ValueError(f'Layer index must be <= {self.num_layers}.')
 
         if not isinstance(self.model[layer_idx], nn.modules.conv.Conv2d):
-            raise RuntimeError('Selected layer is not of Conv2d.')
+            raise RuntimeError('Layer {layer_idx} is not Conv2d.')
 
         num_filters = self.model[layer_idx].out_channels
 
