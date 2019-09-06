@@ -129,6 +129,7 @@ class Backprop:
             if isinstance(module, nn.modules.conv.Conv2d) and \
                     module.in_channels == 3:
                 module.register_backward_hook(_record_gradients)
+                break
 
     def _register_relu_hooks(self):
         def _record_output(module, input_, output):
