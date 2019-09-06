@@ -41,69 +41,69 @@ def g_ascent(model):
 
 
 def test_optimize_with_default_input_size(g_ascent):
-    output = g_ascent.optimize(0, 0, 5)
+    output = g_ascent.optimize(0, 0, 2)
 
     assert output.shape == (1, 3, 224, 224)
 
 
 def test_optimize_with_custom_input_size(g_ascent):
     custom_input_size = 64
-    output = g_ascent.optimize(0, 0, 5, size=custom_input_size)
+    output = g_ascent.optimize(0, 0, 2, size=custom_input_size)
 
     assert output.shape == (1, 3, custom_input_size, custom_input_size)
 
 
 def test_optimize_without_adam(g_ascent):
-    output = g_ascent.optimize(0, 0, 5, with_adam=False)
+    output = g_ascent.optimize(0, 0, 2, with_adam=False)
 
     assert output.shape == (1, 3, 224, 224)
 
 
 def test_invalid_layer_idx_not_int(g_ascent):
     with pytest.raises(TypeError) as err:
-        g_ascent.optimize('first', 0, 5)
+        g_ascent.optimize('first', 0, 2)
 
     assert 'must be int' in str(err.value)
 
 
 def test_invalid_layer_idx_negative(g_ascent):
     with pytest.raises(ValueError) as err:
-        g_ascent.optimize(-1, 0, 5)
+        g_ascent.optimize(-1, 0, 2)
 
     assert 'must be zero or positive int' in str(err.value)
 
 
 def test_invalid_layer_idx_too_large(g_ascent):
     with pytest.raises(ValueError) as err:
-        g_ascent.optimize(15, 0, 5)  # alexnet has 13 layers
+        g_ascent.optimize(15, 0, 2)  # alexnet has 13 layers
 
     assert 'Layer index must be <=' in str(err.value)
 
 
 def test_invalid_layer_idx_not_conv_layer(g_ascent):
     with pytest.raises(RuntimeError) as err:
-        g_ascent.optimize(1, 0, 5)  # layer index 1 is a ReLU layer
+        g_ascent.optimize(1, 0, 2)  # layer index 1 is a ReLU layer
 
-    assert 'is not of Conv2d' in str(err.value)
+    assert 'is not Conv2d' in str(err.value)
 
 
 def test_invalid_filter_idx_not_int(g_ascent):
     with pytest.raises(TypeError) as err:
-        g_ascent.optimize(0, 'first', 5)
+        g_ascent.optimize(0, 'first', 2)
 
     assert 'must be int' in str(err.value)
 
 
 def test_invalid_filter_idx_negative(g_ascent):
     with pytest.raises(ValueError) as err:
-        g_ascent.optimize(0, -1, 5)
+        g_ascent.optimize(0, -1, 2)
 
     assert 'must be zero or positive int' in str(err.value)
 
 
 def test_invalid_filter_idx_too_large(g_ascent):
     with pytest.raises(ValueError) as err:
-        g_ascent.optimize(0, 70, 5)  # the first conv layer has 64 filters
+        g_ascent.optimize(0, 70, 2)  # the first conv layer has 64 filters
 
     assert 'Filter index must be <=' in str(err.value)
 
