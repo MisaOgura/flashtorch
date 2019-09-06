@@ -158,17 +158,13 @@ def test_register_backward_hook_to_first_conv_layer(mocker, model):
     conv_layer.register_backward_hook.assert_called_once()
 
 
-def test_visualize_one_filter(model, g_ascent):
+def test_visualize_one_filter(g_ascent):
     output = g_ascent.visualize_filter(0, 0, 2, return_output=True)
 
     assert output.shape == (1, 3, g_ascent.img_size, g_ascent.img_size)
 
 
-def test_visualize_many_filters(model, g_ascent):
-    filter_idxs = np.random.choice(range(64), size=5)
-
-
-def test_visualize_random_filters_from_one_layer(model, g_ascent):
+def test_visualize_random_filters_from_one_layer(g_ascent):
     num_subplots = 3
 
     output = g_ascent.visualize_filters(
@@ -177,7 +173,18 @@ def test_visualize_random_filters_from_one_layer(model, g_ascent):
     assert len(output) == num_subplots
 
 
-def test_visualize_specified_filters_from_one_layer(model, g_ascent):
+def test_max_num_of_subplots_is_total_num_of_filters(model, g_ascent):
+    num_subplots = 100
+
+    output = g_ascent.visualize_filters(
+        0, num_iter=2, num_subplots=num_subplots, return_output=True)
+
+    total_num_filters = model[0].out_channels
+
+    assert len(output) == total_num_filters
+
+
+def test_visualize_specified_filters_from_one_layer(g_ascent):
     filter_idxs = np.random.choice(range(64), size=5)
 
     output = g_ascent.visualize_filters(
