@@ -134,7 +134,7 @@ def test_register_backward_hook_to_first_conv_layer(mocker, model):
 
 def test_visualize_one_filter(model):
     g_ascent = GradientAscent(model)
-    output = g_ascent.visualize(0, 0, 2, return_output=True)
+    output = g_ascent.visualize_filter(0, 0, 2, return_output=True)
 
     assert output.shape == (1, 3, 224, 224)
 

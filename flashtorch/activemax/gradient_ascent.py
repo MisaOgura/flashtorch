@@ -116,19 +116,18 @@ class GradientAscent(nn.Module):
 
         return output
 
-    def visualize(self, layer_idx, filter_idx, num_iter=20, size=224,
-                  with_adam=True, return_output=False):
+    def visualize_filter(self, layer_idx, filter_idx, num_iter=20, size=224,
+                         with_adam=True, figsize=(4, 4), return_output=False):
         """
         """
 
         output = self.optimize(
             layer_idx, filter_idx, num_iter, size, with_adam)
 
-        plt.figure(figsize=(4, 4))
+        plt.figure(figsize=figsize)
 
-        plt.title(f'Conv2d ({layer_idx}, {filter_idx})')
         plt.axis('off')
-
+        plt.title(f'Conv2d (layer {layer_idx}, filter {filter_idx})')
         plt.imshow(format_for_plotting(standardize_and_clip(output)));
 
         # Return output for further processing if desired
