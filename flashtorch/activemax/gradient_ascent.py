@@ -16,13 +16,32 @@ class GradientAscent(nn.Module):
     """
     """
 
-    def __init__(self, model):
+    def __init__(self, model, lr=0.01, weight_decay=1e-5):
         super().__init__()
 
         self.model = model
+        self._lr = lr
+        self._weight_decay = weight_decay
+
         self.num_layers = len(list(self.model.named_children()))
         self.activation = None
         self.gradients = None
+
+    @property
+    def lr(self):
+        return self._lr
+
+    @lr.setter
+    def lr(self, lr):
+        self._lr = lr
+
+    @property
+    def weight_decay(self):
+        return self._weight_decay
+
+    @weight_decay.setter
+    def weight_decay(self, weight_decay):
+        self._weight_decay = weight_decay
 
     def _register_forward_hooks(self, layer_idx, filter_idx):
         def _record_activation(module, input_, output):
@@ -42,7 +61,10 @@ class GradientAscent(nn.Module):
                 break
 
     def _ascent_with_adam(self, x, num_iter):
-        optimizer = optim.Adam([x], lr=0.01, weight_decay=1e-5)
+        optimizer = optim.Adam([x],
+                               lr=self._lr,
+                               weight_decay=self.weight_decay)
+
         optimizer.zero_grad()
 
         for i in range(num_iter):

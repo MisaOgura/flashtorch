@@ -41,6 +41,24 @@ def g_ascent(model):
 ##############
 
 
+def test_default_lr(g_ascent):
+    assert g_ascent.lr == 0.01
+
+
+def test_set_custom_lr(g_ascent):
+    g_ascent.lr = 0.1
+    assert g_ascent.lr == 0.1
+
+
+def test_default_weight_decay(g_ascent):
+    assert g_ascent.weight_decay == 1e-5
+
+
+def test_set_custom_weight_decay(g_ascent):
+    g_ascent.weight_decay = 1e-3
+    assert g_ascent.weight_decay == 1e-3
+
+
 def test_optimize_with_default_input_size(g_ascent):
     output = g_ascent.optimize(0, 0, 2)
 
@@ -132,16 +150,13 @@ def test_register_backward_hook_to_first_conv_layer(mocker, model):
     conv_layer.register_backward_hook.assert_called_once()
 
 
-def test_visualize_one_filter(model):
-    g_ascent = GradientAscent(model)
+def test_visualize_one_filter(model, g_ascent):
     output = g_ascent.visualize_filter(0, 0, 2, return_output=True)
 
     assert output.shape == (1, 3, 224, 224)
 
 
-def test_visualize_one_layer(model):
-    g_ascent = GradientAscent(model)
-
+def test_visualize_one_layer(model, g_ascent):
     num_subplots = 3
     output = g_ascent.visualize_layer(
         0, num_iter=2, num_subplots=num_subplots, return_output=True)
