@@ -14,17 +14,11 @@ import torchvision.models as models
 
 from flashtorch.saliency import Backprop
 
+from common_utils import *
 
 #####################
 # Utility functions #
 #####################
-
-
-def find_first_conv_layer(model, layer_type, in_channels):
-    for _, module in model.named_modules():
-        if isinstance(module, layer_type) and \
-                module.in_channels == in_channels:
-            return module
 
 
 def find_relu_layers(model, layer_type):
