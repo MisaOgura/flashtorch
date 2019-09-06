@@ -26,7 +26,6 @@ from flashtorch.activemax import GradientAscent
 def model():
     return models.alexnet().features
 
-
 @pytest.fixture
 def available_models():
     return inspect.getmembers(models, inspect.isfunction)
@@ -87,52 +86,38 @@ def test_optimize_without_adam(g_ascent):
 
 
 def test_invalid_layer_idx_not_int(g_ascent):
-    with pytest.raises(TypeError) as err:
+    with pytest.raises(TypeError):
         g_ascent.optimize('first', 0, 2)
-
-    assert 'must be int' in str(err.value)
 
 
 def test_invalid_layer_idx_negative(g_ascent):
-    with pytest.raises(ValueError) as err:
+    with pytest.raises(ValueError):
         g_ascent.optimize(-1, 0, 2)
-
-    assert 'must be zero or positive int' in str(err.value)
 
 
 def test_invalid_layer_idx_too_large(g_ascent):
-    with pytest.raises(ValueError) as err:
+    with pytest.raises(ValueError):
         g_ascent.optimize(15, 0, 2)  # alexnet has 13 layers
-
-    assert 'Layer index must be <=' in str(err.value)
 
 
 def test_invalid_layer_idx_not_conv_layer(g_ascent):
-    with pytest.raises(RuntimeError) as err:
+    with pytest.raises(RuntimeError):
         g_ascent.optimize(1, 0, 2)  # layer index 1 is a ReLU layer
-
-    assert 'is not Conv2d' in str(err.value)
 
 
 def test_invalid_filter_idx_not_int(g_ascent):
-    with pytest.raises(TypeError) as err:
+    with pytest.raises(TypeError):
         g_ascent.optimize(0, 'first', 2)
-
-    assert 'must be int' in str(err.value)
 
 
 def test_invalid_filter_idx_negative(g_ascent):
-    with pytest.raises(ValueError) as err:
+    with pytest.raises(ValueError):
         g_ascent.optimize(0, -1, 2)
-
-    assert 'must be zero or positive int' in str(err.value)
 
 
 def test_invalid_filter_idx_too_large(g_ascent):
-    with pytest.raises(ValueError) as err:
+    with pytest.raises(ValueError):
         g_ascent.optimize(0, 70, 2)  # the first conv layer has 64 filters
-
-    assert 'Filter index must be <=' in str(err.value)
 
 
 def test_register_forward_hook_to_target_layer(mocker, model):
@@ -159,7 +144,7 @@ def test_register_backward_hook_to_first_conv_layer(mocker, model):
 
 
 def test_visualize_one_filter(g_ascent):
-    output = g_ascent.visualize_filter(0, 0, 2, return_output=True)
+    output = g_ascent.visualize(0, 0, 2, return_output=True)
 
     assert output.shape == (1, 3, g_ascent.img_size, g_ascent.img_size)
 
@@ -167,8 +152,8 @@ def test_visualize_one_filter(g_ascent):
 def test_visualize_random_filters_from_one_layer(g_ascent):
     num_subplots = 3
 
-    output = g_ascent.visualize_filters(
-        0, num_iter=2, num_subplots=num_subplots, return_output=True)
+    output = g_ascent.visualize(0, num_iter=2, num_subplots=num_subplots,
+                                return_output=True)
 
     assert len(output) == num_subplots
 
@@ -176,7 +161,7 @@ def test_visualize_random_filters_from_one_layer(g_ascent):
 def test_max_num_of_subplots_is_total_num_of_filters(model, g_ascent):
     num_subplots = 100
 
-    output = g_ascent.visualize_filters(
+    output = g_ascent.visualize(
         0, num_iter=2, num_subplots=num_subplots, return_output=True)
 
     total_num_filters = model[0].out_channels
@@ -187,8 +172,7 @@ def test_max_num_of_subplots_is_total_num_of_filters(model, g_ascent):
 def test_visualize_specified_filters_from_one_layer(g_ascent):
     filter_idxs = np.random.choice(range(64), size=5)
 
-    output = g_ascent.visualize_filters(
-        0, filter_idxs, num_iter=2, return_output=True)
+    output = g_ascent.visualize(0, filter_idxs, num_iter=2, return_output=True)
 
     assert len(output) == len(filter_idxs)
 

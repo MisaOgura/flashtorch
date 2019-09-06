@@ -29,6 +29,7 @@ class GradientAscent(nn.Module):
         self.num_layers = len(list(self.model.named_children()))
         self.activation = None
         self.gradients = None
+        self.output = None
 
     @property
     def lr(self):
@@ -108,23 +109,71 @@ class GradientAscent(nn.Module):
 
         return x
 
-    def _check_indecies(self, layer_idx, filter_idx):
-        if not np.issubdtype(type(layer_idx), np.integer) \
-                or not np.issubdtype(type(filter_idx), np.integer):
+    def _validate_layer_idx(self, layer_idx):
+        if not np.issubdtype(type(layer_idx), np.integer):
             raise TypeError('Indecies must be integers.')
-        elif (layer_idx < 0) or (filter_idx < 0):
-            raise ValueError('Indecies must be zero or positive integers.')
-
-        if layer_idx > self.num_layers:
-            raise ValueError(f'Layer index must be <= {self.num_layers}.')
+        elif (layer_idx < 0) or (layer_idx > self.num_layers):
+            raise ValueError(f'Layer index must be between 0 and {self.num_layers - 1}.')
 
         if not isinstance(self.model[layer_idx], nn.modules.conv.Conv2d):
             raise RuntimeError('Layer {layer_idx} is not Conv2d.')
 
+    def _validate_filter_idx(self, num_filters, filter_idx):
+        if not np.issubdtype(type(filter_idx), np.integer):
+            raise TypeError('Indecies must be integers.')
+        elif (filter_idx < 0) or (filter_idx > num_filters):
+            raise ValueError(f'Filter index must be between 0 and {num_filters - 1}.')
+
+    def _validate_indicies(self, layer_idx, filter_idxs):
+        self._validate_layer_idx(layer_idx)
         num_filters = self.model[layer_idx].out_channels
 
-        if filter_idx > num_filters:
-            raise ValueError(f'Filter index must be <= {num_filters}.')
+        for filter_idx in filter_idxs:
+            self._validate_filter_idx(num_filters, filter_idx)
+
+    def _visualize_filter(self, layer_idx, filter_idx, num_iter, figsize):
+        """
+        """
+
+        self._validate_indicies(layer_idx, [filter_idx])
+
+        self.output = self.optimize(layer_idx, filter_idx, num_iter)
+
+        plt.figure(figsize=figsize)
+        plt.axis('off')
+        plt.title(f'Conv2d (layer {layer_idx}, filter {filter_idx})')
+
+        plt.imshow(format_for_plotting(standardize_and_clip(self.output)));
+
+    def _visualize_filters(self, layer_idx, filter_idxs, num_iter, num_subplots):
+        """
+        """
+
+        # Prepare the main plot
+
+        num_cols = 4
+        num_rows = int(np.ceil(num_subplots / num_cols))
+
+        fig = plt.figure(figsize=(16, num_rows * 5))
+        plt.title(f'Conv2d layer {layer_idx}')
+        plt.axis('off')
+
+        self.output = []
+
+        # Plot subplots
+
+        for i, filter_idx in enumerate(filter_idxs):
+            output = self.optimize(layer_idx, filter_idx, num_iter)
+
+            self.output.append(output)
+
+            ax = fig.add_subplot(num_rows, num_cols, i+1)
+            ax.set_xticks([])
+            ax.set_yticks([])
+            ax.set_title(f'filter {filter_idx}')
+            ax.imshow(format_for_plotting(standardize_and_clip(output)))
+
+        plt.subplots_adjust(wspace=0, hspace=0);
 
     def optimize(self, layer_idx, filter_idx, num_iter):
         """
@@ -132,7 +181,7 @@ class GradientAscent(nn.Module):
 
         # Check if the indecies are valid
 
-        self._check_indecies(layer_idx, filter_idx)
+        self._validate_indicies(layer_idx, [filter_idx])
 
         # Register hooks to recort activation and gradients
 
@@ -141,8 +190,8 @@ class GradientAscent(nn.Module):
 
         # Inisialize input noise
 
-        input_noise = np.uint8(
-            np.random.uniform(150, 180, (self._img_size, self._img_size, 3)))
+        input_noise = np.uint8(np.random.uniform(
+            150, 180, (self._img_size, self._img_size, 3)))
         input_noise = apply_transforms(input_noise, size=self._img_size)
 
         # Inisialize gradients
@@ -158,61 +207,29 @@ class GradientAscent(nn.Module):
 
         return output
 
-    def visualize_filter(self, layer_idx, filter_idx, num_iter=20,
-                         figsize=(4, 4), return_output=False):
-        """
-        """
-
-        output = self.optimize(layer_idx, filter_idx, num_iter)
-
-        plt.figure(figsize=figsize)
-        plt.axis('off')
-        plt.title(f'Conv2d (layer {layer_idx}, filter {filter_idx})')
-
-        plt.imshow(format_for_plotting(standardize_and_clip(output)));
-
-        if return_output:
-            return output
-
-    def visualize_filters(self, layer_idx, filter_idxs=None, num_iter=20,
-                          num_subplots=5, return_output=False):
-        """
-        """
-
-        num_total_filters = self.model[layer_idx].out_channels
-        num_subplots = min(num_total_filters, num_subplots)
-
-        if filter_idxs is None:
-            filter_idxs = np.random.choice(
-                range(num_total_filters), size=num_subplots)
-
-        # Prepare the main plot
-
-        num_cols = 4
-        num_rows = int(np.ceil(num_subplots / num_cols))
-
-        fig = plt.figure(figsize=(16, num_rows * 5))
-        plt.title(f'Conv2d layer {layer_idx}')
-        plt.axis('off')
-
-        outputs = []
-
-        for i, filter_idx in enumerate(filter_idxs):
-            output = self.optimize(layer_idx, filter_idx, num_iter)
-
-            outputs.append(output)
-
-            ax = fig.add_subplot(num_rows, num_cols, i+1)
-            ax.set_xticks([])
-            ax.set_yticks([])
-            ax.set_title(f'filter {filter_idx}')
-            ax.imshow(format_for_plotting(standardize_and_clip(output)))
-
-        plt.subplots_adjust(wspace=0, hspace=0);
-
-        if return_output:
-            return outputs
-
-    def visualize(self, layer_idx, filter_idxs, num_iter=20,
+    def visualize(self, layer_idx, filter_idxs=None, num_iter=20,
                   num_subplots=5, return_output=False):
-        pass
+
+        if (type(filter_idxs) == int):
+            output = self._visualize_filter(layer_idx,
+                                            filter_idxs,
+                                            num_iter=num_iter,
+                                            figsize=(4, 4))
+        else:
+            if filter_idxs is None:
+                num_total_filters = self.model[layer_idx].out_channels
+                num_subplots = min(num_total_filters, num_subplots)
+
+                filter_idxs = np.random.choice(range(num_total_filters),
+                                               size=num_subplots)
+            else:
+                self._validate_indicies(layer_idx, filter_idxs)
+                num_subplots = len(filter_idxs)
+
+            self._visualize_filters(layer_idx,
+                                    filter_idxs,
+                                    num_iter,
+                                    num_subplots)
+
+        if return_output:
+            return self.output
