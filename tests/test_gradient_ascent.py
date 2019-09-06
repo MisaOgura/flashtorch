@@ -80,7 +80,8 @@ def test_set_custom_img_size(g_ascent):
 
 
 def test_optimize_without_adam(g_ascent):
-    output = g_ascent.optimize(0, 0, 2, with_adam=False)
+    g_ascent.with_adam = False
+    output = g_ascent.optimize(0, 0, 2)
 
     assert output.shape == (1, 3, g_ascent.img_size, g_ascent.img_size)
 
@@ -170,10 +171,19 @@ def test_visualize_many_filters(model, g_ascent):
 def test_visualize_random_filters_from_one_layer(model, g_ascent):
     num_subplots = 3
 
-    output = g_ascent.visualize_layer(
+    output = g_ascent.visualize_filters(
         0, num_iter=2, num_subplots=num_subplots, return_output=True)
 
     assert len(output) == num_subplots
+
+
+def test_visualize_specified_filters_from_one_layer(model, g_ascent):
+    filter_idxs = np.random.choice(range(64), size=5)
+
+    output = g_ascent.visualize_filters(
+        0, filter_idxs, num_iter=2, return_output=True)
+
+    assert len(output) == len(filter_idxs)
 
 
 if __name__ == '__main__':

@@ -16,13 +16,15 @@ class GradientAscent(nn.Module):
     """
     """
 
-    def __init__(self, model, img_size=128, lr=0.01, weight_decay=1e-5):
+    def __init__(self, model, img_size=128, lr=0.01, weight_decay=1e-5,
+                 with_adam=True):
         super().__init__()
 
         self.model = model
         self._img_size = img_size
         self._lr = lr
         self._weight_decay = weight_decay
+        self._with_adam = with_adam
 
         self.num_layers = len(list(self.model.named_children()))
         self.activation = None
@@ -51,6 +53,14 @@ class GradientAscent(nn.Module):
     @img_size.setter
     def img_size(self, img_size):
         self._img_size = img_size
+
+    @property
+    def with_adam(self):
+        return self._with_adam
+
+    @with_adam.setter
+    def with_adam(self, with_adam):
+        self._with_adam = with_adam
 
     def _register_forward_hooks(self, layer_idx, filter_idx):
         def _record_activation(module, input_, output):
@@ -116,7 +126,7 @@ class GradientAscent(nn.Module):
         if filter_idx > num_filters:
             raise ValueError(f'Filter index must be <= {num_filters}.')
 
-    def optimize(self, layer_idx, filter_idx, num_iter, with_adam=True):
+    def optimize(self, layer_idx, filter_idx, num_iter):
         """
         """
 
@@ -141,7 +151,7 @@ class GradientAscent(nn.Module):
 
         # Optimize
 
-        if with_adam:
+        if self.with_adam:
             output = self._ascent_with_adam(input_noise, num_iter)
         else:
             output = self._ascent(input_noise, num_iter)
@@ -149,36 +159,32 @@ class GradientAscent(nn.Module):
         return output
 
     def visualize_filter(self, layer_idx, filter_idx, num_iter=20,
-                         with_adam=True, figsize=(4, 4), return_output=False):
+                         figsize=(4, 4), return_output=False):
         """
         """
 
-        output = self.optimize(layer_idx,
-                               filter_idx,
-                               num_iter,
-                               with_adam)
+        output = self.optimize(layer_idx, filter_idx, num_iter)
 
         plt.figure(figsize=figsize)
-
         plt.axis('off')
         plt.title(f'Conv2d (layer {layer_idx}, filter {filter_idx})')
-        plt.imshow(format_for_plotting(standardize_and_clip(output)));
 
-        # Return output for further processing if desired
+        plt.imshow(format_for_plotting(standardize_and_clip(output)));
 
         if return_output:
             return output
 
-    def visualize_layer(self, layer_idx, num_iter=20, with_adam=True,
-                        num_subplots=5, return_output=False):
+    def visualize_filters(self, layer_idx, filter_idxs=None, num_iter=20,
+                          num_subplots=5, return_output=False):
         """
         """
 
         num_total_filters = self.model[layer_idx].out_channels
         num_subplots = min(num_total_filters, num_subplots)
 
-        filter_idxs = np.random.choice(
-            range(num_total_filters), size=num_subplots)
+        if filter_idxs is None:
+            filter_idxs = np.random.choice(
+                range(num_total_filters), size=num_subplots)
 
         # Prepare the main plot
 
@@ -192,10 +198,7 @@ class GradientAscent(nn.Module):
         outputs = []
 
         for i, filter_idx in enumerate(filter_idxs):
-            output = self.optimize(layer_idx,
-                                   filter_idx,
-                                   num_iter,
-                                   with_adam)
+            output = self.optimize(layer_idx, filter_idx, num_iter)
 
             outputs.append(output)
 
@@ -203,11 +206,13 @@ class GradientAscent(nn.Module):
             ax.set_xticks([])
             ax.set_yticks([])
             ax.set_title(f'filter {filter_idx}')
-            ax.imshow(format_for_plotting(standardize_and_clip(output)));
+            ax.imshow(format_for_plotting(standardize_and_clip(output)))
 
         plt.subplots_adjust(wspace=0, hspace=0);
 
-        # Return outputs for convenience
-
         if return_output:
             return outputs
+
+    def visualize(self, layer_idx, filter_idxs, num_iter=20,
+                  num_subplots=5, return_output=False):
+        pass
