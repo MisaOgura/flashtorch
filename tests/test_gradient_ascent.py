@@ -139,5 +139,15 @@ def test_visualize_one_filter(model):
     assert output.shape == (1, 3, 224, 224)
 
 
+def test_visualize_one_layer(model):
+    g_ascent = GradientAscent(model)
+
+    num_subplots = 3
+    output = g_ascent.visualize_layer(
+        0, num_iter=2, num_subplots=num_subplots, return_output=True)
+
+    assert len(output) == num_subplots
+
+
 if __name__ == '__main__':
     pytest.main([__file__])

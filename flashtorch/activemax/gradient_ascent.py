@@ -122,8 +122,11 @@ class GradientAscent(nn.Module):
         """
         """
 
-        output = self.optimize(
-            layer_idx, filter_idx, num_iter, size, with_adam)
+        output = self.optimize(layer_idx,
+                               filter_idx,
+                               num_iter,
+                               size,
+                               with_adam)
 
         plt.figure(figsize=figsize)
 
@@ -135,3 +138,47 @@ class GradientAscent(nn.Module):
 
         if return_output:
             return output
+
+    def visualize_layer(self, layer_idx, num_iter=20, size=224, with_adam=True,
+                        num_subplots=5, return_output=False):
+        """
+        """
+
+        num_total_filters = self.model[layer_idx].out_channels
+        num_subplots = min(num_total_filters, num_subplots)
+
+        filter_idxs = np.random.choice(
+            range(num_total_filters), size=num_subplots)
+
+        # Prepare the main plot
+
+        num_cols = 4
+        num_rows = int(np.ceil(num_subplots / num_cols))
+
+        fig = plt.figure(figsize=(16, num_rows * 5))
+        plt.title(f'Conv2d layer {layer_idx}')
+        plt.axis('off')
+
+        outputs = []
+
+        for i, filter_idx in enumerate(filter_idxs):
+            output = self.optimize(layer_idx,
+                                   filter_idx,
+                                   num_iter,
+                                   size,
+                                   with_adam)
+
+            outputs.append(output)
+
+            ax = fig.add_subplot(num_rows, num_cols, i+1)
+            ax.set_xticks([])
+            ax.set_yticks([])
+            ax.set_title(f'filter {filter_idx}')
+            ax.imshow(format_for_plotting(standardize_and_clip(output)));
+
+        plt.subplots_adjust(wspace=0, hspace=0);
+
+        # Return outputs for convenience
+
+        if return_output:
+            return outputs
