@@ -31,7 +31,46 @@ class GradientAscent(nn.Module):
         self.gradients = None
         self.output = None
 
+    ####################
+    # Public interface #
+    ####################
+
+    @property
+    def lr(self):
+        return self._lr
+
+    @lr.setter
+    def lr(self, lr):
+        self._lr = lr
+
+    @property
+    def weight_decay(self):
+        return self._weight_decay
+
+    @weight_decay.setter
+    def weight_decay(self, weight_decay):
+        self._weight_decay = weight_decay
+
+    @property
+    def img_size(self):
+        return self._img_size
+
+    @img_size.setter
+    def img_size(self, img_size):
+        self._img_size = img_size
+
+    @property
+    def with_adam(self):
+        return self._with_adam
+
+    @with_adam.setter
+    def with_adam(self, with_adam):
+        self._with_adam = with_adam
+
     def optimize(self, layer, filter_idx, num_iter):
+        """
+        """
+
         # Validate the type of the layer
 
         if type(layer) != nn.modules.conv.Conv2d:
@@ -68,6 +107,8 @@ class GradientAscent(nn.Module):
 
     def visualize(self, layer, filter_idxs=None, num_iter=20,
                   num_subplots=5, return_output=False, figsize=(4, 4)):
+        """
+        """
 
         if (type(filter_idxs) == int):
             output = self._visualize_filter(layer,
@@ -90,37 +131,9 @@ class GradientAscent(nn.Module):
         if return_output:
             return self.output
 
-    @property
-    def lr(self):
-        return self._lr
-
-    @lr.setter
-    def lr(self, lr):
-        self._lr = lr
-
-    @property
-    def weight_decay(self):
-        return self._weight_decay
-
-    @weight_decay.setter
-    def weight_decay(self, weight_decay):
-        self._weight_decay = weight_decay
-
-    @property
-    def img_size(self):
-        return self._img_size
-
-    @img_size.setter
-    def img_size(self, img_size):
-        self._img_size = img_size
-
-    @property
-    def with_adam(self):
-        return self._with_adam
-
-    @with_adam.setter
-    def with_adam(self, with_adam):
-        self._with_adam = with_adam
+    #####################
+    # Private interface #
+    #####################
 
     def _register_forward_hooks(self, layer, filter_idx):
         def _record_activation(module, input_, output):
@@ -174,11 +187,7 @@ class GradientAscent(nn.Module):
         elif (filter_idx < 0) or (filter_idx > num_filters):
             raise ValueError(f'Filter index must be between 0 and {num_filters - 1}.')
 
-
     def _visualize_filter(self, layer, filter_idx, num_iter, figsize):
-        """
-        """
-
         self.output = self.optimize(layer, filter_idx, num_iter)
 
         plt.figure(figsize=figsize)
@@ -188,9 +197,6 @@ class GradientAscent(nn.Module):
         plt.imshow(format_for_plotting(standardize_and_clip(self.output)));
 
     def _visualize_filters(self, layer, filter_idxs, num_iter, num_subplots):
-        """
-        """
-
         # Prepare the main plot
 
         num_cols = 4
