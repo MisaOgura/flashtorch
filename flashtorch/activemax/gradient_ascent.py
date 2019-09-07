@@ -16,14 +16,10 @@ class GradientAscent:
     """
     """
 
-    def __init__(self, model, img_size=128, lr=0.1, weight_decay=1e-5,
-                 with_adam=True):
-
+    def __init__(self, model, img_size=128, lr=1.):
         self.model = model
         self._img_size = img_size
         self._lr = lr
-        self._weight_decay = weight_decay
-        self._with_adam = with_adam
 
         self.num_layers = len(list(self.model.named_children()))
         self.activation = None
@@ -43,28 +39,12 @@ class GradientAscent:
         self._lr = lr
 
     @property
-    def weight_decay(self):
-        return self._weight_decay
-
-    @weight_decay.setter
-    def weight_decay(self, weight_decay):
-        self._weight_decay = weight_decay
-
-    @property
     def img_size(self):
         return self._img_size
 
     @img_size.setter
     def img_size(self, img_size):
         self._img_size = img_size
-
-    @property
-    def with_adam(self):
-        return self._with_adam
-
-    @with_adam.setter
-    def with_adam(self, with_adam):
-        self._with_adam = with_adam
 
     def optimize(self, layer, filter_idx, num_iter):
         """
@@ -97,12 +77,7 @@ class GradientAscent:
 
         # Optimize
 
-        if self.with_adam:
-            output = self._ascent_with_adam(input_noise, num_iter)
-        else:
-            output = self._ascent(input_noise, num_iter)
-
-        return output
+        return self._ascent(input_noise, num_iter)
 
     def visualize(self, layer, filter_idxs=None, num_iter=20,
                   num_subplots=4, return_output=False, figsize=(4, 4)):
@@ -160,23 +135,7 @@ class GradientAscent:
             self.gradients /= (torch.sqrt(torch.mean(
                 torch.mul(self.gradients, self.gradients))) + 1e-5)
 
-            x = x + self.gradients
-
-        return x
-
-    def _ascent_with_adam(self, x, num_iter):
-        optimizer = optim.Adam([x],
-                               lr=self._lr,
-                               weight_decay=self.weight_decay)
-
-        optimizer.zero_grad()
-
-        for i in range(num_iter):
-            self.model(x)
-
-            self.activation.backward()
-
-            optimizer.step()
+            x = x + self.gradients * self._lr
 
         return x
 
@@ -195,8 +154,8 @@ class GradientAscent:
 
         plt.imshow(format_for_plotting(
             standardize_and_clip(self.output,
-                                 saturation=0.2,
-                                 brightness=0.7)));
+                                 saturation=0.15,
+                                 brightness=0.75)));
 
     def _visualize_filters(self, layer, filter_idxs, num_iter, num_subplots):
         # Prepare the main plot
@@ -224,7 +183,7 @@ class GradientAscent:
 
             ax.imshow(format_for_plotting(
                 standardize_and_clip(output,
-                                     saturation=0.2,
-                                     brightness=0.7)))
+                                     saturation=0.15,
+                                     brightness=0.75)))
 
         plt.subplots_adjust(wspace=0, hspace=0);

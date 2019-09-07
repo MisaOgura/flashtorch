@@ -45,16 +45,6 @@ def g_ascent(model):
 ##############
 
 
-def test_set_custom_lr(g_ascent):
-    g_ascent.lr = 0.1
-    assert g_ascent.lr == 0.1
-
-
-def test_set_custom_weight_decay(g_ascent):
-    g_ascent.weight_decay = 1e-3
-    assert g_ascent.weight_decay == 1e-3
-
-
 def test_optimize(g_ascent, conv_layer):
     default_img_size = 128
     assert g_ascent.img_size == default_img_size
@@ -72,13 +62,6 @@ def test_set_custom_img_size(conv_layer, g_ascent):
     output = g_ascent.optimize(conv_layer, 0, 2)
 
     assert output.shape == (1, 3, custom_img_size, custom_img_size)
-
-
-def test_optimize_without_adam(conv_layer, g_ascent):
-    g_ascent.with_adam = False
-    output = g_ascent.optimize(conv_layer, 0, 2)
-
-    assert output.shape == (1, 3, g_ascent.img_size, g_ascent.img_size)
 
 
 def test_invalid_layer_str(g_ascent):
