@@ -122,16 +122,21 @@ def denormalize(tensor):
     return denormalized
 
 
-def standardize_and_clip(tensor, min_value=0.0, max_value=1.0):
+def standardize_and_clip(tensor, min_value=0.0, max_value=1.0,
+                         saturation=0.1, brightness=0.5):
+
     """Standardizes and clips input tensor.
 
-    Standardize the input tensor (mean = 0.0, std = 1.0), ensures std is 0.1
-    and clips it to values between min/max (default: 0.0/1.0).
+    Standardizes the input tensor (mean = 0.0, std = 1.0). The color saturation
+    and brightness are adjusted, before tensor values are clipped to min/max
+    (default: 0.0/1.0).
 
     Args:
         tensor (torch.Tensor):
         min_value (float, optional, default=0.0)
         max_value (float, optional, default=1.0)
+        saturation (float, optional, default=0.1)
+        brightness (float, optional, default=0.5)
 
     Shape:
         Input: :math:`(C, H, W)`
@@ -151,9 +156,8 @@ def standardize_and_clip(tensor, min_value=0.0, max_value=1.0):
     if std == 0:
         std += 1e-7
 
-    standardized = tensor.sub(mean).div(std).mul(0.1)
-
-    clipped = standardized.add(0.5).clamp(min_value, max_value)
+    standardized = tensor.sub(mean).div(std).mul(saturation)
+    clipped = standardized.add(brightness).clamp(min_value, max_value)
 
     return clipped
 

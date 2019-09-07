@@ -193,7 +193,10 @@ class GradientAscent:
         plt.axis('off')
         plt.title(f'Filter no. {filter_idx}')
 
-        plt.imshow(format_for_plotting(standardize_and_clip(self.output)));
+        plt.imshow(format_for_plotting(
+            standardize_and_clip(self.output,
+                                 saturation=0.2,
+                                 brightness=0.7)));
 
     def _visualize_filters(self, layer, filter_idxs, num_iter, num_subplots):
         # Prepare the main plot
@@ -218,6 +221,10 @@ class GradientAscent:
             ax.set_xticks([])
             ax.set_yticks([])
             ax.set_title(f'filter {filter_idx}')
-            ax.imshow(format_for_plotting(standardize_and_clip(output)))
+
+            ax.imshow(format_for_plotting(
+                standardize_and_clip(output,
+                                     saturation=0.2,
+                                     brightness=0.7)))
 
         plt.subplots_adjust(wspace=0, hspace=0);
