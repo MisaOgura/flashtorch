@@ -12,13 +12,12 @@ from flashtorch.utils import (apply_transforms,
                               standardize_and_clip)
 
 
-class GradientAscent(nn.Module):
+class GradientAscent:
     """
     """
 
     def __init__(self, model, img_size=128, lr=0.1, weight_decay=1e-5,
                  with_adam=True):
-        super().__init__()
 
         self.model = model
         self._img_size = img_size
@@ -106,7 +105,7 @@ class GradientAscent(nn.Module):
         return output
 
     def visualize(self, layer, filter_idxs=None, num_iter=20,
-                  num_subplots=5, return_output=False, figsize=(4, 4)):
+                  num_subplots=4, return_output=False, figsize=(4, 4)):
         """
         """
 
