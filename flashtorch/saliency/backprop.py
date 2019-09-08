@@ -198,11 +198,10 @@ class Backprop:
         for i, (title, images) in enumerate(subplots):
             ax = fig.add_subplot(1, len(subplots), i + 1)
             ax.set_axis_off()
+            ax.set_title(title)
 
             for image, cmap, alpha in images:
                 ax.imshow(image, cmap=cmap, alpha=alpha)
-
-        ax.set_title(title)
 
         if return_output:
             return gradients, max_gradients
