@@ -16,7 +16,7 @@ class GradientAscent:
     """
     """
 
-    def __init__(self, model, img_size=128, lr=1.):
+    def __init__(self, model, img_size=224, lr=1.):
         self.model = model
         self._img_size = img_size
         self._lr = lr
@@ -24,6 +24,9 @@ class GradientAscent:
         self.num_layers = len(list(self.model.named_children()))
         self.activation = None
         self.gradients = None
+
+        self.handlers = []
+
         self.output = None
 
     ####################
@@ -60,10 +63,15 @@ class GradientAscent:
         num_total_filters = layer.out_channels
         self._validate_filter_idx(num_total_filters, filter_idx)
 
+        # Remove previous hooks if any
+
+        while len(self.handlers) > 0:
+            self.handlers.pop().remove()
+
         # Register hooks to record activation and gradients
 
-        self._register_forward_hooks(layer, filter_idx)
-        self._register_backward_hooks()
+        self.handlers.append(self._register_forward_hooks(layer, filter_idx))
+        self.handlers.append(self._register_backward_hooks())
 
         # Inisialize input noise
 
@@ -113,7 +121,7 @@ class GradientAscent:
         def _record_activation(module, input_, output):
             self.activation = torch.mean(output[:,filter_idx,:,:])
 
-        layer.register_forward_hook(_record_activation)
+        return layer.register_forward_hook(_record_activation)
 
     def _register_backward_hooks(self):
         def _record_gradients(module, grad_in, grad_out):
@@ -123,8 +131,7 @@ class GradientAscent:
         for _, module in self.model.named_modules():
             if isinstance(module, nn.modules.conv.Conv2d) and \
                     module.in_channels == 3:
-                module.register_backward_hook(_record_gradients)
-                break
+                return module.register_backward_hook(_record_gradients)
 
     def _ascent(self, x, num_iter):
         for i in range(num_iter):
@@ -155,7 +162,7 @@ class GradientAscent:
         plt.imshow(format_for_plotting(
             standardize_and_clip(self.output,
                                  saturation=0.15,
-                                 brightness=0.75)));
+                                 brightness=0.7)));
 
     def _visualize_filters(self, layer, filter_idxs, num_iter, num_subplots):
         # Prepare the main plot
@@ -184,6 +191,6 @@ class GradientAscent:
             ax.imshow(format_for_plotting(
                 standardize_and_clip(output,
                                      saturation=0.15,
-                                     brightness=0.75)))
+                                     brightness=0.7)))
 
         plt.subplots_adjust(wspace=0, hspace=0);
