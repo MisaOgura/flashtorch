@@ -123,7 +123,8 @@ class GradientAscent:
         return self._ascent(input_noise, num_iter)
 
     def visualize(self, layer, filter_idxs=None, num_iter=30,
-                  num_subplots=4, figsize=(4, 4), return_output=False):
+                  num_subplots=4, figsize=(4, 4), title='Conv2d',
+                  return_output=False):
         """Optimizes for the target layer/filter and visualizes the output.
 
         A convinient method that combines optimization and visualization. There
@@ -151,6 +152,7 @@ class GradientAscent:
                 optimize for and visualize. Relevant in case 3 above.
             figsize (tuple, optional, default=(4, 4)): The size of the plot.
                 Relevant in case 1 above.
+            title (str, optional default='Conv2d'): The title of the plot.
             return_output (bool, optional, default=False): Returns the
                 output(s) of optimization if set to True.
 
@@ -172,7 +174,8 @@ class GradientAscent:
             output = self._visualize_filter(layer,
                                             filter_idxs,
                                             num_iter=num_iter,
-                                            figsize=figsize)
+                                            figsize=figsize,
+                                            title=title)
         else:
             num_total_filters = layer.out_channels
 
@@ -184,7 +187,8 @@ class GradientAscent:
             self._visualize_filters(layer,
                                     filter_idxs,
                                     num_iter,
-                                    len(filter_idxs))
+                                    len(filter_idxs),
+                                    title=title)
 
         if return_output:
             return self.output
@@ -231,26 +235,27 @@ class GradientAscent:
         elif (filter_idx < 0) or (filter_idx > num_filters):
             raise ValueError(f'Filter index must be between 0 and {num_filters - 1}.')
 
-    def _visualize_filter(self, layer, filter_idx, num_iter, figsize):
+    def _visualize_filter(self, layer, filter_idx, num_iter, figsize, title):
         self.output = self.optimize(layer, filter_idx, num_iter)
 
         plt.figure(figsize=figsize)
         plt.axis('off')
-        plt.title(f'Filter no. {filter_idx}')
+        plt.title(title)
 
         plt.imshow(format_for_plotting(
             standardize_and_clip(self.output[-1],
                                  saturation=0.15,
                                  brightness=0.7)));
 
-    def _visualize_filters(self, layer, filter_idxs, num_iter, num_subplots):
+    def _visualize_filters(self, layer, filter_idxs, num_iter, num_subplots,
+                           title):
         # Prepare the main plot
 
         num_cols = 4
         num_rows = int(np.ceil(num_subplots / num_cols))
 
         fig = plt.figure(figsize=(16, num_rows * 5))
-        plt.title(f'Conv2d')
+        plt.title(title)
         plt.axis('off')
 
         self.output = []
