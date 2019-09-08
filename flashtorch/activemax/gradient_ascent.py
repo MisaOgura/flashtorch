@@ -13,8 +13,34 @@ from flashtorch.utils import (apply_transforms,
 
 
 class GradientAscent:
+    """Provides an interface for activation maximization via gradient descent.
+
+    This class implements the gradient ascent algorithm in order to perform
+    activation maximization with convolutional neural networks (CNN).
+
+    `Activation maximization <https://pdfs.semanticscholar.org/65d9/94fb778a8d9e0f632659fb33a082949a50d3.pdf>`_
+    is one form of feature visualization that allows us to visualize what CNN
+    filters are "looking for", by applying each filter to an input image and
+    updating the input image so as to maximize the activation of the filter of
+    interest (i.e. treating it as a gradient ascent task with activation as the
+    loss). The implementation is inspired by `this demo <https://blog.keras.io/category/demo.html>`_
+    by Francois Chollet.
+
+    Args:
+        model: A neural network model from `torchvision.models
+            <https://pytorch.org/docs/stable/torchvision/models.html>`_,
+            typically without the fully-connected part of the network.
+            e.g. torchvisions.alexnet(pretrained=True).features
+        img_size (int, optional, default=224): The size of an input image to be
+            optimized.
+        lr (float, optional, default=1.): The step size (or learning rate) of
+            the gradient ascent.
+
     """
-    """
+
+    ####################
+    # Public interface #
+    ####################
 
     def __init__(self, model, img_size=224, lr=1.):
         self.model = model
@@ -28,10 +54,6 @@ class GradientAscent:
         self.handlers = []
 
         self.output = None
-
-    ####################
-    # Public interface #
-    ####################
 
     @property
     def lr(self):
@@ -49,8 +71,21 @@ class GradientAscent:
     def img_size(self, img_size):
         self._img_size = img_size
 
-    def optimize(self, layer, filter_idx, num_iter):
-        """
+    def optimize(self, layer, filter_idx, num_iter=30):
+        """Generates an image that maximally activates the target filter.
+
+        Args:
+            layer (torch.nn.modules.conv.Conv2d): The target Conv2d layer from
+                which the filter to be chosen, based on `filter_idx`.
+            filter_idx (int): The index of the target filter.
+            num_iter (int, optional, default=30): The number of iteration for
+                the gradient ascent operation.
+
+        Returns:
+            output (list of torch.Tensor): With dimentions
+                :math:`(num_iter, C, H, W)`. The size of the image is
+                determined by `img_size` attribute which defaults to 224.
+
         """
 
         # Validate the type of the layer
@@ -87,9 +122,43 @@ class GradientAscent:
 
         return self._ascent(input_noise, num_iter)
 
-    def visualize(self, layer, filter_idxs=None, num_iter=20,
+    def visualize(self, layer, filter_idxs=None, num_iter=30,
                   num_subplots=4, return_output=False, figsize=(4, 4)):
-        """
+        """Optimizes for the target layer/filter and visualizes the output.
+
+        A convinient method that combines optimization and visualization. There
+        are mainly 3 types of operations, given a target layer:
+
+        1. If `filter_idxs` is provided as an integer, it optimizes for the
+            filter specified and plots the output.
+        2. If `filter_idxs` is provided as a list of integers, it optimizes for
+            all the filters specified and plots the output.
+        3. if `filter_idx` is not provided, i.e. None, it randomly chooses
+            `num_subplots` number of filters from the layer provided and
+            plots the output.
+
+        It also returns the output of the optimization, if specified with
+        `return_output=True`.
+
+        Args:
+            layer (torch.nn.modules.conv.Conv2d): The target Conv2d layer from
+                which the filter to be chosen, based on `filter_idx`.
+            filter_idxs (int or list of int, optional, default=None): The index
+                or indecies of the target filter(s).
+            num_iter (int, optional, default=30): The number of iteration for
+                the gradient ascent operation.
+
+        Returns:
+            For a single optimization (i.e. case 1 above):
+                output (list of torch.Tensor): With dimentions
+                    :math:`(num_iter, C, H, W)`. The size of the image is
+                    determined by `img_size` attribute which defaults to 224.
+            For multiple optimization (i.e. case 2 or 3 above):
+                output (list of list of torch.Tensor): With dimentions
+                    :math:`(num_subplots, num_iter, C, H, W)`. The size of the
+                    image is determined by `img_size` attribute which defaults
+                    to 224.
+
         """
 
         if (type(filter_idxs) == int):
