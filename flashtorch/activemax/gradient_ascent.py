@@ -35,6 +35,8 @@ class GradientAscent:
             optimized.
         lr (float, optional, default=1.): The step size (or learning rate) of
             the gradient ascent.
+        use_gpu (bool, optional, default=False): Use GPU if set to True and
+            `torch.cuda.is_available()`.
 
     """
 
@@ -42,10 +44,11 @@ class GradientAscent:
     # Public interface #
     ####################
 
-    def __init__(self, model, img_size=224, lr=1.):
+    def __init__(self, model, img_size=224, lr=1., use_gpu=False):
         self.model = model
         self._img_size = img_size
         self._lr = lr
+        self._use_gpu = use_gpu
 
         self.num_layers = len(list(self.model.named_children()))
         self.activation = None
@@ -70,6 +73,14 @@ class GradientAscent:
     @img_size.setter
     def img_size(self, img_size):
         self._img_size = img_size
+
+    @property
+    def use_gpu(self):
+        return self._use_gpu
+
+    @use_gpu.setter
+    def use_gpu(self, use_gpu):
+        self._use_gpu = use_gpu
 
     def optimize(self, layer, filter_idx, num_iter=30):
         """Generates an image that maximally activates the target filter.
@@ -98,6 +109,16 @@ class GradientAscent:
         num_total_filters = layer.out_channels
         self._validate_filter_idx(num_total_filters, filter_idx)
 
+        # Inisialize input noise
+
+        input_noise = np.uint8(np.random.uniform(
+            150, 180, (self._img_size, self._img_size, 3)))
+        input_noise = apply_transforms(input_noise, size=self._img_size)
+
+        if torch.cuda.is_available() and self.use_gpu:
+            self.model = self.model.to('cuda')
+            input_noise = input_noise.to('cuda')
+
         # Remove previous hooks if any
 
         while len(self.handlers) > 0:
@@ -107,12 +128,6 @@ class GradientAscent:
 
         self.handlers.append(self._register_forward_hooks(layer, filter_idx))
         self.handlers.append(self._register_backward_hooks())
-
-        # Inisialize input noise
-
-        input_noise = np.uint8(np.random.uniform(
-            150, 180, (self._img_size, self._img_size, 3)))
-        input_noise = apply_transforms(input_noise, size=self._img_size)
 
         # Inisialize gradients
 
