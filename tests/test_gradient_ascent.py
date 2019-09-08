@@ -37,7 +37,9 @@ def available_models():
 
 @pytest.fixture
 def g_ascent(model):
-    return GradientAscent(model)
+    g_ascent = GradientAscent(model)
+    g_ascent.img_size = 64  # to reduce test time
+    return g_ascent
 
 
 ##############
@@ -46,12 +48,10 @@ def g_ascent(model):
 
 
 def test_optimize(g_ascent, conv_layer):
-    default_img_size = 224
-    assert g_ascent.img_size == default_img_size
-
     output = g_ascent.optimize(conv_layer, 0, 2)
 
-    assert output.shape == (1, 3, default_img_size, default_img_size)
+    assert len(output) == 2  # num_iter
+    assert output[0].shape == (1, 3, g_ascent.img_size, g_ascent.img_size)
 
 
 def test_set_custom_img_size(conv_layer, g_ascent):
@@ -61,7 +61,7 @@ def test_set_custom_img_size(conv_layer, g_ascent):
 
     output = g_ascent.optimize(conv_layer, 0, 2)
 
-    assert output.shape == (1, 3, custom_img_size, custom_img_size)
+    assert output[0].shape == (1, 3, custom_img_size, custom_img_size)
 
 
 def test_invalid_layer_str(g_ascent):
@@ -144,7 +144,7 @@ def test_remove_any_hooks_before_registering(mocker, conv_layer, model):
 def test_visualize_one_filter(conv_layer, g_ascent):
     output = g_ascent.visualize(conv_layer, 0, 2, return_output=True)
 
-    assert output.shape == (1, 3, g_ascent.img_size, g_ascent.img_size)
+    assert output[-1].shape == (1, 3, g_ascent.img_size, g_ascent.img_size)
 
 
 def test_visualize_random_filters_from_one_layer(conv_layer, g_ascent):
@@ -155,6 +155,8 @@ def test_visualize_random_filters_from_one_layer(conv_layer, g_ascent):
                                 return_output=True)
 
     assert len(output) == num_subplots
+    assert len(output[0]) == 2  # num_iter
+    assert output[0][-1].shape == (1, 3, g_ascent.img_size, g_ascent.img_size)
 
 
 def test_max_num_of_subplots_is_total_num_of_filters(conv_layer, g_ascent):

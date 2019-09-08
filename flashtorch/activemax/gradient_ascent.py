@@ -134,6 +134,8 @@ class GradientAscent:
                 return module.register_backward_hook(_record_gradients)
 
     def _ascent(self, x, num_iter):
+        output = []
+
         for i in range(num_iter):
             self.model(x)
 
@@ -143,8 +145,9 @@ class GradientAscent:
                 torch.mul(self.gradients, self.gradients))) + 1e-5)
 
             x = x + self.gradients * self._lr
+            output.append(x)
 
-        return x
+        return output
 
     def _validate_filter_idx(self, num_filters, filter_idx):
         if not np.issubdtype(type(filter_idx), np.integer):
@@ -160,7 +163,7 @@ class GradientAscent:
         plt.title(f'Filter no. {filter_idx}')
 
         plt.imshow(format_for_plotting(
-            standardize_and_clip(self.output,
+            standardize_and_clip(self.output[-1],
                                  saturation=0.15,
                                  brightness=0.7)));
 
@@ -189,7 +192,7 @@ class GradientAscent:
             ax.set_title(f'filter {filter_idx}')
 
             ax.imshow(format_for_plotting(
-                standardize_and_clip(output,
+                standardize_and_clip(output[-1],
                                      saturation=0.15,
                                      brightness=0.7)))
 
