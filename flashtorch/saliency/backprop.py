@@ -20,9 +20,13 @@ class Backprop:
 
     Args:
         model: A neural network model from `torchvision.models
-            <https://pytorch.org/docs/stable/torchvision/models.html>`
+            <https://pytorch.org/docs/stable/torchvision/models.html>`_.
 
     """
+
+    ####################
+    # Public interface #
+    ####################
 
     def __init__(self, model):
         self.model = model
@@ -119,6 +123,10 @@ class Backprop:
             gradients = gradients.max(dim=0, keepdim=True)[0]
 
         return gradients
+
+    #####################
+    # Private interface #
+    #####################
 
     def _register_conv_hook(self):
         def _record_gradients(module, grad_in, grad_out):
