@@ -4,14 +4,14 @@ from setuptools import setup, find_packages
 with open('README.md', 'r') as fh:
     long_description = fh.read()
 
-version = '0.0.8'
+version = '0.1.0'
 
 setup(
     name='flashtorch',
     version=version,
     author='Misa Ogura',
     author_email='misa.ogura01@gmail.com',
-    description='Visualisation toolkit for neural networks in PyTorch',
+    description='Visualization toolkit for neural networks in PyTorch',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/MisaOgura/flashtorch',
