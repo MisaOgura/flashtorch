@@ -123,7 +123,7 @@ class GradientAscent:
         return self._ascent(input_noise, num_iter)
 
     def visualize(self, layer, filter_idxs=None, num_iter=30,
-                  num_subplots=4, return_output=False, figsize=(4, 4)):
+                  num_subplots=4, figsize=(4, 4), return_output=False):
         """Optimizes for the target layer/filter and visualizes the output.
 
         A convinient method that combines optimization and visualization. There
@@ -147,6 +147,13 @@ class GradientAscent:
                 or indecies of the target filter(s).
             num_iter (int, optional, default=30): The number of iteration for
                 the gradient ascent operation.
+            num_subplots (int, optional, default=4): The number of filters to
+                optimize for and visualize. Relevant in case 3 above.
+            figsize (tuple, optional, default=(4, 4)): The size of the plot.
+                Relevant in case 1 above.
+            return_output (bool, optional, default=False): Returns the
+                output(s) of optimization if set to True.
+
 
         Returns:
             For a single optimization (i.e. case 1 above):

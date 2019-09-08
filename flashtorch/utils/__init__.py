@@ -199,31 +199,3 @@ def format_for_plotting(tensor):
         return formatted.squeeze(0).detach()
     else:
         return formatted.permute(1, 2, 0).detach()
-
-
-def visualize(input_, gradients, max_gradients, cmap='viridis', alpha=0.5):
-    input_ = format_for_plotting(denormalize(input_))
-    gradients = format_for_plotting(standardize_and_clip(gradients))
-    max_gradients = format_for_plotting(standardize_and_clip(max_gradients))
-
-    subplots = [
-        # (title, [(image1, cmap, alpha), (image2, cmap, alpha)])
-        ('Input image', [(input_, None, None)]),
-        ('Gradients across RGB channels', [(gradients, None, None)]),
-        ('Max gradients', [(max_gradients, cmap, None)]),
-        ('Overlay', [(input_, None, None), (max_gradients, cmap, alpha)])
-    ]
-
-    num_subplots = len(subplots)
-
-    fig = plt.figure(figsize=(16, 4))
-
-
-    for i, (title, images) in enumerate(subplots):
-        ax = fig.add_subplot(1, num_subplots, i + 1)
-        ax.set_axis_off()
-
-        for image, cmap, alpha in images:
-            ax.imshow(image, cmap=cmap, alpha=alpha)
-
-        ax.set_title(title)
