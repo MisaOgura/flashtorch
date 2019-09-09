@@ -139,13 +139,13 @@ class GradientAscent:
 
         return self._ascent(input_, num_iter)
 
-    def visualize(self, layer, filter_idxs=None, num_iter=30,
+    def visualize(self, layer, filter_idxs=None, lr=1., num_iter=30,
                   num_subplots=4, figsize=(4, 4), title='Conv2d',
                   return_output=False):
         """Optimizes for the target layer/filter and visualizes the output.
 
-        A convinient method that combines optimization and visualization. There
-        are mainly 3 types of operations, given a target layer:
+        A method that combines optimization and visualization. There are
+        mainly 3 types of operations, given a target layer:
 
         1. If `filter_idxs` is provided as an integer, it optimizes for the
             filter specified and plots the output.
@@ -163,6 +163,7 @@ class GradientAscent:
                 which the filter to be chosen, based on `filter_idx`.
             filter_idxs (int or list of int, optional, default=None): The index
                 or indecies of the target filter(s).
+            lr (float, optional, default=.1): The step size of optimization.
             num_iter (int, optional, default=30): The number of iteration for
                 the gradient ascent operation.
             num_subplots (int, optional, default=4): The number of filters to
@@ -187,6 +188,8 @@ class GradientAscent:
 
         """
 
+        self._lr = lr
+
         if (type(filter_idxs) == int):
             output = self._visualize_filter(layer,
                                             filter_idxs,
@@ -210,14 +213,41 @@ class GradientAscent:
         if return_output:
             return self.output
 
-    def deepdream(self, img_path, layer, filter_idx, lr=0.1, num_iter=20,
+    def deepdream(self, img_path, layer, filter_idx, lr=.1, num_iter=20,
                   figsize=(4, 4), title='DeepDream', return_output=False):
-        """
+        """Creates DeepDream.
+
+        It applies the optimization on the image provided. The image is loaded
+        and made into a torch.Tensor that is compatible as the input to the
+        network.
+
+        Read the original blog post by Google for more information on
+        `DeepDream <https://ai.googleblog.com/2015/06/inceptionism-going-deeper-into-neural.html>`_.
+
+        Args:
+            img_path (str): A path to the image you want to apply DeepDream on
+            layer (torch.nn.modules.conv.Conv2d): The target Conv2d layer from
+                which the filter to be chosen, based on `filter_idx`.
+            filter_idx (int): The index of the target filter.
+            lr (float, optional, default=.1): The step size of optimization.
+            num_iter (int, optional, default=30): The number of iteration for
+                the gradient ascent operation.
+            figsize (tuple, optional, default=(4, 4)): The size of the plot.
+                Relevant in case 1 above.
+            title (str, optional default='Conv2d'): The title of the plot.
+            return_output (bool, optional, default=False): Returns the
+                output(s) of optimization if set to True.
+
+        Returns:
+            output (list of torch.Tensor): With dimentions
+                :math:`(num_iter, C, H, W)`. The size of the image is
+                determined by `img_size` attribute which defaults to 224.
+
         """
 
-        self._lr = lr
         input_ = apply_transforms(load_image(img_path), self.img_size)
 
+        self._lr = lr
         output = self.optimize(layer, filter_idx, input_, num_iter=num_iter)
 
         plt.figure(figsize=figsize)
