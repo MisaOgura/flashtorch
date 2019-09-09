@@ -122,16 +122,21 @@ def denormalize(tensor):
     return denormalized
 
 
-def standardize_and_clip(tensor, min_value=0.0, max_value=1.0):
+def standardize_and_clip(tensor, min_value=0.0, max_value=1.0,
+                         saturation=0.1, brightness=0.5):
+
     """Standardizes and clips input tensor.
 
-    Standardize the input tensor (mean = 0.0, std = 1.0), ensures std is 0.1
-    and clips it to values between min/max (default: 0.0/1.0).
+    Standardizes the input tensor (mean = 0.0, std = 1.0). The color saturation
+    and brightness are adjusted, before tensor values are clipped to min/max
+    (default: 0.0/1.0).
 
     Args:
         tensor (torch.Tensor):
         min_value (float, optional, default=0.0)
         max_value (float, optional, default=1.0)
+        saturation (float, optional, default=0.1)
+        brightness (float, optional, default=0.5)
 
     Shape:
         Input: :math:`(C, H, W)`
@@ -151,9 +156,8 @@ def standardize_and_clip(tensor, min_value=0.0, max_value=1.0):
     if std == 0:
         std += 1e-7
 
-    standardized = tensor.sub(mean).div(std).mul(0.1)
-
-    clipped = standardized.add(0.5).clamp(min_value, max_value)
+    standardized = tensor.sub(mean).div(std).mul(saturation)
+    clipped = standardized.add(brightness).clamp(min_value, max_value)
 
     return clipped
 
@@ -195,31 +199,3 @@ def format_for_plotting(tensor):
         return formatted.squeeze(0).detach()
     else:
         return formatted.permute(1, 2, 0).detach()
-
-
-def visualize(input_, gradients, max_gradients, cmap='viridis', alpha=0.5):
-    input_ = format_for_plotting(denormalize(input_))
-    gradients = format_for_plotting(standardize_and_clip(gradients))
-    max_gradients = format_for_plotting(standardize_and_clip(max_gradients))
-
-    subplots = [
-        # (title, [(image1, cmap, alpha), (image2, cmap, alpha)])
-        ('Input image', [(input_, None, None)]),
-        ('Gradients across RGB channels', [(gradients, None, None)]),
-        ('Max gradients', [(max_gradients, cmap, None)]),
-        ('Overlay', [(input_, None, None), (max_gradients, cmap, alpha)])
-    ]
-
-    num_subplots = len(subplots)
-
-    fig = plt.figure(figsize=(16, 4))
-
-
-    for i, (title, images) in enumerate(subplots):
-        ax = fig.add_subplot(1, num_subplots, i + 1)
-        ax.set_axis_off()
-
-        for image, cmap, alpha in images:
-            ax.imshow(image, cmap=cmap, alpha=alpha)
-
-        ax.set_title(title)

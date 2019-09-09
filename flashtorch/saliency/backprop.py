@@ -1,8 +1,14 @@
 import warnings
 
+import matplotlib.pyplot as plt
+
 import torch
 import torch.nn as nn
 
+
+from flashtorch.utils import (denormalize,
+                              format_for_plotting,
+                              standardize_and_clip)
 
 class Backprop:
     """Provides an interface to perform backpropagation.
@@ -20,9 +26,13 @@ class Backprop:
 
     Args:
         model: A neural network model from `torchvision.models
-            <https://pytorch.org/docs/stable/torchvision/models.html>`
+            <https://pytorch.org/docs/stable/torchvision/models.html>`_.
 
     """
+
+    ####################
+    # Public interface #
+    ####################
 
     def __init__(self, model):
         self.model = model
@@ -120,6 +130,85 @@ class Backprop:
 
         return gradients
 
+    def visualize(self, input_, target_class, guided=False, use_gpu=False,
+                  figsize=(16, 4), cmap='viridis', alpha=.5,
+                  return_output=False):
+        """Calculates gradients and visualizes the output.
+
+        A method that combines the backprop operation and visualization.
+
+        It also returns the gradients, if specified with `return_output=True`.
+
+        Args:
+            input_ (torch.Tensor): With shape :math:`(N, C, H, W)`.
+            target_class (int, optional, default=None)
+            take_max (bool, optional, default=False): If True, take the maximum
+                gradients across colour channels for each pixel.
+            guided (bool, optional, default=Fakse): If True, perform guided
+                backpropagation. See `Striving for Simplicity: The All
+                Convolutional Net <https://arxiv.org/pdf/1412.6806.pdf>`_.
+            use_gpu (bool, optional, default=False): Use GPU if set to True and
+                `torch.cuda.is_available()`.
+            figsize (tuple, optional, default=(16, 4)): The size of the plot.
+            cmap (str, optional, default='viridis): The color map of the
+                gradients plots. See avaialable color maps `here <https://matplotlib.org/3.1.0/tutorials/colors/colormaps.html>`_.
+            alpha (float, optional, default=.5): The alpha value of the max
+                gradients to be jaxaposed on top of the input image.
+            return_output (bool, optional, default=False): Returns the
+                output(s) of optimization if set to True.
+
+        Returns:
+            gradients (torch.Tensor): With shape :math:`(C, H, W)`.
+        """
+
+        # Calculate gradients
+
+        gradients = self.calculate_gradients(input_,
+                                             target_class,
+                                             guided=guided)
+        max_gradients = self.calculate_gradients(input_,
+                                                 target_class,
+                                                 guided=guided,
+                                                 take_max=True)
+
+        # Setup subplots
+
+        subplots = [
+            # (title, [(image1, cmap, alpha), (image2, cmap, alpha)])
+            ('Input image',
+             [(format_for_plotting(denormalize(input_)), None, None)]),
+            ('Gradients across RGB channels',
+             [(format_for_plotting(standardize_and_clip(gradients)),
+              None,
+              None)]),
+            ('Max gradients',
+             [(format_for_plotting(standardize_and_clip(max_gradients)),
+              cmap,
+              None)]),
+            ('Overlay',
+             [(format_for_plotting(denormalize(input_)), None, None),
+              (format_for_plotting(standardize_and_clip(max_gradients)),
+               cmap,
+               alpha)])
+        ]
+
+        fig = plt.figure(figsize=figsize)
+
+        for i, (title, images) in enumerate(subplots):
+            ax = fig.add_subplot(1, len(subplots), i + 1)
+            ax.set_axis_off()
+            ax.set_title(title)
+
+            for image, cmap, alpha in images:
+                ax.imshow(image, cmap=cmap, alpha=alpha)
+
+        if return_output:
+            return gradients, max_gradients
+
+    #####################
+    # Private interface #
+    #####################
+
     def _register_conv_hook(self):
         def _record_gradients(module, grad_in, grad_out):
             if self.gradients.shape == grad_in[0].shape:
@@ -129,6 +218,7 @@ class Backprop:
             if isinstance(module, nn.modules.conv.Conv2d) and \
                     module.in_channels == 3:
                 module.register_backward_hook(_record_gradients)
+                break
 
     def _register_relu_hooks(self):
         def _record_output(module, input_, output):

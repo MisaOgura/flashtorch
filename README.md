@@ -5,19 +5,20 @@
 [![PyPI - License](https://img.shields.io/pypi/l/flashtorch.svg?color=black)](https://github.com/MisaOgura/flashtorch/blob/master/LICENSE)
 [![DOI](https://zenodo.org/badge/177140934.svg)](https://zenodo.org/badge/latestdoi/177140934)
 
-Visualisation toolkit implemented in PyTorch for inspecting what neural networks learn in image recognition tasks (feature visualisation).
+Visualizaion toolkit implemented in PyTorch for inspecting what neural networks learn in image recognition tasks (feature visualizaion).
 
 The project is very much work in progress, and I would appreciate your feedback!
 
-It currently supports visualisation of saliency maps for all the models available under [torchvision.models](https://pytorch.org/docs/stable/torchvision/models.html).
+It currently supports visualizaion of saliency maps for all the models available under [torchvision.models](https://pytorch.org/docs/stable/torchvision/models.html).
 
 ## Overview
 
 - [Installation](#installation)
 - [API guide](#api-guide)
-- [Example notebooks](#example-notebooks)
+- [How to use](#how-to-use)
   - [Image handling](#image-handling)
   - [Saliency maps](#saliency-maps)
+  - [Activation maximization](#activation-maximization)
 - [Talks & blog posts](#talks--blog-posts)
 - [Papers](#papers)
 - [Inspiration](#inspiration)
@@ -47,10 +48,11 @@ These are currently available modules.
 - `flashtorch.utils`: some useful utility functions for data handling & transformation
 - `flashtorch.utils.imagenet`: `ImageNetIndex` class for easy-ish retrieval of class index
 - `flashtorch.saliency.backprop`: `Backprop` class for calculating gradients
+- `flashtorch.activmax.gradient_ascent`: `GradientAscent` class for activation maximization
 
-You can inspect each module with Python built-in function `help`. The output of that is available on [Quick API Guide page](https://github.com/MisaOgura/flashtorch/wiki/Quick-API-Guide) for your convenience.
+You can inspect each module with Python built-in function `help`. The output of that is available on [Quick API Guide](https://github.com/MisaOgura/flashtorch/wiki/Quick-API-Guide) for your convenience.
 
-## Example notebooks
+## How to use
 
 Here are some handy notebooks showing examples of using `flashtorch`.
 
@@ -60,54 +62,37 @@ Notebook: [Image handling](./examples/image_handling.ipynb)
 
 ### Saliency maps
 
-Notebook: [Image-specific class saliency map with backpropagation](./examples/visualise_saliency_with_backprop.ipynb)
-
-  - Notebook also available on [Google Colab](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/visualise_saliency_with_backprop_colab.ipynb) - probably the best way to play around quickly, as there is no need for setting up the environment!
-
 **[Saliency](https://en.wikipedia.org/wiki/Salience_(neuroscience))** in human visual perception is a _subjective quality_ that makes certain things within the field of view _stand out_ from the rest and _grabs our attention_.
 
 **Saliency maps** in computer vision provide indications of the most salient regions within images. By creating a saliency map for neural networks, we can gain some intuition on _"where the network is paying the most attention to"_ in an imput image.
-
-#### AlexNet visualisation
 
 Using `flashtorch.saliency` module, let's visualise image-specific class saliency maps of [AlexNet](https://arxiv.org/abs/1404.5997) pre-trained on [ImageNet](http://www.image-net.org/) classification tasks.
 
 **Great gray owl** (class index 24):
 The network is focusing on the sunken eyes and the round head for this owl.
 
-![Saliency map of great grey owl in Alexnet](examples/images/alexnet_great_grey_owl.png)
+![Saliency map of great grey owl in Alexnet](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/alexnet_great_grey_owl.png)
 
-**Peacock** (class index 84):
-But it doesn't always focus on the eyes and head of an animal. In its world's view, what makes peacock a peacock is the eyespots on its tail!
+Refer to the notebooks below for more examples:
 
-![Saliency map of peacock in Alexnet](examples/images/alexnet_peacock.png)
+- [Image-specific class saliency map with backpropagation](https://github.com/MisaOgura/flashtorch/blob/master/examples/visualise_saliency_with_backprop.ipynb)
+- [Google Colab version](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/visualize_saliency_with_backprop_colab.ipynb): best for playing around
 
-**Toucan** (class index 96):
-And in case of a toucan, the network is paying an intense attention on its beak.
+### Activation maximization
 
-![Saliency map of toucan in Alexnet](examples/images/alexnet_tucan.png)
+[Activation maximization](https://pdfs.semanticscholar.org/65d9/94fb778a8d9e0f632659fb33a082949a50d3.pdf) is one form of feature visualization that allows us to visualize what CNN filters are "looking for", by applying each filter to an input image and updating the input image so as to maximize the activation of the filter of interest (i.e. treating it as a gradient ascent task with filter activation values as the loss).
 
-Do you agree?
+Using `flashtorch.activmax` module, let's visualise images optimized with filters
+from [VGG16](https://arxiv.org/pdf/1409.1556.pdf) pre-trained on [ImageNet](http://www.image-net.org/) classification tasks.
 
-#### Insights on transfer learning
+![Activation maximization of conv5_1 filters from VGG16](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv5_1_filters.png)
 
-In the example above, we've visualised saliency maps for a network that has been trained on ImageNet and used images of objects which it _already knows_.
+We can see that, in the **earlier layers** (conv1_2, conv2_1), filters get activated by _colors and simple patterns_ such as virtical, horisontal and diagonal lines. In the **intermediate layers** (conv3_1, conv4_1), we start to see _more complex patterns_. Then concepts such as _'eyes'_ (filter 45) and _'entrances (?)'_ (filter 271) seem to appear in the **last layer** (conv5_1).
 
-We can take a step further and investigate _how the network's perception changes_ before and after the training, when presented by a new object.
+Refer to the notebooks below for more examples:
 
-This time, I'm going to use [DenseNet](https://arxiv.org/abs/1608.06993), which is again pre-trained on ImageNet (1000 classes), and train it into a flower classifier to recognise 102 species of flowers ([dataset](http://www.robots.ox.ac.uk/~vgg/data/flowers/102/index.html)).
-
-With _no additional training_, and just by swapping out the last fully-connected layer, the model performs very poorly (0.1% test accuracy). By plotting the gradients, we can see that the network is mainly focusing on the shape of the flower.
-
-**Foxgloves** as an example:
-
-![Transfer learning pre](examples/images/transfer_learning_pre.png)
-
-With training, the model now achieves 98.7% test accuracy. But _why_? What is it that it's seeing now, that it wasn't before?
-
-The network has _learnt to shift its focus_ on the mottled patten within flower cups! In its world's view, that is the most distinguishing things about this object, which I think closely align with what _we_ deem the most unique trait of this flower.
-
-![Transfer learning post](examples/images/transfer_learning_post.png)
+- [Activation maximization](https://github.com/MisaOgura/flashtorch/blob/master/examples/activation_maximization.ipynb)
+- [Google Colab version](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/activation_maximization_colab.ipynb): best for playing around
 
 ## Talks & blog posts
 
@@ -119,11 +104,11 @@ The network has _learnt to shift its focus_ on the mottled patten within flower 
 
 ## Papers
 
-- Introduction and overview of feature visualisation: [Feature Visualization](https://distill.pub/2017/feature-visualization/)
+- Introduction and overview of feature visualizaion: [Feature Visualization](https://distill.pub/2017/feature-visualization/)
 
-- The latest development in feature visualisation: [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
+- The latest development in feature visualizaion: [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
 
-- Using backpropagation for gradient visualisation: [Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps](https://arxiv.org/pdf/1312.6034.pdf)
+- Using backpropagation for gradient visualizaion: [Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps](https://arxiv.org/pdf/1312.6034.pdf)
 
 - Guided backprobagation: [Striving for Simplicity: The All Convolutional Net](https://arxiv.org/pdf/1412.6806.pdf)
 
