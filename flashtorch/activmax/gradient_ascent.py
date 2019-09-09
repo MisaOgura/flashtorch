@@ -9,6 +9,7 @@ import torch.optim as optim
 
 from flashtorch.utils import (apply_transforms,
                               format_for_plotting,
+                              load_image,
                               standardize_and_clip)
 
 
@@ -82,7 +83,7 @@ class GradientAscent:
     def use_gpu(self, use_gpu):
         self._use_gpu = use_gpu
 
-    def optimize(self, layer, filter_idx, num_iter=30):
+    def optimize(self, layer, filter_idx, input_=None, num_iter=30):
         """Generates an image that maximally activates the target filter.
 
         Args:
@@ -109,15 +110,16 @@ class GradientAscent:
         num_total_filters = layer.out_channels
         self._validate_filter_idx(num_total_filters, filter_idx)
 
-        # Inisialize input noise
+        # Inisialize input (as noise) if not provided
 
-        input_noise = np.uint8(np.random.uniform(
-            150, 180, (self._img_size, self._img_size, 3)))
-        input_noise = apply_transforms(input_noise, size=self._img_size)
+        if input_ is None:
+            input_ = np.uint8(np.random.uniform(
+                150, 180, (self._img_size, self._img_size, 3)))
+            input_ = apply_transforms(input_, size=self._img_size)
 
         if torch.cuda.is_available() and self.use_gpu:
             self.model = self.model.to('cuda')
-            input_noise = input_noise.to('cuda')
+            input_ = input_.to('cuda')
 
         # Remove previous hooks if any
 
@@ -131,11 +133,11 @@ class GradientAscent:
 
         # Inisialize gradients
 
-        self.gradients = torch.zeros(input_noise.shape)
+        self.gradients = torch.zeros(input_.shape)
 
         # Optimize
 
-        return self._ascent(input_noise, num_iter)
+        return self._ascent(input_, num_iter)
 
     def visualize(self, layer, filter_idxs=None, num_iter=30,
                   num_subplots=4, figsize=(4, 4), title='Conv2d',
@@ -208,6 +210,28 @@ class GradientAscent:
         if return_output:
             return self.output
 
+    def deepdream(self, img_path, layer, filter_idx, lr=0.1, num_iter=20,
+                  figsize=(4, 4), title='DeepDream', return_output=False):
+        """
+        """
+
+        self._lr = lr
+        input_ = apply_transforms(load_image(img_path), self.img_size)
+
+        output = self.optimize(layer, filter_idx, input_, num_iter=num_iter)
+
+        plt.figure(figsize=figsize)
+        plt.axis('off')
+        plt.title(title)
+
+        plt.imshow(format_for_plotting(
+            standardize_and_clip(output[-1],
+                                 saturation=0.15,
+                                 brightness=0.7)));
+
+        if return_output:
+            return output
+
     #####################
     # Private interface #
     #####################
@@ -251,7 +275,7 @@ class GradientAscent:
             raise ValueError(f'Filter index must be between 0 and {num_filters - 1}.')
 
     def _visualize_filter(self, layer, filter_idx, num_iter, figsize, title):
-        self.output = self.optimize(layer, filter_idx, num_iter)
+        self.output = self.optimize(layer, filter_idx, num_iter=num_iter)
 
         plt.figure(figsize=figsize)
         plt.axis('off')
@@ -278,7 +302,7 @@ class GradientAscent:
         # Plot subplots
 
         for i, filter_idx in enumerate(filter_idxs):
-            output = self.optimize(layer, filter_idx, num_iter)
+            output = self.optimize(layer, filter_idx, num_iter=num_iter)
 
             self.output.append(output)
 
