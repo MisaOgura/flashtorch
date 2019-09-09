@@ -62,24 +62,34 @@ Notebook: [Image handling](./examples/image_handling.ipynb)
 
 ### Saliency maps
 
-![Saliency map of great grey owl in Alexnet](./examples/images/alexnet_great_grey_owl.png)
-
 **[Saliency](https://en.wikipedia.org/wiki/Salience_(neuroscience))** in human visual perception is a _subjective quality_ that makes certain things within the field of view _stand out_ from the rest and _grabs our attention_.
 
 **Saliency maps** in computer vision provide indications of the most salient regions within images. By creating a saliency map for neural networks, we can gain some intuition on _"where the network is paying the most attention to"_ in an imput image.
 
-Example notebooks:
+Using `flashtorch.saliency` module, let's visualise image-specific class saliency maps of [AlexNet](https://arxiv.org/abs/1404.5997) pre-trained on [ImageNet](http://www.image-net.org/) classification tasks.
+
+**Great gray owl** (class index 24):
+The network is focusing on the sunken eyes and the round head for this owl.
+
+![Saliency map of great grey owl in Alexnet](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/alexnet_great_grey_owl.png)
+
+Refer to the notebooks below for more examples:
 
 - [Image-specific class saliency map with backpropagation](https://github.com/MisaOgura/flashtorch/blob/master/examples/visualise_saliency_with_backprop.ipynb)
 - [Google Colab version](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/visualize_saliency_with_backprop_colab.ipynb): best for playing around
 
 ### Activation maximization
 
-![Activation maximization of conv5_1 filters of VGG16](./examples/images/conv5_1_filters.png)
-
 [Activation maximization](https://pdfs.semanticscholar.org/65d9/94fb778a8d9e0f632659fb33a082949a50d3.pdf) is one form of feature visualization that allows us to visualize what CNN filters are "looking for", by applying each filter to an input image and updating the input image so as to maximize the activation of the filter of interest (i.e. treating it as a gradient ascent task with filter activation values as the loss).
 
-Example notebooks:
+Using `flashtorch.activmax` module, let's visualise images optimized with filters
+from [VGG16](https://arxiv.org/pdf/1409.1556.pdf) pre-trained on [ImageNet](http://www.image-net.org/) classification tasks.
+
+![Activation maximization of conv5_1 filters from VGG16](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv5_1_filters.png)
+
+We can see that, in the **earlier layers** (conv1_2, conv2_1), filters get activated by _colors and simple patterns_ such as virtical, horisontal and diagonal lines. In the **intermediate layers** (conv3_1, conv4_1), we start to see _more complex patterns_. Then concepts such as _'eyes'_ (filter 45) and _'entrances (?)'_ (filter 271) seem to appear in the **last layer** (conv5_1).
+
+Refer to the notebooks below for more examples:
 
 - [Activation maximization](https://github.com/MisaOgura/flashtorch/blob/master/examples/activation_maximization.ipynb)
 - [Google Colab version](https://github.com/MisaOgura/flashtorch/blob/master/examples/activation_maximization_colab.ipynb): best for playing around
