@@ -92,7 +92,7 @@ We can see that, in the **earlier layers** (conv1_2, conv2_1), filters get activ
 Refer to the notebooks below for more examples:
 
 - [Activation maximization](https://github.com/MisaOgura/flashtorch/blob/master/examples/activation_maximization.ipynb)
-- [Google Colab version](https://github.com/MisaOgura/flashtorch/blob/master/examples/activation_maximization_colab.ipynb): best for playing around
+- [Google Colab version](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/activation_maximization_colab.ipynb): best for playing around
 
 ## Talks & blog posts
 
