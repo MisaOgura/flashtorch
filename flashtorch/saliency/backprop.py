@@ -135,8 +135,7 @@ class Backprop:
                   return_output=False):
         """Calculates gradients and visualizes the output.
 
-        A convinient method that combines the backprop operation and
-        visualization.
+        A method that combines the backprop operation and visualization.
 
         It also returns the gradients, if specified with `return_output=True`.
 
