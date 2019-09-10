@@ -57,9 +57,12 @@ Below, you can find links to some handy notebooks showing examples of using `fla
 
 ### Image handling (`flashtorch.utils`)
 
-Notebook: [Image handling](./examples/image_handling.ipynb)
+- [Image handling](https://github.com/MisaOgura/flashtorch/blob/master/examples/examples/image_handling.ipynb) notebook
 
 ### Saliency maps (`flashtorch.saliency`)
+
+- [Saliency map with backpropagation](https://github.com/MisaOgura/flashtorch/blob/master/examples/visualize_saliency_with_backprop.ipynb) notebook
+- [Google Colab](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/visualize_saliency_with_backprop_colab.ipynb) version - best for trying it out
 
 **[Saliency](https://en.wikipedia.org/wiki/Salience_(neuroscience))** in human visual perception is a _subjective quality_ that makes certain things within the field of view _stand out_ from the rest and _grabs our attention_.
 
@@ -72,12 +75,12 @@ The network is focusing on the sunken eyes and the round head for this owl.
 
 ![Saliency map of great grey owl in Alexnet](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/alexnet_great_grey_owl.png)
 
-**Refer to the notebooks below for more examples:**
-
-- [Image-specific class saliency map with backpropagation](https://github.com/MisaOgura/flashtorch/blob/master/examples/visualize_saliency_with_backprop.ipynb)
-- [Google Colab version](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/visualize_saliency_with_backprop_colab.ipynb): best for playing around
-
 ### Activation maximization (`flashtorch.activmax`)
+
+**Notebooks:**
+
+- [Activation maximization](https://github.com/MisaOgura/flashtorch/blob/master/examples/activation_maximization.ipynb) notebook
+- [Google Colab](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/activation_maximization_colab.ipynb) version - best for trying it out
 
 [Activation maximization](https://pdfs.semanticscholar.org/65d9/94fb778a8d9e0f632659fb33a082949a50d3.pdf) is one form of feature visualization that allows us to visualize what CNN filters are "looking for", by applying each filter to an input image and updating the input image so as to maximize the activation of the filter of interest (i.e. treating it as a gradient ascent task with filter activation values as the loss).
 
@@ -88,20 +91,13 @@ from [VGG16](https://arxiv.org/pdf/1409.1556.pdf) pre-trained on [ImageNet](http
 
 ![VGG16 conv2_1 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv2_1.png)
 
-
 ![VGG16 conv3_1 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv3_1.png)
 
 ![VGG16 conv4_1 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv4_1.png)
 
-
 ![VGG16 conv5_1 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv5_1.png)
 
 We can see that, in the **earlier layers** (conv1_2, conv2_1), filters get activated by _colors and simple patterns_ such as virtical, horisontal and diagonal lines. In the **intermediate layers** (conv3_1, conv4_1), we start to see _more complex patterns_. Then concepts such as _'eyes'_ (filter 45) and _'entrances (?)'_ (filter 271) seem to appear in the **last layer** (conv5_1).
-
-**Refer to the notebooks below for more examples:**
-
-- [Activation maximization](https://github.com/MisaOgura/flashtorch/blob/master/examples/activation_maximization.ipynb)
-- [Google Colab version](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/activation_maximization_colab.ipynb): best for playing around
 
 ## Talks & blog posts
 
