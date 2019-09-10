@@ -53,7 +53,7 @@ You can inspect each module with Python built-in function `help`. The output of 
 
 ## How to use
 
-Below, you can find links to some handy notebooks showing examples of using `flashtorch`.
+Below, you can find simple demos to get you started, as well as links to some handy notebooks showing additional examples of using `flashtorch`.
 
 ### Image handling (`flashtorch.utils`)
 
@@ -70,14 +70,11 @@ Below, you can find links to some handy notebooks showing examples of using `fla
 
 Using `flashtorch.saliency` module, let's visualise image-specific class saliency maps of [AlexNet](https://arxiv.org/abs/1404.5997) pre-trained on [ImageNet](http://www.image-net.org/) classification tasks.
 
-**Great gray owl** (class index 24):
+![Saliency map of great grey owl in Alexnet](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/saliency_demo.png)
+
 The network is focusing on the sunken eyes and the round head for this owl.
 
-![Saliency map of great grey owl in Alexnet](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/alexnet_great_grey_owl.png)
-
 ### Activation maximization (`flashtorch.activmax`)
-
-**Notebooks:**
 
 - [Activation maximization](https://github.com/MisaOgura/flashtorch/blob/master/examples/activation_maximization.ipynb) notebook
 - [Google Colab](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/activation_maximization_colab.ipynb) version - best for trying it out
@@ -87,17 +84,11 @@ The network is focusing on the sunken eyes and the round head for this owl.
 Using `flashtorch.activmax` module, let's visualize images optimized with filters
 from [VGG16](https://arxiv.org/pdf/1409.1556.pdf) pre-trained on [ImageNet](http://www.image-net.org/) classification tasks.
 
-![VGG16 conv1_2 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv1_2.png)
+![VGG16 conv5_1 filters](examples/images/activmax_demo.png)
 
-![VGG16 conv2_1 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv2_1.png)
+Concepts such as _'eyes'_ (filter 45) and _'entrances (?)'_ (filter 271) seem to appear in the conv5_1 layer of VGG16.
 
-![VGG16 conv3_1 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv3_1.png)
-
-![VGG16 conv4_1 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv4_1.png)
-
-![VGG16 conv5_1 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv5_1.png)
-
-We can see that, in the **earlier layers** (conv1_2, conv2_1), filters get activated by _colors and simple patterns_ such as virtical, horisontal and diagonal lines. In the **intermediate layers** (conv3_1, conv4_1), we start to see _more complex patterns_. Then concepts such as _'eyes'_ (filter 45) and _'entrances (?)'_ (filter 271) seem to appear in the **last layer** (conv5_1).
+Visit the notebook above to see what earlier layers do!
 
 ## Talks & blog posts
 
