@@ -84,7 +84,7 @@ The network is focusing on the sunken eyes and the round head for this owl.
 Using `flashtorch.activmax` module, let's visualize images optimized with filters
 from [VGG16](https://arxiv.org/pdf/1409.1556.pdf) pre-trained on [ImageNet](http://www.image-net.org/) classification tasks.
 
-![VGG16 conv5_1 filters](examples/images/activmax_demo.png)
+![VGG16 conv5_1 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/activmax_demo.png)
 
 Concepts such as _'eyes'_ (filter 45) and _'entrances (?)'_ (filter 271) seem to appear in the conv5_1 layer of VGG16.
 
