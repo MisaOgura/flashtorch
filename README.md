@@ -4,12 +4,13 @@
 [![PyPI](https://img.shields.io/pypi/v/flashtorch.svg?color=yellow)](https://pypi.org/project/flashtorch/)
 [![PyPI - License](https://img.shields.io/pypi/l/flashtorch.svg?color=black)](https://github.com/MisaOgura/flashtorch/blob/master/LICENSE)
 [![DOI](https://zenodo.org/badge/177140934.svg)](https://zenodo.org/badge/latestdoi/177140934)
+[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/MisaOgura)
 
-Visualizaion toolkit implemented in PyTorch for inspecting what neural networks learn in image recognition tasks (feature visualizaion).
+A Python visualizaion toolkit for neural networks in PyTorch.
 
-The project is very much work in progress, and I would appreciate your feedback!
+You can apply feature visualization techniques (such as **saliency maps** and **activation maximization**) on your model, with as little as a few lines of code!
 
-It currently supports visualizaion of saliency maps for all the models available under [torchvision.models](https://pytorch.org/docs/stable/torchvision/models.html).
+It is compatible with pre-trained models that come with [torchvision](https://pytorch.org/docs/stable/torchvision/models.html), and seemlessly integrates with other custom models built in PyTorch.
 
 ## Overview
 
@@ -41,8 +42,6 @@ $ pip install flashtorch -U
 
 ## API guide
 
-An API guide is under construction, so this is a temporary workaround.
-
 These are currently available modules.
 
 - `flashtorch.utils`: some useful utility functions for data handling & transformation
@@ -54,13 +53,13 @@ You can inspect each module with Python built-in function `help`. The output of 
 
 ## How to use
 
-Here are some handy notebooks showing examples of using `flashtorch`.
+Below, you can find links to some handy notebooks showing examples of using `flashtorch`.
 
-### Image handling
+### Image handling (`flashtorch.utils`)
 
 Notebook: [Image handling](./examples/image_handling.ipynb)
 
-### Saliency maps
+### Saliency maps (`flashtorch.saliency`)
 
 **[Saliency](https://en.wikipedia.org/wiki/Salience_(neuroscience))** in human visual perception is a _subjective quality_ that makes certain things within the field of view _stand out_ from the rest and _grabs our attention_.
 
@@ -73,23 +72,33 @@ The network is focusing on the sunken eyes and the round head for this owl.
 
 ![Saliency map of great grey owl in Alexnet](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/alexnet_great_grey_owl.png)
 
-Refer to the notebooks below for more examples:
+**Refer to the notebooks below for more examples:**
 
-- [Image-specific class saliency map with backpropagation](https://github.com/MisaOgura/flashtorch/blob/master/examples/visualise_saliency_with_backprop.ipynb)
+- [Image-specific class saliency map with backpropagation](https://github.com/MisaOgura/flashtorch/blob/master/examples/visualize_saliency_with_backprop.ipynb)
 - [Google Colab version](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/visualize_saliency_with_backprop_colab.ipynb): best for playing around
 
-### Activation maximization
+### Activation maximization (`flashtorch.activmax`)
 
 [Activation maximization](https://pdfs.semanticscholar.org/65d9/94fb778a8d9e0f632659fb33a082949a50d3.pdf) is one form of feature visualization that allows us to visualize what CNN filters are "looking for", by applying each filter to an input image and updating the input image so as to maximize the activation of the filter of interest (i.e. treating it as a gradient ascent task with filter activation values as the loss).
 
-Using `flashtorch.activmax` module, let's visualise images optimized with filters
+Using `flashtorch.activmax` module, let's visualize images optimized with filters
 from [VGG16](https://arxiv.org/pdf/1409.1556.pdf) pre-trained on [ImageNet](http://www.image-net.org/) classification tasks.
 
-![Activation maximization of conv5_1 filters from VGG16](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv5_1_filters.png)
+![VGG16 conv1_2 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv1_2.png)
+
+![VGG16 conv2_1 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv2_1.png)
+
+
+![VGG16 conv3_1 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv3_1.png)
+
+![VGG16 conv4_1 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv4_1.png)
+
+
+![VGG16 conv5_1 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/conv5_1.png)
 
 We can see that, in the **earlier layers** (conv1_2, conv2_1), filters get activated by _colors and simple patterns_ such as virtical, horisontal and diagonal lines. In the **intermediate layers** (conv3_1, conv4_1), we start to see _more complex patterns_. Then concepts such as _'eyes'_ (filter 45) and _'entrances (?)'_ (filter 271) seem to appear in the **last layer** (conv5_1).
 
-Refer to the notebooks below for more examples:
+**Refer to the notebooks below for more examples:**
 
 - [Activation maximization](https://github.com/MisaOgura/flashtorch/blob/master/examples/activation_maximization.ipynb)
 - [Google Colab version](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/activation_maximization_colab.ipynb): best for playing around
@@ -102,7 +111,7 @@ Refer to the notebooks below for more examples:
 
 - [Gaining insights on transfer learning with FlashTorch](https://towardsdatascience.com/gaining-insights-on-transfer-learning-with-flashtorch-de344df0f410)
 
-## Papers
+## Reading
 
 - Introduction and overview of feature visualizaion: [Feature Visualization](https://distill.pub/2017/feature-visualization/)
 
@@ -121,10 +130,10 @@ Refer to the notebooks below for more examples:
 ## Citation
 
 ```txt
-Misa Ogura. (2019, July 8). MisaOgura/flashtorch: 0.0.8 (Version v0.0.8). Zenodo. http://doi.org/10.5281/zenodo.3271410
+Misa Ogura. (2019, September 9).
+MisaOgura/flashtorch: 0.1.0 (Version v0.1.0).
+Zenodo. http://doi.org/10.5281/zenodo.3403214
 ```
-
-[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/MisaOgura)
 
 ## Author
 
