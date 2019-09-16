@@ -6,11 +6,17 @@
 [![DOI](https://zenodo.org/badge/177140934.svg)](https://zenodo.org/badge/latestdoi/177140934)
 [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/MisaOgura)
 
-A Python visualizaion toolkit for neural networks in PyTorch.
+A Python visualization toolkit, built with PyTorch, for neural networks in PyTorch.
 
-You can apply feature visualization techniques (such as **saliency maps** and **activation maximization**) on your model, with as little as a few lines of code!
+Neural networks are often described as "black box". The lack of understanding on how neural networks make predictions enables unpredictable/biased models, causing real harm to society and a loss of trust in AI-assisted systems.
 
-It is compatible with pre-trained models that come with [torchvision](https://pytorch.org/docs/stable/torchvision/models.html), and seemlessly integrates with other custom models built in PyTorch.
+Feature visualization is an area of research, which aims to understand how neural networks perceive images. However, implementing such techniques is often complicated.
+
+FlashTorch was created to solve this problem!
+
+You can apply feature visualization techniques (such as **saliency maps** and **activation maximization**) on your model, with as little as a few lines of code. It is compatible with pre-trained models that come with [torchvision](https://pytorch.org/docs/stable/torchvision/models.html), and seamlessly integrates with other custom models built in PyTorch.
+
+[![FlashTorch demo](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/flashtorch_demo.png)](https://youtu.be/18Iw4qYqfPo)
 
 ## Overview
 
@@ -28,7 +34,7 @@ It is compatible with pre-trained models that come with [torchvision](https://py
 
 ## Installation
 
-If you are installing `flashtorch` for the first time:
+If you are installing FlashTorch for the first time:
 
 ```bash
 $ pip install flashtorch
@@ -53,7 +59,7 @@ You can inspect each module with Python built-in function `help`. The output of 
 
 ## How to use
 
-Below, you can find simple demos to get you started, as well as links to some handy notebooks showing additional examples of using `flashtorch`.
+Below, you can find simple demos to get you started, as well as links to some handy notebooks showing additional examples of using FlashTorch.
 
 ### Image handling (`flashtorch.utils`)
 
@@ -66,9 +72,9 @@ Below, you can find simple demos to get you started, as well as links to some ha
 
 **[Saliency](https://en.wikipedia.org/wiki/Salience_(neuroscience))** in human visual perception is a _subjective quality_ that makes certain things within the field of view _stand out_ from the rest and _grabs our attention_.
 
-**Saliency maps** in computer vision provide indications of the most salient regions within images. By creating a saliency map for neural networks, we can gain some intuition on _"where the network is paying the most attention to"_ in an imput image.
+**Saliency maps** in computer vision provide indications of the most salient regions within images. By creating a saliency map for neural networks, we can gain some intuition on _"where the network is paying the most attention to"_ in an input image.
 
-Using `flashtorch.saliency` module, let's visualise image-specific class saliency maps of [AlexNet](https://arxiv.org/abs/1404.5997) pre-trained on [ImageNet](http://www.image-net.org/) classification tasks.
+Using `flashtorch.saliency` module, let's visualize image-specific class saliency maps of [AlexNet](https://arxiv.org/abs/1404.5997) pre-trained on [ImageNet](http://www.image-net.org/) classification tasks.
 
 ![Saliency map of great grey owl in Alexnet](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/saliency_demo.png)
 
@@ -100,13 +106,15 @@ Visit the notebook above to see what earlier layers do!
 
 ## Reading
 
-- Introduction and overview of feature visualizaion: [Feature Visualization](https://distill.pub/2017/feature-visualization/)
+- Introduction and overview of feature visualization: [Feature Visualization](https://distill.pub/2017/feature-visualization/)
 
-- The latest development in feature visualizaion: [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
+- The latest development in feature visualization: [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
 
-- Using backpropagation for gradient visualizaion: [Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps](https://arxiv.org/pdf/1312.6034.pdf)
+- Using backpropagation for gradient visualization: [Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps](https://arxiv.org/pdf/1312.6034.pdf)
 
 - Guided backprobagation: [Striving for Simplicity: The All Convolutional Net](https://arxiv.org/pdf/1412.6806.pdf)
+
+- Activation maximization: [Visualizing Higher-Layer Features of a Deep Network](https://pdfs.semanticscholar.org/65d9/94fb778a8d9e0f632659fb33a082949a50d3.pdf)
 
 ## Inspiration
 
