@@ -10,25 +10,36 @@ A Python visualization toolkit, built with PyTorch, for neural networks in PyTor
 
 Neural networks are often described as "black box". The lack of understanding on how neural networks make predictions enables unpredictable/biased models, causing real harm to society and a loss of trust in AI-assisted systems.
 
-Feature visualization is an area of research, which aims to understand how neural networks perceive images. However, implementing such techniques is often complicated.
+**Feature visualization** is an area of research, which aims to understand how neural networks _perceive_ images. However, implementing such techniques is often complicated.
 
-FlashTorch was created to solve this problem!
+**FlashTorch was created to solve this problem!**
 
-You can apply feature visualization techniques (such as **saliency maps** and **activation maximization**) on your model, with as little as a few lines of code. It is compatible with pre-trained models that come with [torchvision](https://pytorch.org/docs/stable/torchvision/models.html), and seamlessly integrates with other custom models built in PyTorch.
+You can apply feature visualization techniques (such as **[saliency maps](#saliency-maps-flashtorchsaliency)** and **[activation maximization](#activation-maximization-flashtorchactivmax)**) on your model, with as little as _a few lines of code_.
+
+It is compatible with pre-trained models that come with [torchvision](https://pytorch.org/docs/stable/torchvision/models.html), and seamlessly integrates with other custom models built in PyTorch.
+
+#### Interested?
+
+Take a look at the quick 3min intro/demo to FlashTorch below!
 
 [![FlashTorch demo](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/flashtorch_demo.png)](https://youtu.be/18Iw4qYqfPo)
+
+#### Want to try?
+
+Head over to example notebooks on Colab!
+
+- Saliency map: [![Saliency map demo](https://colab.research.google.com/assets/colab-badge.svg/)](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/visualize_saliency_with_backprop_colab.ipynb)
+
+- Activation maximization: [![Activation maximization demo](https://colab.research.google.com/assets/colab-badge.svg/)](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/activation_maximization_colab.ipynb)
+
+#### Have questions? [![Join the chat at https://gitter.im/flashtorch/community](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/flashtorch/community)
 
 ## Overview
 
 - [Installation](#installation)
-- [API guide](#api-guide)
-- [How to use](#how-to-use)
-  - [Image handling](#image-handling-flashtorchutils)
-  - [Saliency maps](#saliency-maps-flashtorchsaliency)
-  - [Activation maximization](#activation-maximization-flashtorchactivmax)
-- [Talks & blog posts](#talks--blog-posts)
-- [Reading](#reading)
-- [Inspiration](#inspiration)
+- [Quickstart](#quickstart)
+- [How to contribute](#how-to-contribute)
+- [Resources](#resources)
 - [Citation](#citation)
 - [Author](#author)
 
@@ -46,7 +57,7 @@ Or if you are upgrading it:
 $ pip install flashtorch -U
 ```
 
-## API guide
+### API guide
 
 These are currently available modules.
 
@@ -57,7 +68,7 @@ These are currently available modules.
 
 You can inspect each module with Python built-in function `help`. The output of that is available on [Quick API Guide](https://github.com/MisaOgura/flashtorch/wiki/Quick-API-Guide) for your convenience.
 
-## How to use
+## Quickstart
 
 Below, you can find simple demos to get you started, as well as links to some handy notebooks showing additional examples of using FlashTorch.
 
@@ -96,7 +107,13 @@ Concepts such as _'eyes'_ (filter 45) and _'entrances (?)'_ (filter 271) seem to
 
 Visit the notebook above to see what earlier layers do!
 
-## Talks & blog posts
+## How to contribute
+
+Thanks for your interest in contributing! There are many ways to contribute to this project. Get started [here](https://github.com/MisaOgura/flashtorch/blob/master/CONTRIBUTING.md).
+
+## Resources
+
+### Talks & blog posts
 
 - [Hopperx1 London](http://www.cvent.com/events/hopperx1-london/agenda-e7d0f2fa5e9d46cf88fd8c322ae1290b.aspx), June 2019 - [slide deck](https://misaogura.github.io/flashtorch/presentations/Hopperx1London)
 
@@ -104,7 +121,7 @@ Visit the notebook above to see what earlier layers do!
 
 - [Gaining insights on transfer learning with FlashTorch](https://towardsdatascience.com/gaining-insights-on-transfer-learning-with-flashtorch-de344df0f410)
 
-## Reading
+### Reading
 
 - Introduction and overview of feature visualization: [Feature Visualization](https://distill.pub/2017/feature-visualization/)
 
@@ -116,7 +133,7 @@ Visit the notebook above to see what earlier layers do!
 
 - Activation maximization: [Visualizing Higher-Layer Features of a Deep Network](https://pdfs.semanticscholar.org/65d9/94fb778a8d9e0f632659fb33a082949a50d3.pdf)
 
-## Inspiration
+### Inspiration
 
 - [pytorch-cnn-visualizations](https://github.com/utkuozbulak/pytorch-cnn-visualizations) by utkuozbulak
 
