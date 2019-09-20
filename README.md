@@ -18,21 +18,21 @@ You can apply feature visualization techniques (such as **[saliency maps](#salie
 
 It is compatible with pre-trained models that come with [torchvision](https://pytorch.org/docs/stable/torchvision/models.html), and seamlessly integrates with other custom models built in PyTorch.
 
-#### Interested?
+### Interested?
 
 Take a look at the quick 3min intro/demo to FlashTorch below!
 
 [![FlashTorch demo](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/flashtorch_demo.png)](https://youtu.be/18Iw4qYqfPo)
 
-#### Want to try?
+### Want to try?
 
 Head over to example notebooks on Colab!
 
-- Saliency map: [![Saliency map demo](https://colab.research.google.com/assets/colab-badge.svg/)](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/visualize_saliency_with_backprop_colab.ipynb)
+- Saliency maps: [![Saliency map demo](https://colab.research.google.com/assets/colab-badge.svg/)](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/visualize_saliency_with_backprop_colab.ipynb)
 
 - Activation maximization: [![Activation maximization demo](https://colab.research.google.com/assets/colab-badge.svg/)](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/activation_maximization_colab.ipynb)
 
-#### Have questions? [![Join the chat at https://gitter.im/flashtorch/community](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/flashtorch/community)
+### Have questions? [![Join the chat at https://gitter.im/flashtorch/community](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/flashtorch/community)
 
 ## Overview
 
