@@ -109,7 +109,11 @@ Visit the notebook above to see what earlier layers do!
 
 ## How to contribute
 
-Thanks for your interest in contributing! There are many ways to contribute to this project. Get started [here](https://github.com/MisaOgura/flashtorch/blob/master/CONTRIBUTING.md).
+Thanks for your interest in contributing!
+
+Please first head over to the [Code of Conduct](https://github.com/MisaOgura/flashtorch/blob/master/CODE_OF_CONDUCT.md), which helps set the ground rules for participation in communities and helps build a culture of respect.
+
+Still here? Great! There are many ways to contribute to this project. Get started [here](https://github.com/MisaOgura/flashtorch/blob/master/CONTRIBUTING.md).
 
 ## Resources
 
