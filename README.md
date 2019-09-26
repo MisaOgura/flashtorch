@@ -146,17 +146,17 @@ Still here? Great! There are many ways to contribute to this project. Get starte
 ## Citation
 
 ```txt
-Misa Ogura. (2019, September 9).
-MisaOgura/flashtorch: 0.1.0 (Version v0.1.0).
-Zenodo. http://doi.org/10.5281/zenodo.3403214
+Misa Ogura (2019, September 26).
+MisaOgura/flashtorch: 0.1.1 (Version v0.1.1).
+Zenodo. http://doi.org/10.5281/zenodo.3461737
 ```
 
 ## Author
 
 ### Misa Ogura
 
+[Medium](https://medium.com/@misaogura) | [twitter](https://twitter.com/misa_ogura) | [LinkedIn](https://www.linkedin.com/in/misaogura/)
+
 #### R&D Software Engineer @ [BBC](https://www.bbc.co.uk/rd/blog)
 
 #### Co-founder of [Women Driven Development](https://womendrivendev.org/)
-
-[Github](https://github.com/MisaOgura) | [Medium](https://medium.com/@misaogura) | [twitter](https://twitter.com/misa_ogura) | [LinkedIn](https://www.linkedin.com/in/misaogura/)
