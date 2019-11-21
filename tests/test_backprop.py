@@ -4,8 +4,6 @@ import pytest
 
 from sys import stdout
 
-import scipy
-
 import torch
 import torch.nn as nn
 
