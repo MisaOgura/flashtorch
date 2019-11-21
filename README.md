@@ -32,12 +32,12 @@ Head over to example notebooks on Colab!
 
 - Activation maximization: [![Activation maximization demo](https://colab.research.google.com/assets/colab-badge.svg/)](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/activation_maximization_colab.ipynb)
 
-### Have questions? [![Join the chat at https://gitter.im/flashtorch/community](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/flashtorch/community)
-
 ## Overview
 
 - [Installation](#installation)
 - [Quickstart](#quickstart)
+  - [Use FlashTorch](#use-flashtorch)
+  - [Develop FlashTorch](#develop-flashtorch)
 - [How to contribute](#how-to-contribute)
 - [Resources](#resources)
 - [Citation](#citation)
@@ -70,13 +70,15 @@ You can inspect each module with Python built-in function `help`. The output of 
 
 ## Quickstart
 
+### Use FlashTorch
+
 Below, you can find simple demos to get you started, as well as links to some handy notebooks showing additional examples of using FlashTorch.
 
-### Image handling (`flashtorch.utils`)
+#### Image handling (`flashtorch.utils`)
 
 - [Image handling](https://github.com/MisaOgura/flashtorch/blob/master/examples/examples/image_handling.ipynb) notebook
 
-### Saliency maps (`flashtorch.saliency`)
+#### Saliency maps (`flashtorch.saliency`)
 
 - [Saliency map with backpropagation](https://github.com/MisaOgura/flashtorch/blob/master/examples/visualize_saliency_with_backprop.ipynb) notebook
 - [Google Colab](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/visualize_saliency_with_backprop_colab.ipynb) version - best for trying it out
@@ -91,7 +93,7 @@ Using `flashtorch.saliency` module, let's visualize image-specific class salienc
 
 The network is focusing on the sunken eyes and the round head for this owl.
 
-### Activation maximization (`flashtorch.activmax`)
+#### Activation maximization (`flashtorch.activmax`)
 
 - [Activation maximization](https://github.com/MisaOgura/flashtorch/blob/master/examples/activation_maximization.ipynb) notebook
 - [Google Colab](https://colab.research.google.com/github/MisaOgura/flashtorch/blob/master/examples/activation_maximization_colab.ipynb) version - best for trying it out
@@ -107,11 +109,66 @@ Concepts such as _'eyes'_ (filter 45) and _'entrances (?)'_ (filter 271) seem to
 
 Visit the notebook above to see what earlier layers do!
 
+### Develop FlashTorch
+
+Here is how to setup a dev environment for FlashTorch.
+
+From the project root:
+
+1. Create a conda environment.
+
+    ```terminal
+    $ conda env create -f environment.yml
+    ```
+
+2. Activate the environment.
+
+    ```terminal
+    $ conda activate flashtorch
+    ```
+
+3. Install FlashTorch in a development mode.
+
+    ```terminal
+    $ pip install -e .
+    ```
+
+4. Run the test suit.
+
+    ```terminal
+    $ pytest
+    ```
+
+5. Add a kernel to Jupyter notebook.
+
+    ```
+    $ python -m ipykernel install --user --name flashtorch \
+      --display-name <e.g. flashtorch-dev>
+    ```
+
+6. Launch Jupyter notebook
+
+    ```
+    $ jupyter notebook
+    ```
+
+7. Open a notebook in the `./examples` directory.
+
+8. From the top menu, `Kernel` -> `Change kernel` -> `flashtorch-dev`
+
+9. From the top menu, `Cell` -> `Run All`
+
+If the test suit runs and all the cells in the notebook execute - congratulations, you're good to go!
+
+If you encounter problema setting up the dev environment, please [open an issue](https://github.com/MisaOgura/flashtorch/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D).
+
 ## How to contribute
 
 Thanks for your interest in contributing!
 
 Please first head over to the [Code of Conduct](https://github.com/MisaOgura/flashtorch/blob/master/CODE_OF_CONDUCT.md), which helps set the ground rules for participation in communities and helps build a culture of respect.
+
+Next, please make sure that you have a dev environment set up (see the [Develop FlashTorch](#develop-flashtorch) section above).
 
 Still here? Great! There are many ways to contribute to this project. Get started [here](https://github.com/MisaOgura/flashtorch/blob/master/CONTRIBUTING.md).
 

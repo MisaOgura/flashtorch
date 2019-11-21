@@ -12,7 +12,7 @@ First off, thanks for taking the time to contribute! 🎉👍
 
 * Open a new GitHub pull request with the patch.
 
-* Ensure the PR description clearly describes the problem and solution. Include the relevant issue number if applicable.
+* Ensure the PR description clearly describes the problem and solution with appropriate tests. Include the relevant issue number if applicable.
 
 ### **Did you fix whitespace, format code, or make a purely cosmetic patch?**
 
@@ -20,14 +20,11 @@ Changes that are cosmetic in nature and do not add anything substantial to the s
 
 ### **Do you intend to add a new feature or change an existing one?**
 
-* If you are not sure about your change, [![Join the chat at https://gitter.im/flashtorch/community](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/flashtorch/community)
- and seek feedback.
-
-* Alternatively, [open an issue](https://github.com/MisaOgura/flashtorch/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=%5BREQUEST%5D) with your request to discuss further.
+* If you are not sure about your change, [open an issue](https://github.com/MisaOgura/flashtorch/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=%5BREQUEST%5D) with your request to discuss further.
 
 ### **Do you have questions about the source code?**
 
-* Ask any question about how to use FlashTorch here: [![Join the chat at https://gitter.im/flashtorch/community](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/flashtorch/community)
+* Ask any question about how to use FlashTorch, please email me at `misa.ogura01_at_gmail.com`.
 
 Many thanks :yellow_heart:
 
