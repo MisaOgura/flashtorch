@@ -160,7 +160,7 @@ From the project root:
 
 If the test suit runs and all the cells in the notebook execute - congratulations, you're good to go!
 
-If you encounter problema setting up the dev environment, please [open an issue](https://github.com/MisaOgura/flashtorch/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D).
+If you encounter any problem setting up the dev environment, please [open an issue](https://github.com/MisaOgura/flashtorch/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D).
 
 ## How to contribute
 
