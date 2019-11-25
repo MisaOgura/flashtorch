@@ -140,6 +140,19 @@ ul#profile-list > li {
     padding-bottom: 14px;
 }
 
+div.google-photo {
+    display: flex;
+    justify-content: center;
+}
+
+div.google-photo > img {
+    margin: auto 0;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding: 0 15px;
+    /* width: a;  */
+}
+
 div.facerec {
     display: flex;
     justify-content: center;
@@ -150,7 +163,7 @@ div.facerec > img {
     margin: auto 0;
     margin-top: 40px;
     padding: 0 15px;
-    width: audo;
+    width: auto;
     max-height: 170px;
 }
 
@@ -188,12 +201,11 @@ img#transfer-learning {
     margin: auto;
 }
 
-img#sobel_1 {
-    margin-bottom: 10px;
-}
-
-img#cnn {
-    margin: 50px auto;
+img#sobel_1,
+img#feature-viz,
+img#cnn,
+img#cnn2 {
+    margin: 40px auto;
 }
 
 /* Demos */
