@@ -208,6 +208,11 @@ img#cnn2 {
     margin: 40px auto;
 }
 
+img#cnn2 {
+    margin-bottom: 40px;
+}
+
+
 /* Demos */
 
 .highlight span.si {
