@@ -85,8 +85,10 @@ div.title > a:hover {
     color: #333333;
 }
 
-div.title > i#repo {
-    font-size: 1.8em;
+div.title i#repo {
+    color: black;
+    font-size: 1.2em;
+    margin-left: 10px;
 }
 
 /* Profile */
