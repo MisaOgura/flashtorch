@@ -205,15 +205,13 @@ img#transfer-learning {
 
 img#sobel_1,
 img#feature-viz,
-img#cnn,
-img#cnn2 {
+img#cnn {
     margin: 40px auto;
 }
 
-img#cnn2 {
+img#cnn {
     margin-bottom: 40px;
 }
-
 
 /* Demos */
 
