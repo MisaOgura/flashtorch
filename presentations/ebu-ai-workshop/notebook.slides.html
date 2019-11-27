@@ -13270,7 +13270,7 @@ a.anchor-link {
 <h2 id="Explainability-&amp;-AI">Explainability &amp; AI<a class="anchor-link" href="#Explainability-&amp;-AI">&#182;</a></h2><p>What is it and why is it important?</p>
 <hr>
 <aside class="notes">
-    Let's start by defining it.
+    Let's start by defining these terms.
 </aside>
 </div>
 </div>
@@ -13288,12 +13288,36 @@ a.anchor-link {
 </ul>
 <p><strong>In the context of AI:</strong></p>
 <p>Ability to explain decisions made by algorithms.</p>
+<p><em>But what do I mean by AI?</em></p>
 <aside class="notes">
     Same as interpretability?<br/>
     <br/>
     No, it asks a different question.<br/>
     <br/>
     Paraphrase, in the context of AI.<br/>
+    <br/>
+    AI is a very broad term - let me be more specific!
+</aside>
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Deep-learning">Deep learning<a class="anchor-link" href="#Deep-learning">&#182;</a></h2><p>A subset of machine learning in AI</p>
+<hr>
+<p>Uses <strong>deep neural networks</strong> to extract patterns in data.</p>
+<p><img id='cnn' src='images/dnn.jpg' width='600'></p>
+<p>Millions of parameters: <em>notoriously difficult</em> to explain.</p>
+<p>Applications in computer vision, natural language processing, reinforcement learning...</p>
+<aside class="notes">
+    Specifically, I want to focus on the explainability of deep learning algo.<br/>
+    <br/>
+    Hidden layers between input/output allow us to model complex dataset.<br/>
+    <br/>
+    But... millions of parameters makes it difficult to explain<br/>
+    <br/>
+    If it works so well, why do we need to explain?
 </aside>
 </div>
 </div>
@@ -13310,8 +13334,6 @@ a.anchor-link {
 </div><div class='source'>
     <a target='_blank' href='https://www.youtube.com/watch?v=UG_X_7g63rY'>Source</a>
 </div><aside class="notes">
-    Why is explainability important?<br/>
-    <br/>
     I want to illustrate this with the use of AI in computer vision.<br/>
     <br/>
     Joy - computer scientist and digital activist at MIT media lab.<br/>
@@ -13330,7 +13352,7 @@ a.anchor-link {
 <p>Sadly biases <em>do</em> creep into the algorithms.</p>
 <p>Being able to <strong>spot, understand &amp; explain</strong> is the first step!</p>
 <aside class="notes">
-    No system is perfect.<br/>
+    No algorithm is perfect.<br/>
     <br/>
     All algorithms contain biases, to different degrees, just like us humans!<br/>
     <br/>
@@ -13380,7 +13402,7 @@ a.anchor-link {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="CNN">CNN<a class="anchor-link" href="#CNN">&#182;</a></h2><p>Go-to architecture for image recognition tasks</p>
+<h2 id="CNN">CNN<a class="anchor-link" href="#CNN">&#182;</a></h2><p>Convolution + deep neural network</p>
 <hr>
 <p>Useful features are <em>learned</em> during training, rather than pre-defined.</p>
 <p><img id='cnn' src='images/cnn.png' width='800'></p>
@@ -13464,7 +13486,7 @@ a.anchor-link {
 <li><p><strong>Positive gradients == positive effects</strong> on the confidence of the label</p>
 </li>
 </ul>
-<p><img id='cnn' src='images/cnn.png' width='800'></p>
+<p><img id='cnn' src='images/cnn.png' width='700'></p>
 <p>Great!</p>
 <p>How can I do this with <em>my</em> network? 🤨</p>
 <div class='source'>
@@ -13622,7 +13644,7 @@ height=247
 <li>Registers <strong>custom functions</strong> to model layers</li>
 <li>Grabs gradients out of the computational graph</li>
 </ul>
-<p><img id='cnn' src='images/cnn.png' width='800'></p>
+<p><img id='cnn' src='images/cnn.png' width='700'></p>
 <div class='source'>
     <a target='_blank' href='https://missinglink.ai/guides/convolutional-neural-networks/convolutional-neural-network-tutorial-basic-advanced'>Source</a>
 </div><aside class="notes">
@@ -13805,18 +13827,18 @@ height=223
 <div class='bottom'>
     Do you agree? 🤖<br/>
     <br/>
-    We've seen how well the network is doing.<br/>
-    What about when it gets things wrong? Is FlashTorch still useful?
+    What about when it gets things wrong?<br/>
+    Is FlashTorch still useful?
 </div><aside class="notes">
     It is their magnificent beaks!<br/>
     <br/>
     Interesting parallel between our perception and networks' perception.<br/>
     <br/>
-    Yes!<br/>
+    We've seen how well the network is doing.<br/>
     <br/>
-    It can also help us understand wrong predictions.<br/>
+    YES! It can also help us understand wrong predictions.<br/>
     <br/>
-    AND how the network improves!
+    AND how the network improves through training!
 </aside>
 </div>
 </div>
