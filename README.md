@@ -203,9 +203,9 @@ Still here? Great! There are many ways to contribute to this project. Get starte
 ## Citation
 
 ```txt
-Misa Ogura (2019, September 26).
-MisaOgura/flashtorch: 0.1.1 (Version v0.1.1).
-Zenodo. http://doi.org/10.5281/zenodo.3461737
+Misa Ogura, & Ravi Jain. (2020, January 2).
+MisaOgura/flashtorch: 0.1.2 (Version v0.1.2).
+Zenodo. http://doi.org/10.5281/zenodo.3596650
 ```
 
 ## Author
