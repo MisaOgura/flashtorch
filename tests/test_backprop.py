@@ -213,6 +213,45 @@ def test_warn_when_prediction_is_wrong(mocker, model):
         backprop.calculate_gradients(input_, target_class)
 
 
+# Test visualize method
+
+
+def test_visualize_calls_calculate_gradients_twice(mocker, model):
+    backprop = Backprop(model)
+    mocker.spy(backprop, 'calculate_gradients')
+
+    top_class = 5
+    target_class = 5
+    input_ = torch.zeros([1, 3, 224, 224])
+
+    target = make_expected_gradient_target(top_class)
+
+    mock_output = make_mock_output(mocker, model, target_class)
+
+    backprop.visualize(input_, target_class, use_gpu=True)
+
+    assert backprop.calculate_gradients.call_count == 2
+
+
+def test_visualize_passes_gpu_flag(mocker, model):
+    backprop = Backprop(model)
+    mocker.spy(backprop, 'calculate_gradients')
+
+    top_class = 5
+    target_class = 5
+    input_ = torch.zeros([1, 3, 224, 224])
+
+    target = make_expected_gradient_target(top_class)
+
+    mock_output = make_mock_output(mocker, model, target_class)
+
+    backprop.visualize(input_, target_class, use_gpu=True)
+
+    _, _, kwargs = backprop.calculate_gradients.mock_calls[0]
+
+    assert kwargs['use_gpu']
+
+
 # Test compatibilities with torchvision models
 
 

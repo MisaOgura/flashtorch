@@ -165,11 +165,13 @@ class Backprop:
 
         gradients = self.calculate_gradients(input_,
                                              target_class,
-                                             guided=guided)
+                                             guided=guided,
+                                             use_gpu=use_gpu)
         max_gradients = self.calculate_gradients(input_,
                                                  target_class,
                                                  guided=guided,
-                                                 take_max=True)
+                                                 take_max=True,
+                                                 use_gpu=use_gpu)
 
         # Setup subplots
 
