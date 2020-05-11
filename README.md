@@ -177,7 +177,7 @@ Still here? Great! There are many ways to contribute to this project. Get starte
 
 ### Talks & blog posts
 
-- [Hopperx1 London](http://www.cvent.com/events/hopperx1-london/agenda-e7d0f2fa5e9d46cf88fd8c322ae1290b.aspx), June 2019 - [slide deck](https://misaogura.github.io/flashtorch/presentations/Hopperx1London)
+- [EBU AI IN PRODUCTION AND DISTRIBUTION WORKSHOP](https://tech.ebu.ch/events/2019/ai-in-production-distribution), November 2019 - [slide deck](https://misaogura.github.io/flashtorch/presentations/ebu-ai-workshop/#/)
 
 - [Uncovering what neural nets “see” with FlashTorch](https://towardsdatascience.com/feature-visualisation-in-pytorch-saliency-maps-a3f99d08f78a)
 
