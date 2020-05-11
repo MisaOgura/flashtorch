@@ -16,7 +16,7 @@ install:
     - conda update -q conda
     - conda info -a
 
-    - conda env create -f environment.yml -q  python=$TRAVIS_PYTHON_VERSION
+    - conda env create -f environment.yml -q python=$TRAVIS_PYTHON_VERSION
     - conda activate flashtorch
     - python setup.py install
 
