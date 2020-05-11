@@ -32,11 +32,11 @@ def test_list_items(imagenet):
 
 
 def test_return_true_when_target_class_exists(imagenet):
-    assert ('dalmatian' in imagenet) == True
+    assert 'dalmatian' in imagenet
 
 
 def test_return_false_when_target_class_does_not_exist(imagenet):
-    assert ('invalid class' in imagenet) == False
+    assert 'invalid class' not in imagenet
 
 
 def test_find_class_index(imagenet):
@@ -56,6 +56,7 @@ def test_handle_multi_word_target_class(imagenet):
 
     assert class_index == 251
 
+
 def test_handle_partial_match(imagenet):
     class_index = imagenet['foxhound']
 
@@ -65,19 +66,19 @@ def test_handle_partial_match(imagenet):
 def test_return_none_for_invalid_class_name(imagenet):
     class_index = imagenet['invalid class name']
 
-    assert class_index == None
+    assert class_index is None
 
 
 def test_raise_on_invalid_argument_type(imagenet):
     with pytest.raises(TypeError) as error:
-        class_index = imagenet[1]
+        _ = imagenet[1]
 
     assert 'Target class needs to be a string' in str(error.value)
 
 
 def test_raise_on_multiple_matches(imagenet):
     with pytest.raises(ValueError) as error:
-        class_index = imagenet['dog']
+        _ = imagenet['dog']
 
     assert 'Multiple potential matches found' in str(error.value)
 

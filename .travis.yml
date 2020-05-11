@@ -1,25 +1,25 @@
 language: python
-cache: pip
 
 python:
     - "3.6"
+    - "3.7"
+
+cache: pip
 
 install:
-    - pip install jupyter
-    - wget https://github.com/hakimel/reveal.js/archive/3.7.0.zip
-    - unzip 3.7.0.zip
-    - mv reveal.js-3.7.0 reveal.js
+    - sudo apt-get update
+    - wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+    - bash miniconda.sh -b -p $HOME/miniconda
+    - source "$HOME/miniconda/etc/profile.d/conda.sh"
+    - hash -r
+    - conda config --set always_yes yes --set changeps1 no
+    - conda update -q conda
+    - conda info -a
+
+    - conda env create -f environment.yml -q python=$TRAVIS_PYTHON_VERSION
+    - conda activate flashtorch
+    - python setup.py install
 
 script:
-    - jupyter nbconvert presentations/ebu-ai-workshop/notebook.ipynb --to slides --reveal-prefix=https://misaogura.github.io/flashtorch/presentations/reveal.js
-
-after_success: |
-    if [ -n "$GITHUB_API_KEY" ]; then
-    git checkout --orphan gh-pages
-    git rm -rf --cached .
-    mv presentations/ebu-ai-workshop/notebook.slides.html presentations/ebu-ai-workshop/index.html
-    mv reveal.js presentations
-    git add -f --ignore-errors README.md presentations examples/images
-    git -c user.name='travis' -c user.email='travis' commit -m init
-    git push -f -q https://$GITHUB_USER:$GITHUB_API_KEY@github.com/$TRAVIS_REPO_SLUG gh-pages
-    fi
+    - flake8 flashtorch tests
+    - pytest

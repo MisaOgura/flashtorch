@@ -10,6 +10,7 @@ from flashtorch.utils import (denormalize,
                               format_for_plotting,
                               standardize_and_clip)
 
+
 class Backprop:
     """Provides an interface to perform backpropagation.
 
@@ -28,7 +29,7 @@ class Backprop:
         model: A neural network model from `torchvision.models
             <https://pytorch.org/docs/stable/torchvision/models.html>`_.
 
-    """
+    """ # noqa
 
     ####################
     # Public interface #
@@ -66,7 +67,7 @@ class Backprop:
         Returns:
             gradients (torch.Tensor): With shape :math:`(C, H, W)`.
 
-        """
+        """ # noqa
 
         if 'inception' in self.model.__class__.__name__.lower():
             if input_.size()[1:] != (3, 299, 299):
@@ -107,8 +108,8 @@ class Backprop:
             if (target_class is not None) and (top_class != target_class):
                 warnings.warn(UserWarning(
                     f'The predicted class index {top_class.item()} does not' +
-                    f'equal the target class index {target_class}. Calculating' +
-                    'the gradient w.r.t. the predicted class.'
+                    f'equal the target class index {target_class}. ' +
+                    'Calculating the gradient w.r.t. the predicted class.'
                 ))
 
             # Set the element at top class index to be 1
@@ -159,7 +160,7 @@ class Backprop:
 
         Returns:
             gradients (torch.Tensor): With shape :math:`(C, H, W)`.
-        """
+        """ # noqa
 
         # Calculate gradients
 

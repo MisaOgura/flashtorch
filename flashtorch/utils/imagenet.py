@@ -26,7 +26,7 @@ class ImageNetIndex(Mapping):
         Class names in `imagenet_class_index.json` has been slightly modified
         from the source due to duplicated class names (e.g. crane). This helps
         make the use of this tool simpler.
-    """
+    """ # noqa
 
     def __init__(self):
         self._index = {}
@@ -57,8 +57,8 @@ class ImageNetIndex(Mapping):
         if not any(partial_matches):
             return None
         elif len(partial_matches) > 1:
-            raise ValueError('Multiple potential matches found: {}' \
-                .format(', '.join(map(str, partial_matches))))
+            raise ValueError('Multiple potential matches found: {}'
+                             .format(', '.join(map(str, partial_matches))))
 
         target_class = partial_matches.pop()
 
@@ -78,16 +78,16 @@ class ImageNetIndex(Mapping):
 
         # Find the intersection between search words and class names to
         # prioritise whole word matches
-            # e.g. If words = {'dalmatian', 'dog'} then matches 'dalmatian'
+        # e.g. If words = {'dalmatian', 'dog'} then matches 'dalmatian'
 
         matches = set(words).intersection(set(self.keys()))
 
         if not any(matches):
             # Find substring matches between search words and class names to
             # accommodate for fuzzy matches to some extend
-                # e.g. If words = {'foxhound'} then matches 'english foxhound'
+            # e.g. If words = {'foxhound'} then matches 'english foxhound'
 
-            matches = [key for word in words for key in self.keys() \
-                if word in key]
+            matches = [key for word in words for key in self.keys()
+                       if word in key]
 
         return matches
