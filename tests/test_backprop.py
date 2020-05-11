@@ -71,11 +71,6 @@ def model():
     return models.alexnet()
 
 
-@pytest.fixture
-def available_models():
-    return inspect.getmembers(models, inspect.isfunction)
-
-
 ##############
 # Test cases #
 ##############
@@ -250,77 +245,66 @@ def test_visualize_passes_gpu_flag(mocker, model):
 
 # Test compatibilities with torchvision models
 
-
-def test_register_backward_hook_to_first_conv_layer(mocker, available_models):
-    print()
-    for name, model_module in available_models:
-        print(f'Testing model: {name}', end='\r')
-        stdout.write('\x1b[2K')
-
-        model = model_module()
-
-        conv_layer = find_first_conv_layer(model, nn.modules.conv.Conv2d, 3)
-        mocker.spy(conv_layer, 'register_backward_hook')
-
-        Backprop(model)
-
-        conv_layer.register_backward_hook.assert_called_once()
+available_models = inspect.getmembers(models, inspect.isfunction)
 
 
-def test_register_hooks_to_relu_layers(mocker, available_models):
-    print()
-    for name, model_module in available_models:
-        print(f'Testing model: {name}', end='\r')
-        stdout.write('\x1b[2K')
+@pytest.mark.parametrize("name, model_module", available_models)
+def test_register_hook_to_first_conv_layer(mocker, name, model_module):
+    model = model_module()
 
-        model = model_module()
+    conv_layer = find_first_conv_layer(model, nn.modules.conv.Conv2d, 3)
+    mocker.spy(conv_layer, 'register_backward_hook')
 
-        relu_layers = find_relu_layers(model, nn.ReLU)
+    Backprop(model)
 
-        for layer in relu_layers:
-            mocker.spy(layer, 'register_forward_hook')
-            mocker.spy(layer, 'register_backward_hook')
-
-        backprop = Backprop(model)
-
-        target_class = 5
-        input_ = torch.zeros([1, 3, 224, 224])
-
-        if 'inception' in name:
-            input_ = torch.zeros([1, 3, 299, 299])
-
-        make_mock_output(mocker, model, target_class)
-
-        backprop.calculate_gradients(input_, target_class, guided=True)
-
-        for layer in relu_layers:
-
-            layer.register_forward_hook.assert_called_once()
-            layer.register_backward_hook.assert_called_once()
+    conv_layer.register_backward_hook.assert_called_once()
 
 
-def test_calculate_gradients_for_all_models(mocker, available_models):
-    print()
-    for name, model_module in available_models:
-        print(f'Testing model: {name}', end='\r')
-        stdout.write('\x1b[2K')
+@pytest.mark.parametrize("name, model_module", available_models)
+def test_register_hooks_to_relu_layers(mocker, name, model_module):
+    model = model_module()
+    relu_layers = find_relu_layers(model, nn.ReLU)
 
-        model = model_module()
-        backprop = Backprop(model)
+    for layer in relu_layers:
+        mocker.spy(layer, 'register_forward_hook')
+        mocker.spy(layer, 'register_backward_hook')
 
-        target_class = 5
-        input_ = torch.zeros([1, 3, 224, 224])
+    backprop = Backprop(model)
 
-        if 'inception' in name:
-            input_ = torch.zeros([1, 3, 299, 299])
+    target_class = 5
+    input_ = torch.zeros([1, 3, 224, 224])
 
-        make_mock_output(mocker, model, target_class)
+    if 'inception' in name:
+        input_ = torch.zeros([1, 3, 299, 299])
 
-        gradients = backprop.calculate_gradients(input_,
-                                                 target_class,
-                                                 use_gpu=True)
+    make_mock_output(mocker, model, target_class)
 
-        assert gradients.shape == input_.size()[1:]
+    backprop.calculate_gradients(input_, target_class, guided=True)
+
+    for layer in relu_layers:
+
+        layer.register_forward_hook.assert_called_once()
+        layer.register_backward_hook.assert_called_once()
+
+
+@pytest.mark.parametrize("name, model_module", available_models)
+def test_calculate_gradients_for_all_models(mocker, name, model_module):
+    model = model_module()
+    backprop = Backprop(model)
+
+    target_class = 5
+    input_ = torch.zeros([1, 3, 224, 224])
+
+    if 'inception' in name:
+        input_ = torch.zeros([1, 3, 299, 299])
+
+    make_mock_output(mocker, model, target_class)
+
+    gradients = backprop.calculate_gradients(input_,
+                                                target_class,
+                                                use_gpu=True)
+
+    assert gradients.shape == input_.size()[1:]
 
 
 if __name__ == '__main__':

@@ -21,4 +21,4 @@ install:
     - python setup.py install
 
 script:
-    - travis_wait 5 pytest
+    - pytest
