@@ -1,6 +1,7 @@
 # FlashTorch
 
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/flashtorch.svg?color=green)](https://pypi.org/project/flashtorch/)
+[![Build Status](https://travis-ci.com/MisaOgura/flashtorch.svg?branch=master)](https://travis-ci.com/MisaOgura/flashtorch)
 [![PyPI](https://img.shields.io/pypi/v/flashtorch.svg?color=yellow)](https://pypi.org/project/flashtorch/)
 [![PyPI - License](https://img.shields.io/pypi/l/flashtorch.svg?color=black)](https://github.com/MisaOgura/flashtorch/blob/master/LICENSE)
 [![DOI](https://zenodo.org/badge/177140934.svg)](https://zenodo.org/badge/latestdoi/177140934)
