@@ -1,8 +1,6 @@
 import inspect
 import pytest
 
-from sys import stdout
-
 import torch
 import torch.nn as nn
 
@@ -301,8 +299,8 @@ def test_calculate_gradients_for_all_models(mocker, name, model_module):
     make_mock_output(mocker, model, target_class)
 
     gradients = backprop.calculate_gradients(input_,
-                                                target_class,
-                                                use_gpu=True)
+                                             target_class,
+                                             use_gpu=True)
 
     assert gradients.shape == input_.size()[1:]
 
