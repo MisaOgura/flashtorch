@@ -134,10 +134,10 @@ From the project root:
     $ pip install -e .
     ```
 
-4. Run the test suit.
+4. Run the linter & test suit.
 
     ```terminal
-    $ pytest
+    $ flake8 flashtorch tests && pytest
     ```
 
 5. Add a kernel to Jupyter notebook.
