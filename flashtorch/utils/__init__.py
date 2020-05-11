@@ -7,12 +7,11 @@ transformation.
 """
 from PIL import Image
 
-import matplotlib.pyplot as plt
-
 import torchvision.transforms as transforms
 import torchvision.transforms.functional as F
 
-from .imagenet import *
+from .imagenet import * # noqa
+
 
 def load_image(image_path):
     """Loads image as a PIL RGB image.

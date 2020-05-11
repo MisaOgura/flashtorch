@@ -3,10 +3,8 @@ import inspect
 import pytest
 
 from os import path
-from sys import stdout
 
 import numpy as np
-import torch.nn as nn
 import torchvision.models as models
 
 from flashtorch.activmax import GradientAscent
@@ -27,6 +25,7 @@ def model():
 @pytest.fixture
 def conv_layer(model):
     return model[0]
+
 
 @pytest.fixture
 def available_models():
@@ -101,7 +100,8 @@ def test_invalid_filter_idx_negative(conv_layer, g_ascent):
 
 def test_invalid_filter_idx_too_large(conv_layer, g_ascent):
     with pytest.raises(ValueError):
-        g_ascent.optimize(conv_layer, 70, num_iter=2)  # the target conv layer has 64 filters
+        # Target conv layer has 64 filters
+        g_ascent.optimize(conv_layer, 70, num_iter=2)
 
 
 def test_register_forward_hook_to_target_layer(mocker, conv_layer, model):

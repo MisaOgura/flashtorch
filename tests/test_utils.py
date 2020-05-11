@@ -132,14 +132,12 @@ def test_standardize_and_clip_tensor():
 
 
 def test_standardize_and_clip_detach_input_from_graph():
-    default_min = 0.0
-    default_max = 1.0
 
     input_ = torch.randint(low=-1000, high=1000, size=(224, 224)).float()
     input_.requires_grad = True
     normalized = standardize_and_clip(input_)
 
-    assert normalized.requires_grad == False
+    assert not normalized.requires_grad
 
 
 def test_standardize_and_clip_with_custom_min_max():
@@ -147,7 +145,9 @@ def test_standardize_and_clip_with_custom_min_max():
     custom_max = 3.0
 
     input_ = torch.randint(low=-1000, high=1000, size=(224, 224)).float()
-    normalized = standardize_and_clip(input_, min_value=custom_min, max_value=custom_max)
+    normalized = standardize_and_clip(input_,
+                                      min_value=custom_min,
+                                      max_value=custom_max)
 
     assert normalized.shape == input_.shape
     assert normalized.min() >= custom_min

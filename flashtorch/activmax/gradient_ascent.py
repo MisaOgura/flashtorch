@@ -1,11 +1,8 @@
-import sys
-
 import numpy as np
 import matplotlib.pyplot as plt
 
 import torch
 import torch.nn as nn
-import torch.optim as optim
 
 from flashtorch.utils import (apply_transforms,
                               format_for_plotting,
@@ -39,7 +36,7 @@ class GradientAscent:
         use_gpu (bool, optional, default=False): Use GPU if set to True and
             `torch.cuda.is_available()`.
 
-    """
+    """ # noqa
 
     ####################
     # Public interface #
@@ -191,11 +188,11 @@ class GradientAscent:
         self._lr = lr
 
         if (type(filter_idxs) == int):
-            output = self._visualize_filter(layer,
-                                            filter_idxs,
-                                            num_iter=num_iter,
-                                            figsize=figsize,
-                                            title=title)
+            self._visualize_filter(layer,
+                                   filter_idxs,
+                                   num_iter=num_iter,
+                                   figsize=figsize,
+                                   title=title)
         else:
             num_total_filters = layer.out_channels
 
@@ -243,7 +240,7 @@ class GradientAscent:
                 :math:`(num_iter, C, H, W)`. The size of the image is
                 determined by `img_size` attribute which defaults to 224.
 
-        """
+        """ # noqa
 
         input_ = apply_transforms(load_image(img_path), self.img_size)
 
@@ -257,7 +254,7 @@ class GradientAscent:
         plt.imshow(format_for_plotting(
             standardize_and_clip(output[-1],
                                  saturation=0.15,
-                                 brightness=0.7)));
+                                 brightness=0.7))); # noqa
 
         if return_output:
             return output
@@ -268,7 +265,7 @@ class GradientAscent:
 
     def _register_forward_hooks(self, layer, filter_idx):
         def _record_activation(module, input_, output):
-            self.activation = torch.mean(output[:,filter_idx,:,:])
+            self.activation = torch.mean(output[:, filter_idx, :, :])
 
         return layer.register_forward_hook(_record_activation)
 
@@ -302,7 +299,8 @@ class GradientAscent:
         if not np.issubdtype(type(filter_idx), np.integer):
             raise TypeError('Indecies must be integers.')
         elif (filter_idx < 0) or (filter_idx > num_filters):
-            raise ValueError(f'Filter index must be between 0 and {num_filters - 1}.')
+            raise ValueError(f'Filter index must be between 0 and \
+                             {num_filters - 1}.')
 
     def _visualize_filter(self, layer, filter_idx, num_iter, figsize, title):
         self.output = self.optimize(layer, filter_idx, num_iter=num_iter)
@@ -314,7 +312,7 @@ class GradientAscent:
         plt.imshow(format_for_plotting(
             standardize_and_clip(self.output[-1],
                                  saturation=0.15,
-                                 brightness=0.7)));
+                                 brightness=0.7))); # noqa
 
     def _visualize_filters(self, layer, filter_idxs, num_iter, num_subplots,
                            title):
@@ -346,4 +344,4 @@ class GradientAscent:
                                      saturation=0.15,
                                      brightness=0.7)))
 
-        plt.subplots_adjust(wspace=0, hspace=0);
+        plt.subplots_adjust(wspace=0, hspace=0); # noqa

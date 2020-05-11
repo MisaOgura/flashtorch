@@ -1,5 +1,4 @@
 import inspect
-import warnings
 import pytest
 
 from sys import stdout
@@ -7,7 +6,6 @@ from sys import stdout
 import torch
 import torch.nn as nn
 
-import torchvision
 import torchvision.models as models
 
 from flashtorch.saliency import Backprop
@@ -135,7 +133,7 @@ def test_calculate_gradients_of_target_class_only(mocker, model):
     assert torch.all(kwargs['gradient'].eq(target))
 
 
-def test_calculate_gradients_of_top_class_if_target_not_provided(mocker, model):
+def test_calc_gradients_of_top_class_if_target_not_provided(mocker, model):
     backprop = Backprop(model)
 
     top_class = 5
@@ -152,7 +150,7 @@ def test_calculate_gradients_of_top_class_if_target_not_provided(mocker, model):
     assert torch.all(kwargs['gradient'].eq(target))
 
 
-def test_calculate_gradients_of_top_class_if_prediction_is_wrong(mocker, model):
+def test_calc_gradients_of_top_class_if_prediction_is_wrong(mocker, model):
     backprop = Backprop(model)
 
     top_class = torch.tensor(5)
@@ -224,9 +222,8 @@ def test_visualize_calls_calculate_gradients_twice(mocker, model):
     target_class = 5
     input_ = torch.zeros([1, 3, 224, 224])
 
-    target = make_expected_gradient_target(top_class)
-
-    mock_output = make_mock_output(mocker, model, target_class)
+    make_expected_gradient_target(top_class)
+    make_mock_output(mocker, model, target_class)
 
     backprop.visualize(input_, target_class, use_gpu=True)
 
@@ -241,9 +238,8 @@ def test_visualize_passes_gpu_flag(mocker, model):
     target_class = 5
     input_ = torch.zeros([1, 3, 224, 224])
 
-    target = make_expected_gradient_target(top_class)
-
-    mock_output = make_mock_output(mocker, model, target_class)
+    make_expected_gradient_target(top_class)
+    make_mock_output(mocker, model, target_class)
 
     backprop.visualize(input_, target_class, use_gpu=True)
 
@@ -279,7 +275,7 @@ def test_register_hooks_to_relu_layers(mocker, available_models):
 
         model = model_module()
 
-        relu_layers = find_relu_layers(model,nn.ReLU)
+        relu_layers = find_relu_layers(model, nn.ReLU)
 
         for layer in relu_layers:
             mocker.spy(layer, 'register_forward_hook')
