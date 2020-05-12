@@ -19,7 +19,7 @@ install:
     - conda config --set always_yes yes --set changeps1 no
     - conda update -q conda
     - conda info -a
-    - conda env create -f environment.yml -q python=$TRAVIS_PYTHON_VERSION
+    - conda env create -f environment.ci.yml -q python=$TRAVIS_PYTHON_VERSION
     - conda activate flashtorch
     - conda install nbconvert
     - pip install --upgrade torch==$TORCH_VERSION
