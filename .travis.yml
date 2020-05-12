@@ -6,6 +6,10 @@ python:
 
 cache: pip
 
+env:
+    - TORCH_VERSION=1.5.0 TORCHVISION_VERSION=0.6.0
+    - TORCH_VERSION=0.4.1 TORCHVISION_VERSION=0.6.0
+
 install:
     - sudo apt-get update
     - wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
@@ -15,9 +19,11 @@ install:
     - conda config --set always_yes yes --set changeps1 no
     - conda update -q conda
     - conda info -a
-
-    - conda env create -f environment.yml -q python=$TRAVIS_PYTHON_VERSION
-    - conda activate flashtorch
+    - conda env create -f environment.ci.yml -q python=$TRAVIS_PYTHON_VERSION
+    - conda activate flashtorch-ci
+    - conda install nbconvert
+    - pip install --upgrade torch==$TORCH_VERSION
+    - pip install --upgrade torchvision==$TORCHVISION_VERSION
     - python setup.py install
 
 script:
