@@ -20,7 +20,7 @@ install:
     - conda update -q conda
     - conda info -a
     - conda env create -f environment.ci.yml -q python=$TRAVIS_PYTHON_VERSION
-    - conda activate flashtorch
+    - conda activate flashtorch-ci
     - conda install nbconvert
     - pip install --upgrade torch==$TORCH_VERSION
     - pip install --upgrade torchvision==$TORCHVISION_VERSION

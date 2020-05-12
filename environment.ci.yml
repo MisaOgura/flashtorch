@@ -1,4 +1,4 @@
-name: flashtorch
+name: flashtorch-ci
 channels:
   - pytorch
 dependencies:
