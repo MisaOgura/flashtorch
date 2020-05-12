@@ -7,9 +7,10 @@ python:
 cache: pip
 
 env:
-    - TORCH_VERSION=1.5.0
-    - TORCH_VERSION=0.4.1
-    - TORCHVISION_VERSION=0.6.0
+    matrix:
+        - TORCH_VERSION=1.5.0
+        - TORCH_VERSION=0.4.1
+        - TORCHVISION_VERSION=0.6.0
 
 install:
     - sudo apt-get update
