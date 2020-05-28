@@ -186,7 +186,6 @@ def test_calc_gradients_of_top_class_if_prediction_is_wrong(mocker, model):
 def test_handle_greyscale_input(mocker, model_grayscale):
     backprop = Backprop(model_grayscale)
 
-    target_class = 0
     input_ = torch.zeros([1, 1, 224, 224], requires_grad=True)
 
     gradients = backprop.calculate_gradients(input_)
