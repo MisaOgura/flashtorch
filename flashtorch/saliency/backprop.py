@@ -117,7 +117,6 @@ class Backprop:
             target[0][top_class] = 1
 
         # Calculate gradients of the target class output w.r.t. input_
-
         output.backward(gradient=target)
 
         # Detach the gradients from the graph and move to cpu
@@ -218,8 +217,7 @@ class Backprop:
                 self.gradients = grad_in[0]
 
         for _, module in self.model.named_modules():
-            if isinstance(module, nn.modules.conv.Conv2d) and \
-                    module.in_channels == 3:
+            if isinstance(module, nn.modules.conv.Conv2d):
                 module.register_backward_hook(_record_gradients)
                 break
 
