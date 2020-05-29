@@ -218,8 +218,7 @@ class Backprop:
                 self.gradients = grad_in[0]
 
         for _, module in self.model.named_modules():
-            if isinstance(module, nn.modules.conv.Conv2d) and \
-                    module.in_channels == 3:
+            if isinstance(module, nn.modules.conv.Conv2d):
                 module.register_backward_hook(_record_gradients)
                 break
 

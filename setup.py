@@ -26,7 +26,7 @@ from setuptools import setup, find_packages
 DOCLINES = (__doc__ or '').split("\n")
 long_description = "\n".join(DOCLINES[2:])
 
-version = '0.1.2'
+version = '0.1.3'
 
 setup(
     name='flashtorch',

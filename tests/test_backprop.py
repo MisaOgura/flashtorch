@@ -3,6 +3,7 @@ import pytest
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 import torchvision.models as models
 
@@ -59,6 +60,21 @@ def make_expected_gradient_target(top_class):
     return target
 
 
+class CnnGrayscale(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=3, padding=1)
+        self.relu1 = nn.ReLU(inplace=True)
+        self.conv2 = nn.Conv2d(64, 10, kernel_size=3, stride=3, padding=1)
+        self.fc1 = nn.Linear(10 * 25 * 25, 10)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv2(x))
+
+        return F.softmax(self.fc1(x.view(-1, 10 * 25 * 25)), dim=1)
+
+
 #################
 # Test fixtures #
 #################
@@ -67,6 +83,11 @@ def make_expected_gradient_target(top_class):
 @pytest.fixture
 def model():
     return models.alexnet()
+
+
+@pytest.fixture
+def model_grayscale():
+    return CnnGrayscale()
 
 
 ##############
@@ -160,6 +181,16 @@ def test_calc_gradients_of_top_class_if_prediction_is_wrong(mocker, model):
     args, kwargs = mock_output.backward.call_args
 
     assert torch.all(kwargs['gradient'].eq(target))
+
+
+def test_handle_greyscale_input(mocker, model_grayscale):
+    backprop = Backprop(model_grayscale)
+
+    input_ = torch.zeros([1, 1, 224, 224], requires_grad=True)
+
+    gradients = backprop.calculate_gradients(input_)
+
+    assert gradients.shape == (1, 224, 224)
 
 
 def test_return_max_across_color_channels_if_specified(mocker, model):
