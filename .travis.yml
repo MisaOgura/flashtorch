@@ -6,7 +6,7 @@ python:
 
 install:
     - pip install jupyter
-    - pip install -U nbconvert==5.4
+    - pip install -U nbconvert==5.6.1
     - wget https://github.com/hakimel/reveal.js/archive/3.7.0.zip
     - unzip 3.7.0.zip
     - mv reveal.js-3.7.0 reveal.js
