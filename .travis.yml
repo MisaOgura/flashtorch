@@ -1,31 +1,25 @@
 language: python
+cache: pip
 
 python:
     - "3.6"
-    - "3.7"
-
-cache: pip
-
-env:
-    - TORCH_VERSION=1.5.0 TORCHVISION_VERSION=0.6.0
-    - TORCH_VERSION=0.4.1 TORCHVISION_VERSION=0.6.0
 
 install:
-    - sudo apt-get update
-    - wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
-    - bash miniconda.sh -b -p $HOME/miniconda
-    - source "$HOME/miniconda/etc/profile.d/conda.sh"
-    - hash -r
-    - conda config --set always_yes yes --set changeps1 no
-    - conda update -q conda
-    - conda info -a
-    - conda env create -f environment.ci.yml -q python=$TRAVIS_PYTHON_VERSION
-    - conda activate flashtorch-ci
-    - conda install nbconvert
-    - pip install --upgrade torch==$TORCH_VERSION
-    - pip install --upgrade torchvision==$TORCHVISION_VERSION
-    - python setup.py install
+    - pip install jupyter
+    - wget https://github.com/hakimel/reveal.js/archive/3.7.0.zip
+    - unzip 3.7.0.zip
+    - mv reveal.js-3.7.0 reveal.js
 
 script:
-    - flake8 flashtorch tests
-    - pytest
+    - jupyter nbconvert presentations/ldn-pytorch-meetup/notebook.ipynb --to slides --reveal-prefix=https://misaogura.github.io/flashtorch/presentations/reveal.js
+
+after_success: |
+    if [ -n "$GITHUB_API_KEY" ]; then
+    git checkout --orphan gh-pages
+    git rm -rf --cached .
+    mv presentations/ldn-pytorch-meetup/notebook.slides.html presentations/ldn-pytorch-meetup/index.html
+    mv reveal.js presentations
+    git add -f --ignore-errors README.md presentations examples/images
+    git -c user.name='travis' -c user.email='travis' commit -m init
+    git push -f -q https://$GITHUB_USER:$GITHUB_API_KEY@github.com/$TRAVIS_REPO_SLUG gh-pages
+    fi
