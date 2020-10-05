@@ -1,0 +1,206 @@
+/* Global style */
+
+div > div.inner_cell > div > hr {
+    margin-top: 18px;
+    border: 0;
+    border-top: 1px solid #eeeeee;
+    background-color: transparent;
+}
+
+div.prompt {
+    width: 0px;
+    min-width: 0px;
+    visibility: collapse
+}
+
+div.output_subarea.output_stream.output_stderr.output_text {
+    visibility: hidden;
+    height: 0;
+}
+
+div.output_subarea {
+    max-width: 100%;
+}
+
+div.output_subarea {
+    text-align: center;
+}
+
+.reveal pre,
+div.output_area pre {
+    font-size: 65%;
+}
+
+div.source {
+    text-align: right;
+    font-size: 0.7em;
+}
+
+.rendered_html hr {
+    margin-bottom: 0;
+    margin-top: 18px;
+    border: 0;
+    border-top: 1px solid #eeeeee;
+    background-color: transparent;
+}
+
+.rendered_html ul {
+    margin-top: 0;
+}
+
+div.output_subarea.output_stream.output_stderr.output_text {
+    font-size: 0.8em;
+}
+
+div.bottom {
+    margin-top: -10px;
+}
+
+div.bottom > i {
+    font-style: italic;
+    font-family: Lato, sans-serif;
+    font-size: 1em;
+}
+
+/* Title */
+
+.rendered_html h1:first-child {
+    margin-top: 3em;
+}
+
+h3#subtitle {
+    margin: 25px 0 20px;
+}
+
+p.short-url {
+    margin-top: 50px;
+    text-align: center;
+}
+
+div.title > a,
+div.title > a:hover {
+    position: absolute;
+    right: 3%;
+    top: 47%;
+    color: #333333;
+}
+
+div.title > i#repo {
+    font-size: 1.8em;
+}
+
+/* Profile */
+
+div.social-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5em 0 0 2em;
+    width: 200px;
+}
+
+div.social-container > a,
+div.social-container > a:hover {
+    color: #333333;
+}
+
+div.social-container > a > i.fab {
+    font-family: "Font Awesome 5 Brands";
+    font-size: 1.2em;
+}
+
+div.social-container > a > i.fas {
+    font-family: "Font Awesome 5 Free";
+    font-size: 1.2em;
+}
+
+div.profile-container {
+    display: flex;
+    justify-content: flex-start;
+}
+
+img#profile-image {
+    width: 200px;
+    height: 200px;
+    margin: 1em 3em 0 2em;
+    border-radius: 10px;
+}
+
+img#wdd-logo {
+    width: 1.2em;
+    height: 1.2em;
+    margin: 0;
+    box-shadow: none;
+}
+
+ul#profile-list {
+   margin-top: 1.3em;
+}
+
+ul#profile-list > li {
+    padding-bottom: 14px;
+}
+
+/* CNN */
+
+div.convolution {
+    display: flex;
+    justify-content: center;
+    height: 360px;
+}
+
+div.convolution > img {
+    margin: auto 0;
+    margin-top: 40px;
+}
+
+div.kernels-container {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+div.kernels-container > img {
+    margin: 0;
+    height: 100%;
+}
+
+div.kernels-container > img#kernels_2 {
+    padding-top: 25px;
+}
+
+img#sobel_1,
+img#sobel_2 {
+    margin: auto;
+}
+
+img#sobel_1 {
+    margin-bottom: 10px;
+}
+
+img#cnn {
+    margin: 50px auto;
+}
+
+/* Demos */
+
+.highlight span.si {
+    color: #BA2121;
+    font-weight: 400;
+}
+
+div.saliency,
+div.guided_backprop {
+    display: flex;
+    justify-content: center;
+}
+
+div.saliency > img {
+    width: 400px;
+    height: 150px;
+    margin: 30px auto;
+}
+
+div.guided_backprop > img {
+    width: 300px;
+    height: 150px;
+    margin: 1em;
+}
