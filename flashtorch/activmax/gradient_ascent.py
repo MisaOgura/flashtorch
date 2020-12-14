@@ -126,7 +126,6 @@ class GradientAscent:
         # Register hooks to record activation and gradients
 
         self.handlers.append(self._register_forward_hooks(layer, filter_idx))
-        self.handlers.append(self._register_backward_hooks())
 
         # Inisialize gradients
 
@@ -269,27 +268,16 @@ class GradientAscent:
 
         return layer.register_forward_hook(_record_activation)
 
-    def _register_backward_hooks(self):
-        def _record_gradients(module, grad_in, grad_out):
-            if self.gradients.shape == grad_in[0].shape:
-                self.gradients = grad_in[0]
-
-        for _, module in self.model.named_modules():
-            if isinstance(module, nn.modules.conv.Conv2d) and \
-                    module.in_channels == 3:
-                return module.register_backward_hook(_record_gradients)
-
     def _ascent(self, x, num_iter):
         output = []
 
         for i in range(num_iter):
+            x = x.detach()
+            x.requires_grad = True
             self.model(x)
-
             self.activation.backward()
-
-            self.gradients /= (torch.sqrt(torch.mean(
-                torch.mul(self.gradients, self.gradients))) + 1e-5)
-
+            self.gradients = x.grad / (torch.sqrt(torch.mean(
+                torch.mul(x.grad, x.grad))) + 1e-5)
             x = x + self.gradients * self._lr
             output.append(x)
 
