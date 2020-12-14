@@ -130,7 +130,7 @@ class GradientAscent:
 
         # Inisialize gradients
 
-        self.gradients = torch.zeros(input_.shape)
+        self.gradients = torch.zeros_like(input_) # immitate everything, including device
 
         # Optimize
 
