@@ -1,3 +1,4 @@
+import re
 import warnings
 
 import matplotlib.pyplot as plt
@@ -69,9 +70,9 @@ class Backprop:
 
         """ # noqa
 
-        if 'inception' in self.model.__class__.__name__.lower():
-            if input_.size()[1:] != (3, 299, 299):
-                raise ValueError('Image must be 299x299 for Inception models.')
+        if self._is_inception_or_googlenet() and \
+                input_.size()[1:] != (3, 299, 299):
+            raise ValueError('Input image must be 299x299')
 
         if guided:
             self.relu_outputs = []
@@ -211,6 +212,12 @@ class Backprop:
     #####################
     # Private interface #
     #####################
+
+    def _is_inception_or_googlenet(self):
+        return re.match(
+            r'(inception|googlenet)',
+            self.model.__class__.__name__.lower()
+        ) is not None
 
     def _register_conv_hook(self):
         def _record_gradients(module, grad_in, grad_out):

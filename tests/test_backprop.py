@@ -1,4 +1,6 @@
 import inspect
+import re
+
 import pytest
 
 import torch
@@ -208,9 +210,11 @@ def test_return_max_across_color_channels_if_specified(mocker, model):
     assert gradients.shape == (1, 224, 224)
 
 
-def test_checks_input_size_for_inception_model(mocker):
+@pytest.mark.parametrize('model_module',
+                         [models.inception_v3, models.googlenet])
+def test_checks_input_size_for_inception_model(model_module):
     with pytest.raises(ValueError) as error:
-        model = models.inception_v3()
+        model = model_module(init_weights=True)
         backprop = Backprop(model)
 
         target_class = 5
@@ -218,7 +222,7 @@ def test_checks_input_size_for_inception_model(mocker):
 
         backprop.calculate_gradients(input_, target_class)
 
-    assert 'Image must be 299x299 for Inception models.' in str(error.value)
+    assert 'Image must be 299x299' in str(error.value)
 
 
 def test_warn_when_prediction_is_wrong(mocker, model):
@@ -279,7 +283,10 @@ available_models = inspect.getmembers(models, inspect.isfunction)
 
 @pytest.mark.parametrize("name, model_module", available_models)
 def test_register_hook_to_first_conv_layer(mocker, name, model_module):
-    model = model_module()
+    if re.match(r'(inception|googlenet)', name) is not None:
+        model = model_module(init_weights=True)
+    else:
+        model = model_module()
 
     conv_layer = find_first_conv_layer(model, nn.modules.conv.Conv2d, 3)
     mocker.spy(conv_layer, 'register_full_backward_hook')
@@ -291,7 +298,13 @@ def test_register_hook_to_first_conv_layer(mocker, name, model_module):
 
 @pytest.mark.parametrize("name, model_module", available_models)
 def test_register_hooks_to_relu_layers(mocker, name, model_module):
-    model = model_module()
+    if re.match(r'(inception|googlenet)', name) is not None:
+        model = model_module(init_weights=True)
+        input_ = torch.zeros([1, 3, 299, 299])
+    else:
+        model = model_module()
+        input_ = torch.zeros([1, 3, 224, 224])
+
     relu_layers = find_relu_layers(model, nn.ReLU)
 
     for layer in relu_layers:
@@ -301,10 +314,6 @@ def test_register_hooks_to_relu_layers(mocker, name, model_module):
     backprop = Backprop(model)
 
     target_class = 5
-    input_ = torch.zeros([1, 3, 224, 224])
-
-    if 'inception' in name:
-        input_ = torch.zeros([1, 3, 299, 299])
 
     make_mock_output(mocker, model, target_class)
 
@@ -313,19 +322,21 @@ def test_register_hooks_to_relu_layers(mocker, name, model_module):
     for layer in relu_layers:
 
         layer.register_forward_hook.assert_called_once()
-        layer.register_backward_hook.assert_called_once()
+        layer.register_full_backward_hook.assert_called_once()
 
 
 @pytest.mark.parametrize("name, model_module", available_models)
 def test_calculate_gradients_for_all_models(mocker, name, model_module):
-    model = model_module()
+    if re.match(r'(inception|googlenet)', name) is not None:
+        model = model_module(init_weights=True)
+        input_ = torch.zeros([1, 3, 299, 299])
+    else:
+        model = model_module()
+        input_ = torch.zeros([1, 3, 224, 224])
+
     backprop = Backprop(model)
 
     target_class = 5
-    input_ = torch.zeros([1, 3, 224, 224])
-
-    if 'inception' in name:
-        input_ = torch.zeros([1, 3, 299, 299])
 
     make_mock_output(mocker, model, target_class)
 
