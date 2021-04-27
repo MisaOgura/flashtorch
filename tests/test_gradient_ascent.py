@@ -114,21 +114,21 @@ def test_register_forward_hook_to_target_layer(mocker, conv_layer, model):
 
 
 def test_register_backward_hook_to_first_conv_layer(mocker, conv_layer, model):
-    mocker.spy(conv_layer, 'register_backward_hook')
+    mocker.spy(conv_layer, 'register_full_backward_hook')
 
     g_ascent = GradientAscent(model)
     g_ascent.optimize(conv_layer, 0, num_iter=2)
 
-    conv_layer.register_backward_hook.assert_called_once()
+    conv_layer.register_full_backward_hook.assert_called_once()
 
 
 def test_remove_any_hooks_before_registering(mocker, conv_layer, model):
     mocker.spy(conv_layer, 'register_forward_hook')
-    mocker.spy(conv_layer, 'register_backward_hook')
+    mocker.spy(conv_layer, 'register_full_backward_hook')
 
     another_conv_layer = model[10]
     mocker.spy(another_conv_layer, 'register_forward_hook')
-    mocker.spy(another_conv_layer, 'register_backward_hook')
+    mocker.spy(another_conv_layer, 'register_full_backward_hook')
 
     g_ascent = GradientAscent(model)
 
@@ -144,7 +144,7 @@ def test_remove_any_hooks_before_registering(mocker, conv_layer, model):
     # gradients from it, but forward hook is registered only once
 
     conv_layer.register_forward_hook.assert_called_once()
-    assert conv_layer.register_backward_hook.call_count == 2
+    assert conv_layer.register_full_backward_hook.call_count == 2
 
     # Instead forward hook is registered on the target layer
 

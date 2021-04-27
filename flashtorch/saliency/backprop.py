@@ -219,7 +219,7 @@ class Backprop:
 
         for _, module in self.model.named_modules():
             if isinstance(module, nn.modules.conv.Conv2d):
-                module.register_backward_hook(_record_gradients)
+                module.register_full_backward_hook(_record_gradients)
                 break
 
     def _register_relu_hooks(self):
@@ -235,4 +235,4 @@ class Backprop:
         for _, module in self.model.named_modules():
             if isinstance(module, nn.ReLU):
                 module.register_forward_hook(_record_output)
-                module.register_backward_hook(_clip_gradients)
+                module.register_full_backward_hook(_clip_gradients)

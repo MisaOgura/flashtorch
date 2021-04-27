@@ -277,7 +277,7 @@ class GradientAscent:
         for _, module in self.model.named_modules():
             if isinstance(module, nn.modules.conv.Conv2d) and \
                     module.in_channels == 3:
-                return module.register_backward_hook(_record_gradients)
+                return module.register_full_backward_hook(_record_gradients)
 
     def _ascent(self, x, num_iter):
         output = []

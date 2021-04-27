@@ -282,11 +282,11 @@ def test_register_hook_to_first_conv_layer(mocker, name, model_module):
     model = model_module()
 
     conv_layer = find_first_conv_layer(model, nn.modules.conv.Conv2d, 3)
-    mocker.spy(conv_layer, 'register_backward_hook')
+    mocker.spy(conv_layer, 'register_full_backward_hook')
 
     Backprop(model)
 
-    conv_layer.register_backward_hook.assert_called_once()
+    conv_layer.register_full_backward_hook.assert_called_once()
 
 
 @pytest.mark.parametrize("name, model_module", available_models)
@@ -296,7 +296,7 @@ def test_register_hooks_to_relu_layers(mocker, name, model_module):
 
     for layer in relu_layers:
         mocker.spy(layer, 'register_forward_hook')
-        mocker.spy(layer, 'register_backward_hook')
+        mocker.spy(layer, 'register_full_backward_hook')
 
     backprop = Backprop(model)
 
