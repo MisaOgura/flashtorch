@@ -222,7 +222,7 @@ def test_checks_input_size_for_inception_model(model_module):
 
         backprop.calculate_gradients(input_, target_class)
 
-    assert 'Image must be 299x299' in str(error.value)
+    assert 'must be 299x299' in str(error.value)
 
 
 def test_warn_when_prediction_is_wrong(mocker, model):
