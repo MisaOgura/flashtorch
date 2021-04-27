@@ -37,8 +37,10 @@ def test_convert_image_to_rgb_when_loading_image(image):
     assert image.mode == 'RGB'
 
 
-def test_handle_non_pil_as_input():
-    non_pil_input = np.uint8(np.random.uniform(150, 180, (3, 224, 224)))
+def test_handle_non_pil_input_with_channel_first():
+    non_pil_input = torch.from_numpy(
+        np.random.uniform(150, 180, (3, 224, 224))
+    )
 
     transformed = apply_transforms(non_pil_input)
 
