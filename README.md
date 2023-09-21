@@ -23,7 +23,7 @@ It is compatible with pre-trained models that come with [torchvision](https://py
 
 Take a look at the quick 3min intro/demo to FlashTorch below!
 
-[![FlashTorch demo](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/flashtorch_demo.png)](https://youtu.be/18Iw4qYqfPo)
+[![FlashTorch demo](examples/images/flashtorch_demo.png)](https://youtu.be/18Iw4qYqfPo)
 
 ### Want to try?
 
@@ -90,7 +90,7 @@ Below, you can find simple demos to get you started, as well as links to some ha
 
 Using `flashtorch.saliency` module, let's visualize image-specific class saliency maps of [AlexNet](https://arxiv.org/abs/1404.5997) pre-trained on [ImageNet](http://www.image-net.org/) classification tasks.
 
-![Saliency map of great grey owl in Alexnet](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/saliency_demo.png)
+![Saliency map of great grey owl in Alexnet](examples/images/saliency_demo.png)
 
 The network is focusing on the sunken eyes and the round head for this owl.
 
@@ -104,7 +104,7 @@ The network is focusing on the sunken eyes and the round head for this owl.
 Using `flashtorch.activmax` module, let's visualize images optimized with filters
 from [VGG16](https://arxiv.org/pdf/1409.1556.pdf) pre-trained on [ImageNet](http://www.image-net.org/) classification tasks.
 
-![VGG16 conv5_1 filters](https://github.com/MisaOgura/flashtorch/blob/master/examples/images/activmax_demo.png)
+![VGG16 conv5_1 filters](examples/images/activmax_demo.png)
 
 Concepts such as _'eyes'_ (filter 45) and _'entrances (?)'_ (filter 271) seem to appear in the conv5_1 layer of VGG16.
 
